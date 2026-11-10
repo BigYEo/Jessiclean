@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jessiclean – Entretien ménager</title>
+<meta name="description" content="Jessiclean – entretien ménager résidentiel et commercial. Fiable, soigné, horaire flexible.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e8f86'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='white' font-family='Georgia,serif' font-weight='700'%3EJ%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4faf9;--card:#fff;--tx:#17302e;--mut:#5d7775;--ac:#0e9c8f;--ac2:#e8f6f4;--bd:#d6e6e3;--danger:#c0392b;--star:#f5a623}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1e1d;--card:#172928;--tx:#e6f2f0;--mut:#93b0ad;--ac:#2fc5b6;--ac2:#1d3533;--bd:#264240;--danger:#ff7b6b;--star:#ffb84a}}
+:root[data-theme="dark"]{--bg:#0f1e1d;--card:#172928;--tx:#e6f2f0;--mut:#93b0ad;--ac:#2fc5b6;--ac2:#1d3533;--bd:#264240;--danger:#ff7b6b;--star:#ffb84a}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:env(safe-area-inset-bottom,0px)}
+header{position:sticky;top:0;padding-top:env(safe-area-inset-top,0px);background:var(--card);border-bottom:1px solid var(--bd);z-index:5}
+.bar{max-width:860px;margin:auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:1.3rem;color:var(--ac);cursor:pointer}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{border:0;background:none;color:var(--mut);padding:8px 12px;border-radius:999px;font:inherit;font-weight:600;cursor:pointer}
+nav button.on{background:var(--ac2);color:var(--ac)}
+nav button.acct{border:1px solid var(--bd)}
+main{max-width:860px;margin:auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(10,60,60,.05)}
+h2{margin:0 0 10px;font-size:1.2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:block;font-size:.85rem;color:var(--mut);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:480px){.row.st{grid-template-columns:1fr}}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;margin-top:12px}
+.btn:disabled{opacity:.6;cursor:default}
+.btn.sec{background:var(--ac2);color:var(--ac)}.btn.sm{padding:6px 10px;margin:0;font-size:.85rem}
+.btn.del{background:none;color:var(--danger);border:1px solid var(--danger)}
+.linkbtn{border:0;background:none;color:var(--ac);font:inherit;font-size:.88rem;cursor:pointer;padding:0;margin-top:10px;text-decoration:underline}
+.stars{font-size:1.8rem;color:var(--star);letter-spacing:2px;cursor:pointer;user-select:none}
+.stars span{opacity:.3}.stars span.f{opacity:1}
+.rev{border-top:1px solid var(--bd);padding:12px 0}.rev:first-child{border-top:0}
+.rev b{margin-right:6px}.mut{color:var(--mut);font-size:.88rem}
+.shift{border-left:4px solid var(--ac);background:var(--bg);border-radius:10px;padding:10px 12px;margin:8px 0;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.shift>div:first-child{min-width:0;overflow-wrap:anywhere}
+.shift .acts{display:flex;gap:6px;flex-shrink:0}
+.day{font-weight:700;margin-top:14px;text-transform:capitalize}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{background:var(--ac2);color:var(--ac);border-radius:999px;padding:4px 6px 4px 12px;font-size:.9rem;display:flex;gap:6px;align-items:center}
+.chip small{color:var(--mut)}
+.chip button{border:0;background:none;color:var(--danger);cursor:pointer;font-size:1rem}
+.note{background:var(--ac2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-bottom:12px}
+.note.err{color:var(--danger)}
+.logo,.hero h1,.serif{font-family:"Playfair Display",Georgia,"Times New Roman",serif}
+.logo{letter-spacing:.02em}
+.hero{position:relative;overflow:hidden;color:#fff;margin-bottom:18px;padding:46px 24px 38px;border-radius:22px;background:linear-gradient(140deg,#0a4a58 0%,#0e8f86 100%);box-shadow:0 10px 30px rgba(10,74,88,.18)}
+.hero::after{content:"";position:absolute;right:-70px;top:-70px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero::before{content:"";position:absolute;right:50px;bottom:-90px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
+.hero>*{position:relative;z-index:1}
+.eyebrow{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;opacity:.85;margin-bottom:12px}
+.hero h1{font-size:2.1rem;line-height:1.18;margin:0 0 14px}
+.hero p{max-width:460px;opacity:.93;font-size:1.02rem;margin:0}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.cta button{border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer;background:#fff;color:#0a4a58}
+.cta button.ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.7)}
+.badges{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:24px;font-size:.88rem;opacity:.95}
+.svc{background:var(--card);border:1px solid var(--bd);border-top:3px solid var(--ac);border-radius:12px;padding:14px}
+.svc b{display:block;margin-bottom:4px}
+.svc small{display:block;color:var(--mut);font-size:.85rem}
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.why b{display:block;color:var(--ac);margin-bottom:2px}
+.why span{color:var(--mut);font-size:.92rem}
+.who{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+footer{text-align:center;color:var(--mut);font-size:.82rem;padding:10px 16px 28px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="bar"><div class="logo" data-go="accueil">Jessiclean</div>
+<nav><button data-v="accueil">Accueil</button><button data-v="client">Mes visites</button><button data-v="employes" id="tabEmp" class="hide">Mon horaire</button><button data-v="admin" id="tabAdmin" class="hide">Admin</button><button data-v="connexion" id="tabLogin" class="acct">Connexion</button></nav></div></header>
+<main>
+<div id="setupNote" class="note err hide"></div>
+
+<section id="v-accueil">
+ <div class="hero"><div class="eyebrow">Entretien ménager · Résidentiel et commercial</div><h1>Un espace impeccable, sans effort de votre part</h1><p>Jessiclean prend soin de votre maison et de vos locaux avec rigueur, discrétion et constance.</p>
+  <div class="cta"><button data-scroll="svcCard">Nos services</button><button class="ghost" data-scroll="revCard">Laisser un avis</button></div>
+  <div class="badges"><span>✓ Fiable</span><span>✓ Soigné</span><span>✓ Horaire flexible</span></div></div>
+ <div class="card" id="svcCard"><h2 class="serif">Nos services</h2><div class="grid">
+  <div class="svc"><b>Ménage régulier</b><small>Chaque semaine ou aux deux semaines, selon vos besoins</small></div>
+  <div class="svc"><b>Grand ménage</b><small>Nettoyage en profondeur, de haut en bas</small></div>
+  <div class="svc"><b>Déménagement</b><small>Nettoyage avant ou après votre déménagement</small></div>
+  <div class="svc"><b>Commercial</b><small>Bureaux, commerces et espaces de travail</small></div></div></div>
+ <div class="card"><h2 class="serif">Pourquoi Jessiclean</h2><div class="why"><div><b>Fiable</b><span>Ponctualité et constance, visite après visite.</span></div><div><b>Soigné</b><span>Une attention aux détails dans chaque pièce.</span></div><div><b>Flexible</b><span>Un horaire adapté à votre quotidien.</span></div></div></div>
+ <div class="card" id="revCard"><h2 class="serif">Laissez votre avis</h2>
+  <div id="revNote" class="note hide"></div>
+  <div class="stars" id="stars" role="radiogroup" aria-label="Note"></div>
+  <label for="rName">Votre nom</label><input id="rName" maxlength="40">
+  <label for="rText">Votre commentaire</label><textarea id="rText" rows="3" maxlength="500"></textarea>
+  <button class="btn" id="rSend">Publier mon avis</button></div>
+ <div class="card"><h2 class="serif">Avis de nos clients <span class="mut" id="avg"></span></h2><div id="revList"><p class="mut">Chargement…</p></div></div>
+</section>
+
+<section id="v-client" class="hide">
+ <div class="card"><h2 class="serif">Mes visites</h2>
+  <p class="mut">Entrez le code d’accès que Jessiclean vous a remis pour voir vos prochaines visites.</p>
+  <label for="vCode">Code d’accès</label><input id="vCode" maxlength="10" autocapitalize="characters" autocomplete="off">
+  <button class="btn" id="vGo">Voir mon horaire</button>
+  <div id="vOut" style="margin-top:12px"></div></div>
+</section>
+
+<section id="v-connexion" class="hide">
+ <div class="card" id="loginCard"><h2 class="serif">Espace équipe</h2>
+  <p class="mut">Réservé aux employées et à l’administration de Jessiclean.</p>
+  <div id="loginMsg" class="note hide"></div>
+  <label for="lEmail">Courriel</label><input id="lEmail" type="email" autocomplete="username">
+  <label for="lPass">Mot de passe</label><input id="lPass" type="password" autocomplete="current-password">
+  <button class="btn" id="lGo">Se connecter</button><br>
+  <button class="linkbtn" id="lReset">Mot de passe oublié ?</button></div>
+ <div class="card hide" id="meCard"><div class="who"><div>Connectée en tant que <b id="meEmail"></b><div class="mut" id="meRole"></div></div><button class="btn sec sm" id="lOut">Se déconnecter</button></div></div>
+</section>
+
+<section id="v-employes" class="hide">
+ <div class="card"><h2>Mon horaire</h2>
+  <div id="empNote" class="note hide"></div>
+  <label for="empSel">Employée</label><select id="empSel"></select>
+  <div id="empList"><p class="mut">Chargement…</p></div></div>
+</section>
+
+<section id="v-admin" class="hide">
+ <div class="card"><h2>Employées</h2>
+  <p class="mut">Le courriel sert à la connexion : créez ensuite le compte dans Firebase (Authentication → Ajouter un utilisateur) avec ce même courriel.</p>
+  <div class="chips" id="empChips"></div>
+  <div class="row st"><input id="newEmp" placeholder="Nom de l’employée"><input id="newEmpMail" type="email" placeholder="Courriel (pour se connecter)"></div>
+  <button class="btn sm" id="addEmp" style="margin-top:10px">Ajouter</button></div>
+ <div class="card"><h2>Clients <span class="mut" id="cCount"></span></h2>
+  <input id="cSearch" placeholder="Rechercher un client…" aria-label="Rechercher un client">
+  <div id="cList"></div>
+  <h2 id="cFormTitle" style="margin-top:18px">Nouveau client</h2>
+  <label for="cName">Nom</label><input id="cName">
+  <div class="row st"><div><label for="cPhone">Téléphone</label><input id="cPhone" type="tel"></div><div><label for="cAddr">Adresse</label><input id="cAddr"></div></div>
+  <label for="cNotes">Notes (accès, clés, animaux, produits, préférences…)</label><textarea id="cNotes" rows="3"></textarea>
+  <button class="btn" id="cSave">Enregistrer le client</button> <button class="btn sec hide" id="cCancel">Annuler</button></div>
+ <div class="card"><h2 id="formTitle">Nouveau quart de travail</h2>
+  <div class="row"><div><label for="sDate">Date</label><input type="date" id="sDate"></div><div><label for="sEmp">Employée</label><select id="sEmp"></select></div></div>
+  <div class="row"><div><label for="sStart">Début</label><input type="time" id="sStart" value="09:00"></div><div><label for="sEnd">Fin</label><input type="time" id="sEnd" value="12:00"></div></div>
+  <label for="sClient">Client</label><input id="sClient" list="clList"><datalist id="clList"></datalist><label for="sAddr">Adresse</label><input id="sAddr"><label for="sNotes">Notes</label><textarea id="sNotes" rows="2"></textarea>
+  <button class="btn" id="sSave">Enregistrer</button> <button class="btn sec hide" id="sCancel">Annuler</button></div>
+ <div class="card"><h2>Horaire complet</h2>
+  <label><input type="checkbox" id="showPast" style="width:auto;margin-right:6px">Afficher les quarts passés</label>
+  <div id="admList"><p class="mut">Chargement…</p></div></div>
+</section>
+</main>
+<footer>© <span id="yr"></span> Jessiclean · Entretien ménager</footer>
+
+<script type="module">
+import { firebaseConfig, ADMIN_EMAILS } from './firebase-config.js';
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const admins=(ADMIN_EMAILS||[]).map(e=>String(e).trim().toLowerCase());
+$('yr').textContent=new Date().getFullYear();
+
+let api=null,user=null,isAdmin=false,rating=0,editId=null,cEditId=null;
+let reviews=[],shifts=[],emps=[],clients=[],empDenied=false;
+const loaded={shifts:false,employees:false,clients:false};
+let unsubs=[];
+
+/* ───────── Couche de données (Firebase) ───────── */
+async function makeFirebaseApi(){
+  const V='10.12.2',B='https://www.gstatic.com/firebasejs/'+V+'/';
+  const [A,F,U]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-firestore.js'),import(B+'firebase-auth.js')]);
+  const app=A.initializeApp(firebaseConfig),db=F.getFirestore(app),auth=U.getAuth(app);
+  const ref=(c,id)=>F.doc(db,c,id);
+  return {
+    listen:(c,cb,err)=>F.onSnapshot(F.collection(db,c),s=>cb(s.docs.map(d=>Object.assign({id:d.id},d.data()))),err),
+    set:(c,id,d)=>F.setDoc(ref(c,id),d),
+    update:(c,id,d)=>F.updateDoc(ref(c,id),d),
+    del:(c,id)=>F.deleteDoc(ref(c,id)),
+    get:async(c,id)=>{const s=await F.getDoc(ref(c,id));return s.exists()?s.data():null;},
+    onAuth:cb=>U.onAuthStateChanged(auth,cb),
+    signIn:(e,p)=>U.signInWithEmailAndPassword(auth,e,p),
+    signOut:()=>U.signOut(auth),
+    reset:e=>U.sendPasswordResetEmail(auth,e)
+  };
+}
+
+/* ───────── Navigation ───────── */
+const VIEWS=['accueil','client','connexion','employes','admin'];
+function show(v){
+  if(!VIEWS.includes(v))v='accueil';
+  if(v==='admin'&&!isAdmin)v=user?'employes':'connexion';
+  if(v==='employes'&&!user)v='connexion';
+  VIEWS.forEach(k=>$('v-'+k).classList.toggle('hide',k!==v));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{show(b.dataset.v);scrollTo(0,0);});
+document.querySelector('.logo').onclick=()=>{show('accueil');scrollTo(0,0);};
+document.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>$(b.dataset.scroll).scrollIntoView({behavior:'smooth'}));
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+
+/* ───────── Étoiles ───────── */
+function drawStars(){$('stars').innerHTML=[1,2,3,4,5].map(i=>'<span data-i="'+i+'" class="'+(i<=rating?'f':'')+'" role="radio" aria-checked="'+(i===rating)+'" aria-label="'+i+' étoile'+(i>1?'s':'')+'">★</span>').join('');}
+$('stars').onclick=e=>{const i=e.target.dataset&&e.target.dataset.i;if(i){rating=+i;drawStars();}};
+drawStars();
+
+/* ───────── Rendu ───────── */
+const fmtDate=d=>{try{return new Date(d+'T12:00:00').toLocaleDateString('fr-CA',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}catch(e){return d}};
+const empName=id=>(emps.find(e=>e.id===id)||{}).name||'Non assignée';
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+const byTime=(a,b)=>(a.date+a.start).localeCompare(b.date+b.start);
+
+function renderReviews(){
+  const l=[...reviews].sort((a,b)=>(b.ts||0)-(a.ts||0));
+  $('avg').textContent=l.length?'· '+(l.reduce((s,r)=>s+(+r.stars||0),0)/l.length).toFixed(1)+' ★ ('+l.length+')':'';
+  $('revList').innerHTML=l.length?l.map(r=>'<div class="rev"><b>'+esc(r.name)+'</b><span style="color:var(--star)">'+'★'.repeat(Math.max(0,Math.min(5,+r.stars||0)))+'</span><div>'+esc(r.text)+'</div>'+(isAdmin?'<button class="btn del sm" data-del="'+esc(r.id)+'">Supprimer</button>':'')+'</div>').join(''):'<p class="mut">Soyez le premier à laisser un avis !</p>';
+}
+function shiftHTML(s,admin){
+  return '<div class="shift"><div><b>'+esc(s.start)+' – '+esc(s.end)+'</b> · '+esc(s.client||'Client')+(admin?' <span class="mut">('+esc(empName(s.emp))+')</span>':'')+
+  (s.addr?'<div class="mut">📍 <a href="https://maps.google.com/?q='+encodeURIComponent(s.addr)+'" target="_blank" rel="noopener" style="color:inherit">'+esc(s.addr)+'</a></div>':'')+(s.notes?'<div class="mut">📝 '+esc(s.notes)+'</div>':'')+'</div>'+
+  (admin?'<div class="acts"><button class="btn sec sm" data-edit="'+esc(s.id)+'">Modifier</button><button class="btn del sm" data-sdel="'+esc(s.id)+'" aria-label="Supprimer">✕</button></div>':'')+'</div>';
+}
+function grouped(list,admin){
+  let out='',last='';
+  [...list].sort(byTime).forEach(s=>{if(s.date!==last){out+='<div class="day">'+esc(fmtDate(s.date))+'</div>';last=s.date;}out+=shiftHTML(s,admin);});
+  return out||'<p class="mut">Aucun quart de travail à venir.</p>';
+}
+let empSelTouched=false;
+function renderEmp(){
+  if(!user)return;
+  if(empDenied){
+    $('empNote').textContent='Votre compte n’est pas encore associé à une fiche employée. Demandez à l’administration d’ajouter votre courriel ('+user.email+').';
+    $('empNote').classList.remove('hide');$('empList').innerHTML='';return;
+  }
+  $('empNote').classList.add('hide');
+  const sel=$('empSel'),me=(user.email||'').toLowerCase();
+  let cur=sel.value;
+  if(!empSelTouched&&emps.some(e=>e.id===me))cur=me;
+  sel.innerHTML='<option value="">— Toutes —</option>'+emps.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>').join('');
+  sel.value=emps.some(e=>e.id===cur)?cur:'';
+  const f=sel.value;
+  $('empList').innerHTML=grouped(shifts.filter(s=>s.date>=today()&&(!f||s.emp===f)),false);
+}
+$('empSel').onchange=()=>{empSelTouched=true;renderEmp();};
+function renderAdmin(){
+  if(!isAdmin)return;
+  $('empChips').innerHTML=emps.length?emps.map(e=>'<span class="chip">'+esc(e.name)+(e.email?' <small>'+esc(e.email)+'</small>':'')+'<button data-edel="'+esc(e.id)+'" title="Retirer" aria-label="Retirer">✕</button></span>').join(''):'<span class="mut">Ajoutez votre première employée.</span>';
+  const cur=$('sEmp').value;
+  $('sEmp').innerHTML='<option value="">Non assignée</option>'+emps.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>').join('');
+  $('sEmp').value=cur;
+  const past=$('showPast').checked;
+  $('admList').innerHTML=grouped(past?shifts:shifts.filter(s=>s.date>=today()),true);
+  renderClients();
+}
+$('showPast').onchange=renderAdmin;
+function renderAccount(){
+  const on=!!user;
+  $('tabLogin').textContent=on?'Mon compte':'Connexion';
+  $('tabEmp').classList.toggle('hide',!on);
+  $('tabAdmin').classList.toggle('hide',!isAdmin);
+  $('loginCard').classList.toggle('hide',on);
+  $('meCard').classList.toggle('hide',!on);
+  if(on){$('meEmail').textContent=user.email;$('meRole').textContent=isAdmin?'Administratrice':'Employée';}
+}
+
+/* ───────── Actions ───────── */
+const msg=e=>{const c=e&&e.code||'';if(c.includes('permission'))return'accès refusé.';return(e&&e.message)||String(e);};
+const guard=p=>p.catch(e=>{alert('Action impossible : '+msg(e));throw e;});
+$('rSend').onclick=()=>{
+  if(!api){alert('Le site n’est pas encore relié à sa base de données.');return;}
+  const name=$('rName').value.trim(),text=$('rText').value.trim();
+  if(!rating||!name||!text){alert('Choisissez une note et remplissez votre nom et commentaire.');return;}
+  $('rSend').disabled=true;
+  guard(api.set('reviews',uid(),{name,text,stars:rating,ts:Date.now()})).then(()=>{
+    $('rName').value='';$('rText').value='';rating=0;drawStars();
+    $('revNote').textContent='Merci ! Votre avis a été publié.';$('revNote').classList.remove('hide');
+  }).catch(()=>{}).finally(()=>$('rSend').disabled=false);
+};
+$('revList').onclick=e=>{const id=e.target.dataset.del;if(id&&confirm('Supprimer cet avis ?'))guard(api.del('reviews',id)).catch(()=>{});};
+
+/* Connexion */
+function loginMsg(t,err){$('loginMsg').textContent=t;$('loginMsg').classList.toggle('err',!!err);$('loginMsg').classList.toggle('hide',!t);}
+$('lGo').onclick=async()=>{
+  if(!api){loginMsg('Le site n’est pas encore relié à Firebase.',true);return;}
+  const e=$('lEmail').value.trim(),p=$('lPass').value;
+  if(!e||!p){loginMsg('Entrez votre courriel et votre mot de passe.',true);return;}
+  $('lGo').disabled=true;loginMsg('');
+  try{await api.signIn(e,p);$('lPass').value='';}
+  catch(err){loginMsg('Courriel ou mot de passe incorrect.',true);}
+  finally{$('lGo').disabled=false;}
+};
+$('lPass').onkeydown=e=>{if(e.key==='Enter')$('lGo').click();};
+$('lReset').onclick=async()=>{
+  const e=$('lEmail').value.trim();
+  if(!e){loginMsg('Entrez d’abord votre courriel ci-dessus.',true);return;}
+  if(!api)return;
+  try{await api.reset(e);}catch(_){}
+  loginMsg('Si ce courriel existe, un lien de réinitialisation vient d’être envoyé.');
+};
+$('lOut').onclick=()=>api&&api.signOut();
+
+/* Employées */
+$('addEmp').onclick=()=>{
+  const n=$('newEmp').value.trim(),m=$('newEmpMail').value.trim().toLowerCase();
+  if(!n){alert('Le nom est requis.');return;}
+  if(m&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m)){alert('Courriel invalide.');return;}
+  if(m&&emps.some(e=>e.id===m)){alert('Ce courriel est déjà utilisé.');return;}
+  guard(api.set('employees',m||uid(),{name:n,email:m})).then(()=>{$('newEmp').value='';$('newEmpMail').value='';}).catch(()=>{});
+};
+$('empChips').onclick=e=>{const id=e.target.dataset.edel;if(id&&confirm('Retirer cette employée ? Elle n’aura plus accès à l’horaire.'))guard(api.del('employees',id)).catch(()=>{});};
+
+/* Quarts */
+function resetForm(){editId=null;$('formTitle').textContent='Nouveau quart de travail';$('sCancel').classList.add('hide');['sClient','sAddr','sNotes'].forEach(i=>$(i).value='');}
+$('sCancel').onclick=resetForm;
+$('sClient').onchange=()=>{const c=clients.find(x=>(x.name||'').trim().toLowerCase()===$('sClient').value.trim().toLowerCase());if(c&&c.addr&&!$('sAddr').value.trim())$('sAddr').value=c.addr;};
+$('sSave').onclick=()=>{
+  const d={date:$('sDate').value,start:$('sStart').value,end:$('sEnd').value,emp:$('sEmp').value,client:$('sClient').value.trim(),addr:$('sAddr').value.trim(),notes:$('sNotes').value.trim()};
+  if(!d.date||!d.start||!d.end){alert('Date et heures requises.');return;}
+  if(d.end<=d.start){alert('L’heure de fin doit être après l’heure de début.');return;}
+  guard(api.set('shifts',editId||uid(),d)).then(resetForm).catch(()=>{});
+};
+$('admList').onclick=e=>{
+  const ed=e.target.dataset.edit,dl=e.target.dataset.sdel;
+  if(dl&&confirm('Supprimer ce quart ?'))guard(api.del('shifts',dl)).catch(()=>{});
+  if(ed){const s=shifts.find(x=>x.id===ed);if(!s)return;editId=ed;
+    $('sDate').value=s.date;$('sStart').value=s.start;$('sEnd').value=s.end;$('sEmp').value=s.emp||'';$('sClient').value=s.client||'';$('sAddr').value=s.addr||'';$('sNotes').value=s.notes||'';
+    $('formTitle').textContent='Modifier le quart';$('sCancel').classList.remove('hide');$('formTitle').scrollIntoView({behavior:'smooth',block:'center'});}
+};
+
+/* Clients */
+function renderClients(){
+  const q=$('cSearch').value.toLowerCase();
+  const l=clients.filter(c=>((c.name||'')+' '+(c.phone||'')+' '+(c.addr||'')+' '+(c.notes||'')).toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||'','fr'));
+  $('cCount').textContent=clients.length?'· '+clients.length:'';
+  $('clList').innerHTML=clients.map(c=>'<option value="'+esc(c.name)+'">').join('');
+  $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+'</div><div class="acts"><button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
+}
+function resetClient(){cEditId=null;$('cFormTitle').textContent='Nouveau client';$('cCancel').classList.add('hide');['cName','cPhone','cAddr','cNotes'].forEach(i=>$(i).value='');}
+$('cSearch').oninput=renderClients;
+$('cCancel').onclick=resetClient;
+$('cSave').onclick=()=>{
+  const d={name:$('cName').value.trim(),phone:$('cPhone').value.trim(),addr:$('cAddr').value.trim(),notes:$('cNotes').value.trim()};
+  if(!d.name){alert('Le nom du client est requis.');return;}
+  const old=clients.find(x=>x.id===cEditId);d.code=(old&&old.code)||newCode();
+  guard(api.set('clients',cEditId||uid(),d)).then(resetClient).catch(()=>{});
+};
+$('cList').onclick=e=>{
+  const ed=e.target.dataset.cedit,dl=e.target.dataset.cdel;
+  if(dl&&confirm('Supprimer ce client ?')){const c0=clients.find(x=>x.id===dl);if(c0&&c0.code){api.del('visits',c0.code).catch(()=>{});delete visitsCache[c0.code];}guard(api.del('clients',dl)).catch(()=>{});}
+  if(ed){const c=clients.find(x=>x.id===ed);if(!c)return;cEditId=ed;
+    $('cName').value=c.name||'';$('cPhone').value=c.phone||'';$('cAddr').value=c.addr||'';$('cNotes').value=c.notes||'';
+    $('cFormTitle').textContent='Modifier le client';$('cCancel').classList.remove('hide');$('cFormTitle').scrollIntoView({behavior:'smooth',block:'center'});}
+};
+
+/* ───────── Horaire visible par les clients ───────── */
+function newCode(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=new Uint32Array(8);crypto.getRandomValues(r);let s='';for(let i=0;i<8;i++)s+=a[r[i]%a.length];return s;}
+let visitsCache={},syncT=null,syncing=false;
+function scheduleSync(){if(!isAdmin||!api||!loaded.shifts||!loaded.employees||!loaded.clients)return;clearTimeout(syncT);syncT=setTimeout(syncVisits,1200);}
+async function syncVisits(){
+  if(syncing){scheduleSync();return;}
+  syncing=true;
+  try{
+    for(const c of clients){
+      if(!c.code){const code=newCode();c.code=code;await api.update('clients',c.id,{code}).catch(()=>{});}
+      const key=(c.name||'').trim().toLowerCase();
+      const v=shifts.filter(s=>(s.client||'').trim().toLowerCase()===key&&s.date>=today()).sort(byTime).map(s=>({date:s.date,start:s.start,end:s.end,emp:s.emp?empName(s.emp).split(' ')[0]:''}));
+      const payload={name:c.name,visits:v},h=JSON.stringify(payload);
+      if(visitsCache[c.code]!==h){visitsCache[c.code]=h;await api.set('visits',c.code,payload).catch(()=>{visitsCache[c.code]=null;});}
+    }
+  }finally{syncing=false;}
+}
+$('vCode').onkeydown=e=>{if(e.key==='Enter')$('vGo').click();};
+$('vGo').onclick=async()=>{
+  const code=$('vCode').value.trim().toUpperCase(),out=$('vOut');
+  if(!code)return;
+  if(!api){out.innerHTML='<p class="mut">Données non disponibles pour le moment.</p>';return;}
+  try{
+    const x=await api.get('visits',code);
+    if(!x){out.innerHTML='<p class="mut">Code introuvable. Vérifiez-le ou contactez Jessiclean.</p>';return;}
+    const l=(x.visits||[]).filter(v=>v.date>=today()).sort(byTime);
+    out.innerHTML='<p>Bonjour <b>'+esc(x.name)+'</b> !</p>'+(l.length?l.map(v=>'<div class="shift"><div><b style="text-transform:capitalize">'+esc(fmtDate(v.date))+'</b><div>'+esc(v.start)+' – '+esc(v.end)+'</div>'+(v.emp?'<div class="mut">Avec '+esc(v.emp)+'</div>':'')+'</div></div>').join(''):'<p class="mut">Aucune visite prévue pour le moment.</p>');
+  }catch(e){out.innerHTML='<p class="mut">Impossible de charger l’horaire pour le moment.</p>';}
+};
+
+/* ───────── Démarrage ───────── */
+function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};Object.keys(loaded).forEach(k=>loaded[k]=false);}
+function startPrivate(){
+  unsubs.push(api.listen('employees',l=>{emps=l;empDenied=false;loaded.employees=true;renderEmp();renderAdmin();scheduleSync();},()=>{empDenied=true;renderEmp();}));
+  unsubs.push(api.listen('shifts',l=>{shifts=l;loaded.shifts=true;renderEmp();renderAdmin();scheduleSync();},()=>{}));
+  if(isAdmin)unsubs.push(api.listen('clients',l=>{clients=l;loaded.clients=true;renderClients();scheduleSync();},()=>{}));
+}
+function noData(t){
+  $('revNote').textContent=t;$('revNote').classList.remove('hide');
+  $('revList').innerHTML='<p class="mut">Données non disponibles pour le moment.</p>';
+}
+
+show(location.hash.slice(1));
+(async()=>{
+  const configured=firebaseConfig&&firebaseConfig.apiKey&&!/^VOTRE/.test(firebaseConfig.apiKey);
+  try{
+    if(window.__jcMockApi)api=window.__jcMockApi;          // utilisé seulement pour les tests
+    else if(configured)api=await makeFirebaseApi();
+  }catch(e){console.error(e);api=null;}
+  if(!api){
+    if(!configured){$('setupNote').textContent='Site pas encore configuré : remplissez le fichier firebase-config.js (voir le guide README).';$('setupNote').classList.remove('hide');}
+    noData('Les avis seront disponibles sous peu.');return;
+  }
+  api.listen('reviews',l=>{reviews=l;renderReviews();},()=>noData('Impossible de charger les avis.'));
+  api.onAuth(u=>{
+    stopPrivate();
+    user=u||null;
+    isAdmin=!!(user&&admins.includes((user.email||'').toLowerCase()));
+    renderAccount();renderReviews();
+    if(user){startPrivate();if(location.hash==='#connexion')show(isAdmin?'admin':'employes');}
+    show(location.hash.slice(1));
+  });
+})();
+</script>
+</body>
+</html>
