@@ -1,8 +1,7 @@
 rules_version = '2';
 
 // Règles de sécurité Jessiclean
-// ⚠ Remplacez jaykaa92@icloud.com par votre courriel (en minuscules),
-//   le même que dans firebase-config.js.
+// Courriel de l'administratrice : le même que dans firebase-config.js (en minuscules).
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -41,6 +40,21 @@ service cloud.firestore {
     // Fiches clients : admin seulement
     match /clients/{id} {
       allow read, write: if isAdmin();
+    }
+
+    // Pièces jointes (stockées en texte, max ≈ 900 000 caractères par fichier)
+    function okFile() {
+      return request.resource.data.data is string && request.resource.data.data.size() <= 900000
+        && request.resource.data.name is string && request.resource.data.name.size() <= 200;
+    }
+    match /shiftFiles/{id} {
+      allow read: if isStaff();
+      allow create, update: if isAdmin() && okFile();
+      allow delete: if isAdmin();
+    }
+    match /clientFiles/{id} {
+      allow read, delete: if isAdmin();
+      allow create, update: if isAdmin() && okFile();
     }
 
     // Horaire client : lisible seulement avec le code exact (pas de liste possible)

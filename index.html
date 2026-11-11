@@ -68,6 +68,17 @@ input,select,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-
 .why span{color:var(--mut);font-size:.92rem}
 .who{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 footer{text-align:center;color:var(--mut);font-size:.82rem;padding:10px 16px 28px}
+.files{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.file{display:inline-flex;align-items:center;gap:4px;background:var(--ac2);color:var(--ac);border:0;border-radius:999px;padding:4px 10px;font:inherit;font-size:.82rem;cursor:pointer;max-width:100%}
+.file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.file .x{border:0;background:none;color:var(--danger);cursor:pointer;font-size:.95rem;padding:0 0 0 4px}
+.file:disabled{opacity:.6}
+input[type=file]{padding:8px;font-size:.88rem}
+#viewer{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:10px}
+#viewer img{max-width:100%;max-height:calc(100vh - 110px);border-radius:8px;background:#fff}
+#viewer .vbar{display:flex;gap:10px;align-items:center;color:#fff;font-size:.9rem;max-width:100%}
+#viewer .vbar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#viewer a,#viewer button{background:#fff;color:#0a4a58;border:0;border-radius:999px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;flex-shrink:0}
 .hide{display:none!important}
 </style>
 </head>
@@ -135,17 +146,20 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:10px 16px 28p
   <label for="cName">Nom</label><input id="cName">
   <div class="row st"><div><label for="cPhone">Téléphone</label><input id="cPhone" type="tel"></div><div><label for="cAddr">Adresse</label><input id="cAddr"></div></div>
   <label for="cNotes">Notes (accès, clés, animaux, produits, préférences…)</label><textarea id="cNotes" rows="3"></textarea>
+  <label for="cFiles">Pièces jointes (photos, PDF…)</label><input type="file" id="cFiles" multiple accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"><div class="files" id="cFileList"></div>
   <button class="btn" id="cSave">Enregistrer le client</button> <button class="btn sec hide" id="cCancel">Annuler</button></div>
  <div class="card"><h2 id="formTitle">Nouveau quart de travail</h2>
   <div class="row"><div><label for="sDate">Date</label><input type="date" id="sDate"></div><div><label for="sEmp">Employée</label><select id="sEmp"></select></div></div>
   <div class="row"><div><label for="sStart">Début</label><input type="time" id="sStart" value="09:00"></div><div><label for="sEnd">Fin</label><input type="time" id="sEnd" value="12:00"></div></div>
   <label for="sClient">Client</label><input id="sClient" list="clList"><datalist id="clList"></datalist><label for="sAddr">Adresse</label><input id="sAddr"><label for="sNotes">Notes</label><textarea id="sNotes" rows="2"></textarea>
+  <label for="sFiles">Pièces jointes (photos, PDF…) — visibles par les employées</label><input type="file" id="sFiles" multiple accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"><div class="files" id="sFileList"></div>
   <button class="btn" id="sSave">Enregistrer</button> <button class="btn sec hide" id="sCancel">Annuler</button></div>
  <div class="card"><h2>Horaire complet</h2>
   <label><input type="checkbox" id="showPast" style="width:auto;margin-right:6px">Afficher les quarts passés</label>
   <div id="admList"><p class="mut">Chargement…</p></div></div>
 </section>
 </main>
+<div id="viewer" class="hide" role="dialog" aria-modal="true" aria-label="Pièce jointe"><img id="vImg" alt=""><div class="vbar"><span id="vName"></span><a id="vDl" download>Télécharger</a><button id="vClose">Fermer</button></div></div>
 <footer>© <span id="yr"></span> Jessiclean · Entretien ménager</footer>
 
 <script type="module">
@@ -214,7 +228,7 @@ function renderReviews(){
 }
 function shiftHTML(s,admin){
   return '<div class="shift"><div><b>'+esc(s.start)+' – '+esc(s.end)+'</b> · '+esc(s.client||'Client')+(admin?' <span class="mut">('+esc(empName(s.emp))+')</span>':'')+
-  (s.addr?'<div class="mut">📍 <a href="https://maps.google.com/?q='+encodeURIComponent(s.addr)+'" target="_blank" rel="noopener" style="color:inherit">'+esc(s.addr)+'</a></div>':'')+(s.notes?'<div class="mut">📝 '+esc(s.notes)+'</div>':'')+'</div>'+
+  (s.addr?'<div class="mut">📍 <a href="https://maps.google.com/?q='+encodeURIComponent(s.addr)+'" target="_blank" rel="noopener" style="color:inherit">'+esc(s.addr)+'</a></div>':'')+(s.notes?'<div class="mut">📝 '+esc(s.notes)+'</div>':'')+filesHTML(s.files,'s')+'</div>'+
   (admin?'<div class="acts"><button class="btn sec sm" data-edit="'+esc(s.id)+'">Modifier</button><button class="btn del sm" data-sdel="'+esc(s.id)+'" aria-label="Supprimer">✕</button></div>':'')+'</div>';
 }
 function grouped(list,admin){
@@ -306,20 +320,94 @@ $('addEmp').onclick=()=>{
 };
 $('empChips').onclick=e=>{const id=e.target.dataset.edel;if(id&&confirm('Retirer cette employée ? Elle n’aura plus accès à l’horaire.'))guard(api.del('employees',id)).catch(()=>{});};
 
+/* ───────── Pièces jointes ─────────
+   Stockées dans Firestore (pas besoin de forfait payant).
+   Une fiche par fichier, max ≈ 600 Ko ; les photos sont réduites automatiquement. */
+const MAXB=600*1024,FILE_COL={c:'clientFiles',s:'shiftFiles'};
+const formFiles={c:[],s:[]},removedFiles={c:[],s:[]};
+const icon=t=>(t||'').startsWith('image/')?'🖼️':(t==='application/pdf'?'📄':'📎');
+function filesHTML(files,k){
+  return files&&files.length?'<div class="files">'+files.map(f=>'<button type="button" class="file" data-open="'+esc(f.id)+'" data-k="'+k+'" title="'+esc(f.name)+'">'+icon(f.type)+' <span>'+esc(f.name)+'</span></button>').join('')+'</div>':'';
+}
+function drawFormFiles(k){
+  $(k+'FileList').innerHTML=formFiles[k].map((f,i)=>'<span class="file">'+icon(f.type)+' <span>'+esc(f.name)+'</span><button type="button" class="x" data-fx="'+i+'" aria-label="Retirer '+esc(f.name)+'">✕</button></span>').join('');
+}
+const readURL=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(new Error('lecture impossible'));r.readAsDataURL(b);});
+function loadImg(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);res(i);};i.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('format d’image non pris en charge'));};i.src=u;});}
+async function shrinkImage(file){
+  const img=await loadImg(file);let max=1600,q=0.8;
+  for(let t=0;t<10;t++){
+    const s=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight)),c=document.createElement('canvas');
+    c.width=Math.max(1,Math.round(img.naturalWidth*s));c.height=Math.max(1,Math.round(img.naturalHeight*s));
+    const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
+    const out=c.toDataURL('image/jpeg',q);
+    if(out.length*0.75<=MAXB)return out;
+    if(q>0.55)q-=0.1;else max=Math.round(max*0.8);
+  }
+  throw new Error('image trop lourde');
+}
+async function prepFile(file){
+  let type=file.type||'application/octet-stream',name=file.name||'fichier',data;
+  if(type.startsWith('image/')&&type!=='image/gif'&&type!=='image/svg+xml'){
+    data=await shrinkImage(file);type='image/jpeg';name=name.replace(/\.[a-z0-9]+$/i,'')+'.jpg';
+  }else{
+    if(file.size>MAXB)throw new Error('fichier trop lourd (maximum 600 Ko). Astuce : prenez plutôt une photo du document.');
+    data=await readURL(file);
+  }
+  return {id:uid(),name,type,size:Math.round(data.length*0.75),data};
+}
+['c','s'].forEach(k=>{
+  $(k+'Files').onchange=async e=>{
+    const inp=e.target,list=[...inp.files];inp.disabled=true;
+    for(const file of list){try{formFiles[k].push(await prepFile(file));}catch(err){alert(file.name+' : '+err.message);}}
+    inp.value='';inp.disabled=false;drawFormFiles(k);
+  };
+  $(k+'FileList').onclick=e=>{const i=e.target.dataset.fx;if(i==null)return;const f=formFiles[k].splice(+i,1)[0];if(f&&!f.data)removedFiles[k].push(f.id);drawFormFiles(k);};
+});
+async function saveFiles(k){
+  for(const f of formFiles[k])if(f.data)await api.set(FILE_COL[k],f.id,{name:f.name,type:f.type,data:f.data,ts:Date.now()});
+  return formFiles[k].map(f=>({id:f.id,name:f.name,type:f.type,size:f.size}));
+}
+function loadFormFiles(k,files){formFiles[k]=(files||[]).map(f=>({id:f.id,name:f.name,type:f.type,size:f.size}));removedFiles[k]=[];drawFormFiles(k);}
+function deleteFiles(k,ids){ids.forEach(id=>api.del(FILE_COL[k],id).catch(()=>{}));}
+function dataToBlob(u){const i=u.indexOf(','),bin=atob(u.slice(i+1)),a=new Uint8Array(bin.length);for(let j=0;j<bin.length;j++)a[j]=bin.charCodeAt(j);return new Blob([a],{type:u.slice(5,i).split(';')[0]});}
+function openFile(f){
+  if((f.type||'').startsWith('image/')){
+    $('vImg').src=f.data;$('vImg').alt=f.name;$('vName').textContent=f.name;$('vDl').href=f.data;$('vDl').download=f.name;
+    $('viewer').classList.remove('hide');$('vClose').focus();return;
+  }
+  const url=URL.createObjectURL(dataToBlob(f.data)),a=document.createElement('a');
+  a.href=url;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+function closeViewer(){$('viewer').classList.add('hide');$('vImg').removeAttribute('src');}
+$('vClose').onclick=closeViewer;
+$('viewer').onclick=e=>{if(e.target.id==='viewer')closeViewer();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('viewer').classList.contains('hide'))closeViewer();});
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-open]');if(!b||!api)return;
+  b.disabled=true;
+  try{const f=await api.get(FILE_COL[b.dataset.k],b.dataset.open);if(!f){alert('Fichier introuvable.');return;}openFile(f);}
+  catch(err){alert('Impossible d’ouvrir le fichier : '+msg(err));}
+  finally{b.disabled=false;}
+});
+
 /* Quarts */
-function resetForm(){editId=null;$('formTitle').textContent='Nouveau quart de travail';$('sCancel').classList.add('hide');['sClient','sAddr','sNotes'].forEach(i=>$(i).value='');}
+function resetForm(){editId=null;$('formTitle').textContent='Nouveau quart de travail';$('sCancel').classList.add('hide');['sClient','sAddr','sNotes'].forEach(i=>$(i).value='');loadFormFiles('s',[]);}
 $('sCancel').onclick=resetForm;
 $('sClient').onchange=()=>{const c=clients.find(x=>(x.name||'').trim().toLowerCase()===$('sClient').value.trim().toLowerCase());if(c&&c.addr&&!$('sAddr').value.trim())$('sAddr').value=c.addr;};
-$('sSave').onclick=()=>{
+$('sSave').onclick=async()=>{
   const d={date:$('sDate').value,start:$('sStart').value,end:$('sEnd').value,emp:$('sEmp').value,client:$('sClient').value.trim(),addr:$('sAddr').value.trim(),notes:$('sNotes').value.trim()};
   if(!d.date||!d.start||!d.end){alert('Date et heures requises.');return;}
   if(d.end<=d.start){alert('L’heure de fin doit être après l’heure de début.');return;}
-  guard(api.set('shifts',editId||uid(),d)).then(resetForm).catch(()=>{});
+  $('sSave').disabled=true;
+  try{d.files=await saveFiles('s');await api.set('shifts',editId||uid(),d);deleteFiles('s',removedFiles.s);resetForm();}
+  catch(e){alert('Action impossible : '+msg(e));}
+  finally{$('sSave').disabled=false;}
 };
 $('admList').onclick=e=>{
   const ed=e.target.dataset.edit,dl=e.target.dataset.sdel;
-  if(dl&&confirm('Supprimer ce quart ?'))guard(api.del('shifts',dl)).catch(()=>{});
-  if(ed){const s=shifts.find(x=>x.id===ed);if(!s)return;editId=ed;
+  if(dl&&confirm('Supprimer ce quart ?')){const s0=shifts.find(x=>x.id===dl);guard(api.del('shifts',dl)).then(()=>deleteFiles('s',((s0&&s0.files)||[]).map(f=>f.id))).catch(()=>{});}
+  if(ed){const s=shifts.find(x=>x.id===ed);if(!s)return;editId=ed;loadFormFiles('s',s.files);
     $('sDate').value=s.date;$('sStart').value=s.start;$('sEnd').value=s.end;$('sEmp').value=s.emp||'';$('sClient').value=s.client||'';$('sAddr').value=s.addr||'';$('sNotes').value=s.notes||'';
     $('formTitle').textContent='Modifier le quart';$('sCancel').classList.remove('hide');$('formTitle').scrollIntoView({behavior:'smooth',block:'center'});}
 };
@@ -330,21 +418,24 @@ function renderClients(){
   const l=clients.filter(c=>((c.name||'')+' '+(c.phone||'')+' '+(c.addr||'')+' '+(c.notes||'')).toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||'','fr'));
   $('cCount').textContent=clients.length?'· '+clients.length:'';
   $('clList').innerHTML=clients.map(c=>'<option value="'+esc(c.name)+'">').join('');
-  $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+'</div><div class="acts"><button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
+  $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+filesHTML(c.files,'c')+'</div><div class="acts"><button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
 }
-function resetClient(){cEditId=null;$('cFormTitle').textContent='Nouveau client';$('cCancel').classList.add('hide');['cName','cPhone','cAddr','cNotes'].forEach(i=>$(i).value='');}
+function resetClient(){cEditId=null;$('cFormTitle').textContent='Nouveau client';$('cCancel').classList.add('hide');['cName','cPhone','cAddr','cNotes'].forEach(i=>$(i).value='');loadFormFiles('c',[]);}
 $('cSearch').oninput=renderClients;
 $('cCancel').onclick=resetClient;
-$('cSave').onclick=()=>{
+$('cSave').onclick=async()=>{
   const d={name:$('cName').value.trim(),phone:$('cPhone').value.trim(),addr:$('cAddr').value.trim(),notes:$('cNotes').value.trim()};
   if(!d.name){alert('Le nom du client est requis.');return;}
   const old=clients.find(x=>x.id===cEditId);d.code=(old&&old.code)||newCode();
-  guard(api.set('clients',cEditId||uid(),d)).then(resetClient).catch(()=>{});
+  $('cSave').disabled=true;
+  try{d.files=await saveFiles('c');await api.set('clients',cEditId||uid(),d);deleteFiles('c',removedFiles.c);resetClient();}
+  catch(e){alert('Action impossible : '+msg(e));}
+  finally{$('cSave').disabled=false;}
 };
 $('cList').onclick=e=>{
   const ed=e.target.dataset.cedit,dl=e.target.dataset.cdel;
-  if(dl&&confirm('Supprimer ce client ?')){const c0=clients.find(x=>x.id===dl);if(c0&&c0.code){api.del('visits',c0.code).catch(()=>{});delete visitsCache[c0.code];}guard(api.del('clients',dl)).catch(()=>{});}
-  if(ed){const c=clients.find(x=>x.id===ed);if(!c)return;cEditId=ed;
+  if(dl&&confirm('Supprimer ce client ?')){const c0=clients.find(x=>x.id===dl);if(c0&&c0.code){api.del('visits',c0.code).catch(()=>{});delete visitsCache[c0.code];}guard(api.del('clients',dl)).then(()=>deleteFiles('c',((c0&&c0.files)||[]).map(f=>f.id))).catch(()=>{});}
+  if(ed){const c=clients.find(x=>x.id===ed);if(!c)return;cEditId=ed;loadFormFiles('c',c.files);
     $('cName').value=c.name||'';$('cPhone').value=c.phone||'';$('cAddr').value=c.addr||'';$('cNotes').value=c.notes||'';
     $('cFormTitle').textContent='Modifier le client';$('cCancel').classList.remove('hide');$('cFormTitle').scrollIntoView({behavior:'smooth',block:'center'});}
 };
