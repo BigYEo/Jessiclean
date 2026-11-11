@@ -27,3 +27,10 @@ export const NOTIFY_KEY = "2f1e7219-c1ed-4312-b482-a3537c9f70e7";
 
 // Quoi vous envoyer par courriel
 export const NOTIFY_ON = { soumission: true, message: true, avis: true };
+
+// Paiements affichés dans l'espace client
+// interac : courriel où les clients envoient leurs virements Interac ("" pour masquer)
+export const PAYMENT = { interac: "admin@jessiclean.ca" };
+
+// Numéros de taxes (laissez "" si vous n'êtes pas inscrite à la TPS/TVQ)
+export const TAX_NUMBERS = { tps: "", tvq: "" };

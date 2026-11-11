@@ -79,6 +79,30 @@ service cloud.firestore {
     }
 
     // Horaire client : lisible seulement avec le code exact (pas de liste possible)
+    // Demandes envoyées depuis l'espace client (déplacement, mise à jour de fiche)
+    match /clientInbox/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['code', 'name', 'kind', 'visit', 'message', 'contact', 'changes', 'ts', 'done'])
+        && okStr('code', 20) && exists(/databases/$(database)/documents/visits/$(request.resource.data['code']))
+        && request.resource.data['kind'] in ['move', 'fiche']
+        && okStr('name', 120) && okStr('visit', 40) && okStr('message', 1500) && okStr('contact', 120)
+        && request.resource.data['changes'] is map && request.resource.data['changes'].size() <= 20
+        && request.resource.data['ts'] is int && request.resource.data['done'] == false;
+      allow read, update, delete: if isAdmin();
+    }
+    // Confirmations de visites par le client (une fiche par code)
+    match /confirm/{code} {
+      allow get: if true;
+      allow list, delete: if isAdmin();
+      allow create, update: if exists(/databases/$(database)/documents/visits/$(code))
+        && request.resource.data.keys().hasOnly(['keys', 'ts'])
+        && request.resource.data['keys'] is list && request.resource.data['keys'].size() <= 100
+        && request.resource.data['ts'] is int;
+    }
+    // Factures : admin seulement (le client les voit via son horaire)
+    match /invoices/{id} {
+      allow read, write: if isAdmin();
+    }
+
     match /visits/{code} {
       allow get: if true;
       allow list: if false;

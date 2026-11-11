@@ -63,6 +63,13 @@ Retirer l'employée dans Admin lui enlève immédiatement l'accès à l'horaire.
 
 **Espace client** : le code est mémorisé sur l'appareil du client ; il peut ajouter ses visites à son calendrier et vous écrire (les messages arrivent dans Admin → Demandes et messages).
 
+## Espace client : confirmations, fiche, factures
+
+- **Confirmations** : le client clique « Je confirme » sur une visite ; l'Admin affiche « ✓ Confirmée par le client » sur le quart.
+- **Déplacements et mises à jour de fiche** : ils arrivent dans **Admin → Demandes des clients**. Pour une fiche, « Appliquer à la fiche » copie les changements dans la fiche client. La méthode d'entrée actuelle n'est jamais affichée au client (il peut seulement en donner une nouvelle).
+- **Factures** : **Admin → Factures**. Choisissez le client, la description et le montant ; cochez TPS/TVQ si vous êtes inscrite. Le client voit le montant dû, imprime ses factures et paie par virement Interac (courriel dans `firebase-config.js` → `PAYMENT`) ou par un lien de paiement en ligne optionnel. Cliquez « Marquer payée » à la réception du paiement.
+- Numéros de TPS/TVQ à afficher sur les factures : `firebase-config.js` → `TAX_NUMBERS`.
+
 ## Notifications par courriel
 
 Chaque nouvelle demande de soumission, message client ou avis vous est envoyé par courriel via [Web3Forms](https://web3forms.com) (gratuit).

@@ -306,6 +306,45 @@ input,select,textarea{font-size:1.1rem;padding:13px 14px}
 .calbtn{font-size:1.02rem}
 @media (max-width:480px){.hero h1{font-size:3rem}.sec h2{font-size:2.3rem}}
 @media (max-width:560px){header .bar{flex-wrap:nowrap;padding:6px 8px;gap:4px}.logo img{height:36px}.logo{padding:2px 2px;flex-shrink:0}header nav{flex-wrap:nowrap;gap:0}header nav button{font-size:.95rem;padding:9px 9px;white-space:nowrap}}
+.ctabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 26px;padding:6px;background:#fff;border:1px solid var(--bd);border-radius:999px;width:max-content;max-width:100%}
+.ctabs button{border:0;background:none;font:inherit;font-size:1.05rem;color:#4d4153;padding:11px 18px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.ctabs button[aria-selected=true]{background:var(--metal);color:#fff;box-shadow:0 6px 16px -8px rgba(94,44,102,.6)}
+.cbadge{background:#c0392b;color:#fff;border-radius:999px;font-size:.8rem;padding:1px 8px;font-weight:600}
+@media (max-width:640px){.ctabs{border-radius:20px;width:100%;display:grid;grid-template-columns:1fr 1fr}.ctabs button{justify-content:center;padding:12px 8px;font-size:1rem}}
+.cbox{background:#fff;border:1px solid var(--bd);border-radius:24px;padding:24px;margin-top:20px}
+.cbox fieldset{border:0;border-top:1px solid var(--bd);padding:14px 0 0;margin:18px 0 0;min-width:0}
+.cbox fieldset:first-of-type{border-top:0;margin-top:0;padding-top:0}
+.cbox legend{font-weight:500;font-size:1.3rem;color:var(--plum);padding:0 10px 0 0}
+.cbox label{color:#4d4153}
+.hint{font-size:.88rem;color:#7a6d80}
+.crow{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.crow .metal{margin:0}
+.vact{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.okbtn{border:1.5px solid var(--orchid);background:#fff;color:var(--plum);border-radius:999px;padding:9px 16px;font:inherit;font-size:1rem;cursor:pointer}
+.okbtn:hover{background:var(--ac2)}
+.okdone{display:inline-flex;align-items:center;gap:6px;color:#2f7d4f;font-weight:600;font-size:1rem;padding:9px 4px}
+.vrow{grid-template-columns:64px 1fr}
+.vrow .vact{grid-column:1/-1;border-top:1px solid var(--bd);padding-top:10px}
+@media (min-width:700px){.vrow{grid-template-columns:64px 1fr auto}.vrow .vact{grid-column:auto;border-top:0;padding-top:0}}
+details.past{background:#fff;border:1px solid var(--bd);border-radius:20px;padding:4px 20px;margin-top:30px}
+details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(--plum)}
+.prow{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--bd);color:#4d4153}
+.prow b{font-weight:500;color:var(--ink);text-transform:capitalize}
+.duecard{border-radius:24px;padding:26px;background:var(--metal);color:#fff;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;box-shadow:0 24px 50px -28px rgba(59,26,66,.6)}
+.duecard span{font-size:1.1rem;opacity:.9}
+.duecard b{display:block;font-size:clamp(2.4rem,7vw,3.4rem);font-weight:400;letter-spacing:-.02em;line-height:1.05}
+.duecard.ok{background:#fff;color:var(--plum);border:1px solid var(--bd);box-shadow:none}
+.paybox{background:#fff;border:1px solid var(--bd);border-radius:20px;padding:20px 22px;margin-top:16px}
+.paybox h3{margin:0 0 6px;font-size:1.2rem;color:var(--plum);font-weight:500}
+.paybox p{margin:4px 0;color:#4d4153}
+.paybox code{font-family:inherit;font-weight:600;color:var(--plum);background:var(--ac2);padding:2px 8px;border-radius:8px}
+.inv{display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center;background:#fff;border:1px solid var(--bd);border-radius:18px;padding:16px 18px;margin-bottom:10px}
+.inv b{font-weight:500;color:var(--ink)}
+.inv .amt{font-size:1.35rem;color:var(--plum);text-align:right}
+.inv .desc{color:#5c4f62;font-size:.98rem}
+.inv .vact{grid-column:1/-1}
+.chip-due,.chip-paid{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.85rem;font-weight:600;margin-left:6px}
+.chip-due{background:#fdecea;color:#a3271b}.chip-paid{background:#e6f4ec;color:#2f7d4f}
 .policy-note{font-size:.95rem;color:#5c4f62;margin:14px 0 0}
 .policy-note a{color:var(--plum)}
 .hide{display:none!important}
@@ -432,11 +471,68 @@ input,select,textarea{font-size:1.1rem;padding:13px 14px}
 
   <div id="cHome" class="hide">
    <div class="chead"><div><p class="kicker">Mon espace client</p><h1 id="cHello"></h1></div><button class="textlink" id="vLogout" type="button">Changer de code</button></div>
-   <div id="cNext"></div>
-   <div id="cMoreWrap"><h2 class="ch2">Visites à venir</h2><div id="cUpcoming"></div></div>
+   <div class="ctabs" role="tablist" aria-label="Sections de mon espace">
+    <button role="tab" data-ct="visites" aria-selected="true">Mes visites</button>
+    <button role="tab" data-ct="fiche" aria-selected="false">Ma fiche</button>
+    <button role="tab" data-ct="factures" aria-selected="false">Mes factures <span class="cbadge hide" id="cDueBadge"></span></button>
+    <button role="tab" data-ct="ecrire" aria-selected="false">Nous écrire</button>
+   </div>
+
+   <div class="cpanel" id="cp-visites" role="tabpanel">
+    <div id="cNext"></div>
+    <div id="cMoreWrap"><h2 class="ch2">Visites à venir</h2><div id="cUpcoming"></div></div>
+    <div id="cPastWrap" class="hide"><details class="past"><summary>Visites passées <span id="cPastCount"></span></summary><div id="cPast"></div></details></div>
+    <div id="moveBox" class="cbox hide">
+     <h2 class="ch2" style="margin-top:0">Demander à déplacer une visite</h2>
+     <p class="lead" id="moveWhich"></p>
+     <form id="moveForm" novalidate>
+      <div id="moveNote" class="note hide" role="status"></div>
+      <label for="moveMsg">Quand vous conviendrait-il&nbsp;?</label><textarea id="moveMsg" rows="3" maxlength="800" placeholder="Ex. : jeudi après-midi ou vendredi matin"></textarea>
+      <label for="moveContact">Téléphone ou courriel pour vous répondre</label><input id="moveContact" maxlength="120">
+      <div class="crow"><button class="metal" id="moveSend" type="submit">Envoyer la demande</button><button class="textlink" type="button" id="moveCancel">Annuler</button></div>
+     </form>
+    </div>
+   </div>
+
+   <div class="cpanel hide" id="cp-fiche" role="tabpanel">
+    <h2 class="ch2" style="margin-top:0">Ma fiche</h2>
+    <p class="lead">Gardez vos informations à jour. Vos changements sont envoyés à Jessiclean et appliqués après vérification.</p>
+    <form id="fForm" class="cbox" novalidate>
+     <div id="fNote" class="note hide" role="status"></div>
+     <fieldset><legend>Mes coordonnées</legend>
+      <label for="f_addr">Adresse</label><input id="f_addr" maxlength="200">
+      <div class="row st"><div><label for="f_phone">Téléphone</label><input id="f_phone" type="tel" maxlength="30"></div><div><label for="f_email">Courriel</label><input id="f_email" type="email" maxlength="120"></div></div>
+      <label for="f_urgent">À joindre en cas de problème</label><input id="f_urgent" maxlength="160" placeholder="Nom et téléphone">
+     </fieldset>
+     <fieldset><legend>Mon espace</legend>
+      <div class="row st"><div><label for="f_habitat">Type d’habitat</label><select id="f_habitat"><option value=""></option><option>Maison</option><option>Condo / appartement</option><option>Jumelé</option><option>Maison de ville</option><option>Chalet</option><option>Commercial</option><option>Autre</option></select></div>
+      <div><label for="f_rooms">Nombre de pièces</label><input id="f_rooms" maxlength="80"></div></div>
+      <div class="row st"><div><label for="f_basement">Nettoyage du sous-sol</label><select id="f_basement"><option value=""></option><option>Oui</option><option>Non</option><option>Pas de sous-sol</option><option>Sur demande</option></select></div>
+      <div><label for="f_pets">Animaux / enfants</label><input id="f_pets" maxlength="120"></div></div>
+      <div class="row st"><div><label for="f_vacuum">Emplacement de l’aspirateur</label><input id="f_vacuum" maxlength="160"></div><div><label for="f_products">Emplacement des produits</label><input id="f_products" maxlength="160"></div></div>
+      <label for="f_trash">Poubelles</label><input id="f_trash" maxlength="160">
+      <label for="f_entry">Méthode d’entrée <span class="hint">(pour votre sécurité, l’actuelle n’est pas affichée : laissez vide si rien ne change)</span></label><input id="f_entry" maxlength="200" autocomplete="off">
+     </fieldset>
+     <fieldset><legend>Mes disponibilités</legend>
+      <label>Journées préférées</label><div class="daypick" id="f_days"><label><input type="checkbox" value="Lundi">Lundi</label><label><input type="checkbox" value="Mardi">Mardi</label><label><input type="checkbox" value="Mercredi">Mercredi</label><label><input type="checkbox" value="Jeudi">Jeudi</label><label><input type="checkbox" value="Vendredi">Vendredi</label><label><input type="checkbox" value="Samedi">Samedi</label><label><input type="checkbox" value="Dimanche">Dimanche</label></div>
+      <label for="f_hours">Heures</label><input id="f_hours" maxlength="80">
+      <label for="f_availNote">Consignes ou note</label><textarea id="f_availNote" rows="2" maxlength="600"></textarea>
+     </fieldset>
+     <button class="metal" id="fSend" type="submit">Envoyer mes changements</button>
+    </form>
+   </div>
+
+   <div class="cpanel hide" id="cp-factures" role="tabpanel">
+    <div id="cDue"></div>
+    <div id="cPay"></div>
+    <h2 class="ch2">Mes factures</h2>
+    <div id="cInv"></div>
+   </div>
+
+   <div class="cpanel hide" id="cp-ecrire" role="tabpanel">
    <div class="cmsg">
-    <h2 class="ch2">Besoin de changer quelque chose&nbsp;?</h2>
-    <p class="lead">Déplacer une visite, ajouter une tâche, laisser une consigne : écrivez-nous, on vous répond rapidement.</p>
+    <h2 class="ch2" style="margin-top:0">Besoin de changer quelque chose&nbsp;?</h2>
+    <p class="lead">Ajouter une tâche, laisser une consigne, poser une question : écrivez-nous, on vous répond rapidement.</p>
     <form id="mForm" novalidate>
      <div id="mNote" class="note hide" role="status"></div>
      <label for="mText">Votre message</label><textarea id="mText" rows="3" maxlength="1200"></textarea>
@@ -444,6 +540,7 @@ input,select,textarea{font-size:1.1rem;padding:13px 14px}
      <button class="metal" id="mSend" type="submit">Envoyer le message</button>
      <p class="policy-note">Voir notre <a href="politique-confidentialite.html">politique de confidentialité</a>.</p>
     </form>
+   </div>
    </div>
   </div>
  </div>
@@ -468,7 +565,17 @@ input,select,textarea{font-size:1.1rem;padding:13px 14px}
 </section>
 
 <section id="v-admin" class="app hide">
- <div class="card"><h2>Demandes et messages <span class="mut" id="qCount"></span></h2><div id="qList"><p class="mut">Aucune demande pour le moment.</p></div></div>
+ <div class="card"><h2>Demandes des clients <span class="mut" id="ibCount"></span></h2><p class="mut">Déplacements de visites et mises à jour de fiche envoyés depuis l’espace client.</p><div id="ibList"><p class="mut">Aucune demande pour le moment.</p></div></div>
+ <div class="card"><h2>Soumissions et messages <span class="mut" id="qCount"></span></h2><div id="qList"><p class="mut">Aucune demande pour le moment.</p></div></div>
+ <div class="card"><h2>Factures <span class="mut" id="invCount"></span></h2>
+  <div id="invList"><p class="mut">Aucune facture pour le moment.</p></div>
+  <h2 id="invFormTitle" style="margin-top:22px">Nouvelle facture</h2>
+  <div class="row st"><div><label for="iClient">Client</label><select id="iClient"></select></div><div><label for="iDate">Date</label><input type="date" id="iDate"></div></div>
+  <label for="iDesc">Description</label><textarea id="iDesc" rows="2" maxlength="400" placeholder="Ex. : Ménage régulier – novembre (4 visites)"></textarea>
+  <div class="row st"><div><label for="iSub">Montant avant taxes ($)</label><input type="number" id="iSub" min="0" step="0.01" inputmode="decimal"></div><div><label for="iPay">Lien de paiement en ligne (optionnel)</label><input id="iPay" type="url" placeholder="https://…"></div></div>
+  <label style="display:flex;align-items:center;gap:8px;margin-top:14px"><input type="checkbox" id="iTax" style="width:auto;margin:0;accent-color:var(--ac)"> Ajouter la TPS (5 %) et la TVQ (9,975 %)</label>
+  <p class="mut" id="iTotal"></p>
+  <button class="btn" id="iSave">Créer la facture</button> <button class="btn sec hide" id="iCancel">Annuler</button></div>
  <div class="card"><h2>Employées</h2>
   <p class="mut">Le courriel sert à la connexion : créez ensuite le compte dans Firebase (Authentication → Ajouter un utilisateur) avec ce même courriel.</p>
   <div class="chips" id="empChips"></div>
@@ -521,6 +628,7 @@ input,select,textarea{font-size:1.1rem;padding:13px 14px}
 <script type="module">
 import * as CFG from './firebase-config.js';
 const { firebaseConfig, ADMIN_EMAILS } = CFG;
+const PAYMENT=Object.assign({interac:''},CFG.PAYMENT||{}),TAXNO=Object.assign({tps:'',tvq:''},CFG.TAX_NUMBERS||{});
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -529,8 +637,8 @@ const admins=(ADMIN_EMAILS||[]).map(e=>String(e).trim().toLowerCase());
 $('yr').textContent=new Date().getFullYear();
 
 let api=null,user=null,isAdmin=false,rating=0,editId=null,cEditId=null;
-let requests=[],reviews=[],shifts=[],emps=[],clients=[],empDenied=false;
-const loaded={shifts:false,employees:false,clients:false};
+let inbox=[],invoices=[],confirms=[],requests=[],reviews=[],shifts=[],emps=[],clients=[],empDenied=false;
+const loaded={shifts:false,employees:false,clients:false,invoices:false};
 let unsubs=[];
 
 /* ───────── Notifications par courriel (Web3Forms) ───────── */
@@ -600,7 +708,7 @@ function renderReviews(){
   $('revList').innerHTML=n?l.map(r=>{const k=Math.max(0,Math.min(5,+r.stars||0));return '<figure class="rev" style="margin:0"><q>'+esc(r.text)+'</q><figcaption class="by"><span>'+esc(r.name)+'</span><span class="st" aria-label="'+k+' sur 5">'+'★'.repeat(k)+'</span></figcaption>'+(isAdmin?'<button class="btn del sm" data-del="'+esc(r.id)+'">Supprimer</button>':'')+'</figure>';}).join(''):'<p class="mut">Aucun avis pour l’instant. Soyez la première personne à en laisser un.</p>';
 }
 function shiftHTML(s,admin){
-  return '<div class="shift"><div><b>'+esc(s.start)+' – '+esc(s.end)+'</b> · '+esc(s.client||'Client')+(admin?' <span class="mut">('+esc(empName(s.emp))+')</span>':'')+
+  return '<div class="shift"><div><b>'+esc(s.start)+' – '+esc(s.end)+'</b> · '+esc(s.client||'Client')+(admin?' <span class="mut">('+esc(empName(s.emp))+')</span>':'')+(admin&&isConfirmed(s)?' <span class="chip-paid">✓ Confirmée par le client</span>':'')+
   (s.addr?'<div class="mut">📍 <a href="https://maps.google.com/?q='+encodeURIComponent(s.addr)+'" target="_blank" rel="noopener" style="color:inherit">'+esc(s.addr)+'</a></div>':'')+(s.notes?'<div class="mut">📝 '+esc(s.notes)+'</div>':'')+filesHTML(s.files,'s')+((ci=>ci?ficheHTML(ci,true,'Infos du client'):'')(s.client&&infoFor(s.client)))+'</div>'+
   (admin?'<div class="acts"><button class="btn sec sm" data-edit="'+esc(s.id)+'">Modifier</button><button class="btn del sm" data-sdel="'+esc(s.id)+'" aria-label="Supprimer">✕</button></div>':'')+'</div>';
 }
@@ -683,7 +791,7 @@ $('qForm').onsubmit=async e=>{
 };
 function renderRequests(){
   const open=requests.filter(r=>!r.done).length;
-  $('tabAdmin').textContent=open?'Admin ('+open+')':'Admin';
+  updateAdminBadge();
   if(!isAdmin)return;
   $('qCount').textContent=requests.length?'· '+open+' à traiter':'';
   const l=[...requests].sort((a,b)=>(a.done-b.done)||((b.ts||0)-(a.ts||0)));
@@ -707,6 +815,84 @@ $('qList').onclick=e=>{
     $('cNotes').value='Demande de soumission : '+(r.service||'')+(r.message?'\n'+r.message:'');
     $('cFormTitle').textContent='Nouvelle fiche : '+r.name;$('cCancel').classList.remove('hide');
     $('cFormTitle').scrollIntoView({behavior:'smooth',block:'start'});}
+};
+
+/* Confirmations, demandes des clients, factures (admin) */
+function isConfirmed(s){
+  const c=clients.find(x=>nk(x.name)===nk(s.client));if(!c||!c.code)return false;
+  const cf=confirms.find(x=>x.id===c.code);return !!(cf&&(cf.keys||[]).includes(s.date+'_'+s.start));
+}
+function updateAdminBadge(){
+  const n=requests.filter(r=>!r.done).length+inbox.filter(r=>!r.done).length;
+  $('tabAdmin').textContent=n?'Admin ('+n+')':'Admin';
+}
+const LBL={addr:'Adresse',phone:'Téléphone',email:'Courriel',urgent:'À joindre en cas de problème',habitat:'Type d’habitat',rooms:'Nombre de pièces',basement:'Sous-sol',pets:'Animaux / enfants',vacuum:'Aspirateur',products:'Produits',trash:'Poubelles',days:'Journées',hours:'Heures',availNote:'Note',entry:'Méthode d’entrée'};
+const KEYMAP={availNote:'availNote'};
+function renderInbox(){
+  updateAdminBadge();if(!isAdmin)return;
+  const open=inbox.filter(r=>!r.done).length;
+  $('ibCount').textContent=inbox.length?'· '+open+' à traiter':'';
+  const l=[...inbox].sort((a,b)=>(a.done-b.done)||((b.ts||0)-(a.ts||0)));
+  $('ibList').innerHTML=l.length?l.map(r=>{
+    const c=clients.find(x=>x.code===r.code);
+    const when=new Date(r.ts||0).toLocaleString('fr-CA',{dateStyle:'medium',timeStyle:'short'});
+    let body='';
+    if(r.kind==='move'){const [d,t]=String(r.visit||'').split('_');body='<div><b>Déplacer la visite du '+esc(d?dObj(d).toLocaleDateString('fr-CA',{weekday:'long',day:'numeric',month:'long'}):'')+(t?' à '+esc(fmtH(t)):'')+'</b></div><div class="mut" style="white-space:pre-wrap">Souhaite : '+esc(r.message)+'</div>';}
+    else{body='<div><b>Mise à jour de fiche</b></div><div class="fiche"><dl>'+Object.entries(r.changes||{}).map(([k,v])=>'<dt>'+esc(LBL[k]||k)+'</dt><dd>'+(esc(Array.isArray(v)?v.join(', '):v)||'<i>(effacé)</i>')+'</dd>').join('')+'</dl></div>';}
+    return '<div class="shift'+(r.done?' done':'')+'"><div><b>'+esc(r.name||'Client')+'</b>'+(c?'':' <span class="mut">(fiche introuvable)</span>')+'<div class="mut">Reçue le '+esc(when)+'</div>'+body+
+      (r.contact?'<div class="mut">Pour répondre : '+(r.contact.includes('@')?'<a href="mailto:'+esc(r.contact)+'">':'<a href="tel:'+esc(r.contact)+'">')+esc(r.contact)+'</a></div>':'')+'</div>'+
+      '<div class="acts">'+(r.kind==='fiche'&&c&&!r.done?'<button class="btn sm" data-ibapply="'+esc(r.id)+'">Appliquer à la fiche</button>':'')+
+      '<button class="btn sec sm" data-ibdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-ibdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>';
+  }).join(''):'<p class="mut">Aucune demande pour le moment.</p>';
+}
+$('ibList').onclick=async e=>{
+  const ap=e.target.dataset.ibapply,dn=e.target.dataset.ibdone,dl=e.target.dataset.ibdel;
+  if(ap){const r=inbox.find(x=>x.id===ap),c=r&&clients.find(x=>x.code===r.code);if(!r||!c)return;
+    if(!confirm('Appliquer ces changements à la fiche de '+c.name+' ?'))return;
+    const upd={};Object.entries(r.changes||{}).forEach(([k,v])=>{if(k in LBL)upd[k]=v;});
+    try{await api.update('clients',c.id,upd);await api.update('clientInbox',r.id,{done:true});}catch(err){alert('Action impossible : '+msg(err));}}
+  if(dn){const r=inbox.find(x=>x.id===dn);if(r)guard(api.update('clientInbox',dn,{done:!r.done})).catch(()=>{});}
+  if(dl&&confirm('Supprimer cette demande ?'))guard(api.del('clientInbox',dl)).catch(()=>{});
+};
+/* Factures */
+const r2=n=>Math.round((+n||0)*100)/100;
+function invTotals(){const sub=r2($('iSub').value),tax=$('iTax').checked,tps=tax?r2(sub*0.05):0,tvq=tax?r2(sub*0.09975):0;return {sub,tps,tvq,total:r2(sub+tps+tvq)};}
+function showInvTotal(){const t=invTotals();$('iTotal').textContent=t.sub?('Total : '+money(t.total)+($('iTax').checked?' (dont TPS '+money(t.tps)+' et TVQ '+money(t.tvq)+')':'')):'';}
+$('iSub').oninput=showInvTotal;$('iTax').onchange=showInvTotal;
+function nextInvNo(){const y=new Date().getFullYear(),pre='F-'+y+'-';const n=invoices.map(i=>String(i.no||'')).filter(x=>x.startsWith(pre)).map(x=>+x.slice(pre.length)||0);return pre+String((n.length?Math.max(...n):0)+1).padStart(3,'0');}
+let invEditId=null;
+function resetInv(){invEditId=null;$('invFormTitle').textContent='Nouvelle facture';$('iCancel').classList.add('hide');$('iSave').textContent='Créer la facture';$('iDesc').value='';$('iSub').value='';$('iPay').value='';$('iTax').checked=false;$('iDate').value=today();showInvTotal();}
+$('iCancel').onclick=resetInv;
+function renderInvoices(){
+  if(!isAdmin)return;
+  const cur=$('iClient').value;
+  $('iClient').innerHTML='<option value="">— Choisir —</option>'+[...clients].sort((a,b)=>(a.name||'').localeCompare(b.name||'','fr')).map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join('');
+  $('iClient').value=cur;if(!$('iDate').value)$('iDate').value=today();
+  const due=invoices.filter(i=>i.status==='due');
+  $('invCount').textContent=invoices.length?'· '+due.length+' à payer ('+money(due.reduce((t,i)=>t+(+i.total||0),0))+')':'';
+  const l=[...invoices].sort((a,b)=>(a.status===b.status?0:a.status==='due'?-1:1)||String(b.no).localeCompare(String(a.no)));
+  $('invList').innerHTML=l.length?l.map(i=>{const c=clients.find(x=>x.id===i.clientId);return '<div class="shift'+(i.status==='paid'?' done':'')+'"><div><b>'+esc(i.no)+'</b> · '+esc(c?c.name:'(client supprimé)')+' · <b>'+money(i.total)+'</b>'+(i.status==='paid'?'<span class="chip-paid">Payée</span>':'<span class="chip-due">À payer</span>')+
+    '<div class="mut">'+esc(dObj(i.date).toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'}))+(i.desc?' · '+esc(i.desc):'')+'</div></div>'+
+    '<div class="acts"><button class="btn sm" data-ipaid="'+esc(i.id)+'">'+(i.status==='paid'?'Remettre à payer':'Marquer payée')+'</button><button class="btn sec sm" data-iprint="'+esc(i.id)+'">Imprimer</button><button class="btn sec sm" data-iedit="'+esc(i.id)+'">Modifier</button><button class="btn del sm" data-idel="'+esc(i.id)+'" aria-label="Supprimer">✕</button></div></div>';}).join(''):'<p class="mut">Aucune facture pour le moment.</p>';
+}
+$('iSave').onclick=async()=>{
+  const cid=$('iClient').value,t=invTotals();
+  if(!cid){alert('Choisissez un client.');return;}
+  if(!$('iDate').value){alert('Indiquez la date.');return;}
+  if(!(t.sub>0)){alert('Indiquez un montant.');return;}
+  const pay=$('iPay').value.trim();if(pay&&!/^https:\/\//.test(pay)){alert('Le lien de paiement doit commencer par https://');return;}
+  const old=invoices.find(i=>i.id===invEditId);
+  const d=Object.assign({clientId:cid,date:$('iDate').value,desc:$('iDesc').value.trim(),payUrl:pay,no:old?old.no:nextInvNo(),status:old?old.status:'due',paidDate:old?(old.paidDate||''):''},t);
+  $('iSave').disabled=true;
+  try{await api.set('invoices',invEditId||uid(),d);resetInv();}catch(e){alert('Action impossible : '+msg(e));}finally{$('iSave').disabled=false;}
+};
+$('invList').onclick=e=>{
+  const pd=e.target.dataset.ipaid,pr=e.target.dataset.iprint,ed=e.target.dataset.iedit,dl=e.target.dataset.idel;
+  if(pd){const i=invoices.find(x=>x.id===pd);if(i)guard(api.update('invoices',pd,i.status==='paid'?{status:'due',paidDate:''}:{status:'paid',paidDate:today()})).catch(()=>{});}
+  if(pr){const i=invoices.find(x=>x.id===pr),c=i&&clients.find(x=>x.id===i.clientId);if(i)openInvoice(i,{name:c?c.name:'',addr:c?c.addr:''});}
+  if(ed){const i=invoices.find(x=>x.id===ed);if(!i)return;invEditId=ed;$('iClient').value=i.clientId;$('iDate').value=i.date;$('iDesc').value=i.desc||'';$('iSub').value=i.sub;$('iPay').value=i.payUrl||'';$('iTax').checked=(+i.tps||0)>0;showInvTotal();
+    $('invFormTitle').textContent='Modifier la facture '+i.no;$('iSave').textContent='Enregistrer';$('iCancel').classList.remove('hide');$('invFormTitle').scrollIntoView({behavior:'smooth',block:'center'});}
+  if(dl&&confirm('Supprimer cette facture ?'))guard(api.del('invoices',dl)).catch(()=>{});
 };
 
 /* Connexion */
@@ -853,6 +1039,7 @@ function ficheHTML(c,staffOnly,title){
   return body?'<details class="fiche"><summary>'+esc(title)+'</summary>'+body+'</details>':'';
 }
 function renderClients(){
+  if(isAdmin){setTimeout(()=>{renderInvoices();renderInbox();});}
   const q=$('cSearch').value.toLowerCase();
   const l=clients.filter(c=>(CFIELDS.map(f=>[].concat(c[f[1]]||'').join(' ')).join(' ')+' '+(c.notes||'')).toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||'','fr'));
   $('cCount').textContent=clients.length?'· '+clients.length:'';
@@ -887,7 +1074,7 @@ $('cList').onclick=e=>{
 /* ───────── Horaire visible par les clients ───────── */
 function newCode(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=new Uint32Array(8);crypto.getRandomValues(r);let s='';for(let i=0;i<8;i++)s+=a[r[i]%a.length];return s;}
 let visitsCache={},infoCache={},syncT=null,syncing=false;
-function scheduleSync(){if(!isAdmin||!api||!loaded.shifts||!loaded.employees||!loaded.clients)return;clearTimeout(syncT);syncT=setTimeout(syncVisits,1200);}
+function scheduleSync(){if(!isAdmin||!api||!loaded.shifts||!loaded.employees||!loaded.clients||!loaded.invoices)return;clearTimeout(syncT);syncT=setTimeout(syncVisits,1200);}
 async function syncVisits(){
   if(syncing){scheduleSync();return;}
   syncing=true;
@@ -898,8 +1085,13 @@ async function syncVisits(){
       const ih=JSON.stringify(info);
       if(infoCache[c.id]!==ih){infoCache[c.id]=ih;await api.set('clientInfo',c.id,info).catch(()=>{infoCache[c.id]=null;});}
       const key=(c.name||'').trim().toLowerCase();
-      const v=shifts.filter(s=>(s.client||'').trim().toLowerCase()===key&&s.date>=today()).sort(byTime).map(s=>({date:s.date,start:s.start,end:s.end,emp:s.emp?empName(s.emp).split(' ')[0]:''}));
-      const payload={name:c.name,visits:v},h=JSON.stringify(payload);
+      const mine=shifts.filter(s=>(s.client||'').trim().toLowerCase()===key).sort(byTime).map(s=>({date:s.date,start:s.start,end:s.end,emp:s.emp?empName(s.emp).split(' ')[0]:''}));
+      const v=mine.filter(s=>s.date>=today());
+      const yearAgo=new Date(Date.now()-365*864e5).toISOString().slice(0,10);
+      const past=mine.filter(s=>s.date<today()&&s.date>=yearAgo).slice(-30);
+      const fiche={};FICHE_KEYS.forEach(k=>{fiche[k]=k==='days'?(c.days||[]):(c[k]||'');});
+      const inv=invoices.filter(i=>i.clientId===c.id).map(i=>({no:i.no,date:i.date,desc:i.desc||'',sub:i.sub,tps:i.tps,tvq:i.tvq,total:i.total,status:i.status,payUrl:i.payUrl||'',paidDate:i.paidDate||''}));
+      const payload={name:c.name,visits:v,past,fiche,invoices:inv},h=JSON.stringify(payload);
       if(visitsCache[c.code]!==h){visitsCache[c.code]=h;await api.set('visits',c.code,payload).catch(()=>{visitsCache[c.code]=null;});}
     }
   }finally{syncing=false;}
@@ -922,34 +1114,136 @@ function downloadIcs(list,name){
   const url=URL.createObjectURL(new Blob([icsFor(list)],{type:'text/calendar;charset=utf-8'})),a=document.createElement('a');
   a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
+const money=n=>(+n||0).toLocaleString('fr-CA',{style:'currency',currency:'CAD'});
+const vKey=v=>v.date+'_'+v.start;
+let cConfirm=[],moveVisit=null;
+const FICHE_KEYS=['addr','phone','email','urgent','habitat','rooms','basement','pets','vacuum','products','trash','days','hours','availNote'];
+function setTab(t){
+  document.querySelectorAll('.ctabs [data-ct]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.ct===t)));
+  document.querySelectorAll('.cpanel').forEach(p=>p.classList.toggle('hide',p.id!=='cp-'+t));
+}
+document.querySelectorAll('.ctabs [data-ct]').forEach(b=>b.onclick=()=>setTab(b.dataset.ct));
+function visitActs(v,i){
+  const k=vKey(v),ok=cConfirm.includes(k);
+  return '<div class="vact">'+(ok?'<span class="okdone">✓ Confirmée</span>':'<button class="okbtn" data-confirm="'+esc(k)+'">Je confirme</button>')+
+    '<button class="calbtn" data-move="'+i+'">Demander à déplacer</button><button class="calbtn" data-ics="'+i+'" aria-label="Ajouter au calendrier">📅</button></div>';
+}
 function renderClientSpace(){
   const x=cData;if(!x){$('cLogin').classList.remove('hide');$('cHome').classList.add('hide');return;}
   $('cLogin').classList.add('hide');$('cHome').classList.remove('hide');
-  $('cHello').textContent='Bonjour '+(x.name||'')+'\u00a0!';
+  $('cHello').textContent='Bonjour '+(x.name||'')+' !';
   const l=(x.visits||[]).filter(v=>v.date>=today()).sort(byTime);
+  cData._list=l;
+  // passées
+  const past=(x.past||[]).slice().sort((a,b)=>byTime(b,a));
+  $('cPastWrap').classList.toggle('hide',!past.length);
+  $('cPastCount').textContent=past.length?'('+past.length+')':'';
+  $('cPast').innerHTML=past.map(v=>{const d=dObj(v.date);return '<div class="prow"><span><b>'+esc(d.toLocaleDateString('fr-CA',{weekday:'long',day:'numeric',month:'long',year:'numeric'}))+'</b></span><span>'+esc(fmtH(v.start))+' à '+esc(fmtH(v.end))+(v.emp?' · '+esc(v.emp):'')+'</span></div>';}).join('');
   if(!l.length){
     $('cNext').innerHTML='<div class="empty"><b style="color:var(--plum);font-weight:500">Aucune visite prévue pour le moment.</b><br>Dès qu’une visite sera planifiée, elle apparaîtra ici.</div>';
-    $('cMoreWrap').classList.add('hide');return;
+    $('cMoreWrap').classList.add('hide');
+  }else{
+    const n=l[0],d=dObj(n.date);
+    $('cNext').innerHTML='<div class="nextcard"><div class="nextin"><div><span class="when">'+esc(whenLabel(n.date))+'</span>'+
+      '<div class="nextday">'+esc(d.toLocaleDateString('fr-CA',{weekday:'long'}))+'</div><div class="nextdate">'+esc(d.toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'}))+'</div></div>'+
+      '<div class="nexttime"><b>'+esc(fmtH(n.start))+' à '+esc(fmtH(n.end))+'</b>'+(n.emp?'<span>avec '+esc(n.emp)+'</span>':'')+'</div>'+
+      '<div class="nextact">'+visitActs(n,0).replace('<div class="vact">','').replace(/<\/div>$/,'')+(l.length>1?'<button class="calbtn" data-ics="all">Tout ajouter au calendrier ('+l.length+')</button>':'')+'</div></div></div>';
+    const rest=l.slice(1);
+    $('cMoreWrap').classList.toggle('hide',!rest.length);
+    $('cUpcoming').innerHTML=rest.map((v,i)=>{const dd=dObj(v.date);return '<div class="vrow"><div class="vdate"><b>'+dd.getDate()+'</b><span>'+esc(dd.toLocaleDateString('fr-CA',{month:'short'}))+'</span></div>'+
+      '<div class="vinfo"><b>'+esc(dd.toLocaleDateString('fr-CA',{weekday:'long'}))+'</b><div>'+esc(fmtH(v.start))+' à '+esc(fmtH(v.end))+(v.emp?' · avec '+esc(v.emp):'')+'</div></div>'+visitActs(v,i+1)+'</div>';}).join('');
   }
-  const n=l[0],d=dObj(n.date);
-  $('cNext').innerHTML='<div class="nextcard"><div class="nextin"><div><span class="when">'+esc(whenLabel(n.date))+'</span>'+
-    '<div class="nextday">'+esc(d.toLocaleDateString('fr-CA',{weekday:'long'}))+'</div><div class="nextdate">'+esc(d.toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'}))+'</div></div>'+
-    '<div class="nexttime"><b>'+esc(fmtH(n.start))+' à '+esc(fmtH(n.end))+'</b>'+(n.emp?'<span>avec '+esc(n.emp)+'</span>':'')+'</div>'+
-    '<div class="nextact"><button class="calbtn" data-ics="0">Ajouter à mon calendrier</button>'+(l.length>1?'<button class="calbtn" data-ics="all">Ajouter toutes mes visites ('+l.length+')</button>':'')+'</div></div></div>';
-  const rest=l.slice(1);
-  $('cMoreWrap').classList.toggle('hide',!rest.length);
-  $('cUpcoming').innerHTML=rest.map((v,i)=>{const dd=dObj(v.date);return '<div class="vrow"><div class="vdate"><b>'+dd.getDate()+'</b><span>'+esc(dd.toLocaleDateString('fr-CA',{month:'short'}))+'</span></div>'+
-    '<div class="vinfo"><b>'+esc(dd.toLocaleDateString('fr-CA',{weekday:'long'}))+'</b><div>'+esc(fmtH(v.start))+' à '+esc(fmtH(v.end))+(v.emp?' · avec '+esc(v.emp):'')+'</div></div>'+
-    '<button class="calbtn" data-ics="'+(i+1)+'" aria-label="Ajouter au calendrier">📅</button></div>';}).join('');
-  $('cHome').dataset.count=l.length;
-  cData._list=l;
+  // fiche
+  const f=x.fiche||{};
+  FICHE_KEYS.forEach(k=>{if(k==='days')$('f_days').querySelectorAll('input').forEach(i=>i.checked=(f.days||[]).includes(i.value));else if($('f_'+k))$('f_'+k).value=f[k]||'';});
+  $('f_entry').value='';
+  // factures
+  const inv=(x.invoices||[]).slice().sort((a,b)=>(a.status===b.status?0:a.status==='due'?-1:1)||String(b.date).localeCompare(a.date));
+  const due=inv.filter(i=>i.status==='due').reduce((t,i)=>t+(+i.total||0),0);
+  $('cDueBadge').textContent=inv.filter(i=>i.status==='due').length;$('cDueBadge').classList.toggle('hide',!due);
+  $('cDue').innerHTML=due?'<div class="duecard"><div><span>Montant à payer</span><b>'+money(due)+'</b></div></div>':'<div class="duecard ok"><div><span>Montant à payer</span><b>'+money(0)+'</b></div><span>Tout est réglé. Merci&nbsp;!</span></div>';
+  $('cPay').innerHTML=due&&PAYMENT.interac?'<div class="paybox"><h3>Comment payer</h3><p>Par <b>virement Interac</b> à <code>'+esc(PAYMENT.interac)+'</code></p><p>Indiquez le <b>numéro de facture</b> dans le message du virement.</p></div>':'';
+  $('cInv').innerHTML=inv.length?inv.map((i,ix)=>'<div class="inv"><div><b>Facture '+esc(i.no)+'</b>'+(i.status==='paid'?'<span class="chip-paid">Payée</span>':'<span class="chip-due">À payer</span>')+
+    '<div class="desc">'+esc(dObj(i.date).toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'}))+(i.desc?' · '+esc(i.desc):'')+'</div></div><div class="amt">'+money(i.total)+'</div>'+
+    '<div class="vact"><button class="calbtn" data-inv="'+ix+'">Voir / imprimer</button>'+(i.status==='due'&&i.payUrl&&/^https:\/\//.test(i.payUrl)?'<a class="okbtn" style="text-decoration:none" href="'+esc(i.payUrl)+'" target="_blank" rel="noopener">Payer en ligne</a>':'')+'</div></div>').join(''):'<div class="empty">Aucune facture pour le moment.</div>';
+  cData._inv=inv;
+  // contacts pré-remplis
+  if(!$('moveContact').value)$('moveContact').value=f.phone||f.email||'';
+  if(!$('mContact').value)$('mContact').value=f.phone||f.email||'';
 }
-$('v-client').addEventListener('click',e=>{
-  const b=e.target.closest('[data-ics]');if(!b||!cData||!cData._list)return;
-  const l=cData._list;
-  if(b.dataset.ics==='all')downloadIcs(l,'visites-jessiclean.ics');
-  else{const v=l[+b.dataset.ics];if(v)downloadIcs([v],'visite-jessiclean-'+v.date+'.ics');}
+function invoiceHTML(i,client){
+  const dt=dObj(i.date).toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'});
+  const tax=(+i.tps||0)+(+i.tvq||0)>0;
+  return '<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>Facture '+esc(i.no)+' – Jessiclean</title><style>body{font:16px/1.5 system-ui,sans-serif;color:#1e1422;max-width:720px;margin:40px auto;padding:0 24px}h1{font-weight:400;color:#3b1a42;margin:0}header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:2px solid #8a4a91;padding-bottom:18px}img{height:70px}table{width:100%;border-collapse:collapse;margin:28px 0}td,th{padding:10px 8px;border-bottom:1px solid #e6dcea;text-align:left}td.r,th.r{text-align:right}.tot td{font-weight:700;font-size:1.15rem;border-bottom:0}.muted{color:#6c5f72;font-size:.92rem}.st{display:inline-block;padding:3px 12px;border-radius:999px;font-weight:600;'+(i.status==='paid'?'background:#e6f4ec;color:#2f7d4f':'background:#fdecea;color:#a3271b')+'}@media print{.np{display:none}}</style></head><body>'+
+  '<header><div><img src="'+location.origin+location.pathname.replace(/[^/]*$/,'')+'img/logo-sm.jpg" alt="Jessiclean"><div class="muted">819 598-0121 · admin@jessiclean.ca · jessiclean.ca'+(TAXNO.tps?'<br>TPS : '+esc(TAXNO.tps):'')+(TAXNO.tvq?' · TVQ : '+esc(TAXNO.tvq):'')+'</div></div><div style="text-align:right"><h1>Facture</h1><div><b>'+esc(i.no)+'</b></div><div class="muted">'+esc(dt)+'</div><div style="margin-top:6px"><span class="st">'+(i.status==='paid'?'Payée':'À payer')+'</span></div></div></header>'+
+  '<p><b>Facturé à :</b><br>'+esc(client.name||'')+(client.addr?'<br>'+esc(client.addr):'')+'</p>'+
+  '<table><thead><tr><th>Description</th><th class="r">Montant</th></tr></thead><tbody><tr><td>'+esc(i.desc||'Entretien ménager')+'</td><td class="r">'+money(i.sub)+'</td></tr>'+
+  (tax?'<tr><td class="r">TPS (5 %)</td><td class="r">'+money(i.tps)+'</td></tr><tr><td class="r">TVQ (9,975 %)</td><td class="r">'+money(i.tvq)+'</td></tr>':'')+
+  '<tr class="tot"><td class="r">Total</td><td class="r">'+money(i.total)+'</td></tr></tbody></table>'+
+  (i.status==='due'&&PAYMENT.interac?'<p><b>Paiement :</b> virement Interac à '+esc(PAYMENT.interac)+' en indiquant le numéro '+esc(i.no)+'.</p>':'')+
+  (i.status==='paid'&&i.paidDate?'<p class="muted">Payée le '+esc(dObj(i.paidDate).toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'}))+'.</p>':'')+
+  '<p class="muted">Merci de faire confiance à Jessiclean.</p><p class="np"><button onclick="print()" style="font:inherit;padding:10px 18px;border-radius:999px;border:0;background:#8a4a91;color:#fff;cursor:pointer">Imprimer ou enregistrer en PDF</button></p></body></html>';
+}
+function openInvoice(i,client){
+  const w=window.open('','_blank');
+  if(!w){alert('Autorisez les fenêtres pop-up pour afficher la facture.');return;}
+  w.document.open();w.document.write(invoiceHTML(i,client));w.document.close();
+}
+$('v-client').addEventListener('click',async e=>{
+  const c=e.target.closest('[data-confirm]'),m=e.target.closest('[data-move]'),iv=e.target.closest('[data-inv]');
+  const ic=e.target.closest('[data-ics]');
+  if(ic&&cData&&cData._list){const l=cData._list;if(ic.dataset.ics==='all')downloadIcs(l,'visites-jessiclean.ics');else{const v=l[+ic.dataset.ics];if(v)downloadIcs([v],'visite-jessiclean-'+v.date+'.ics');}}
+  if(iv&&cData){const i=cData._inv[+iv.dataset.inv];if(i)openInvoice(i,{name:cData.name,addr:(cData.fiche||{}).addr});}
+  if(c&&cData&&api){
+    c.disabled=true;const keys=[...new Set([...cConfirm,c.dataset.confirm])].filter(k=>k.slice(0,10)>=today()).slice(-100);
+    try{await api.set('confirm',cCode,{keys,ts:Date.now()});cConfirm=keys;renderClientSpace();}
+    catch(_){c.disabled=false;alert('La confirmation n’a pas pu être envoyée. Réessayez dans un instant.');}
+  }
+  if(m&&cData){
+    const v=cData._list[+m.dataset.move];if(!v)return;moveVisit=v;
+    const d=dObj(v.date);
+    $('moveWhich').textContent='Visite du '+d.toLocaleDateString('fr-CA',{weekday:'long',day:'numeric',month:'long'})+', de '+fmtH(v.start)+' à '+fmtH(v.end)+'.';
+    $('moveNote').classList.add('hide');$('moveBox').classList.remove('hide');$('moveBox').scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>$('moveMsg').focus({preventScroll:true}),400);
+  }
 });
+$('moveCancel').onclick=()=>{$('moveBox').classList.add('hide');moveVisit=null;};
+const inboxSend=async(kind,extra)=>api.set('clientInbox',uid(),Object.assign({code:cCode,name:(cData&&cData.name)||'',kind,visit:'',message:'',contact:'',changes:{},ts:Date.now(),done:false},extra));
+$('moveForm').onsubmit=async e=>{
+  e.preventDefault();
+  const note=$('moveNote'),say=(t,er)=>{note.textContent=t;note.classList.toggle('err',!!er);note.classList.remove('hide');};
+  const msgv=$('moveMsg').value.trim(),contact=$('moveContact').value.trim();
+  if(!moveVisit)return;
+  if(!msgv){say('Indiquez quand vous conviendrait-il.',true);$('moveMsg').focus();return;}
+  if(!contact){say('Indiquez un téléphone ou un courriel pour vous répondre.',true);$('moveContact').focus();return;}
+  $('moveSend').disabled=true;
+  try{
+    await inboxSend('move',{visit:vKey(moveVisit),message:msgv.slice(0,1500),contact:contact.slice(0,120)});
+    notifyAdmin('message','Demande de déplacement – '+(cData.name||''),{'Client':cData.name,'Code client':cCode,'Visite':moveVisit.date+' de '+fmtH(moveVisit.start)+' à '+fmtH(moveVisit.end),'Nouveau moment souhaité':msgv,'Pour répondre':contact},contact.includes('@')?contact:'');
+    $('moveMsg').value='';say('Demande envoyée. Nous vous contactons pour confirmer le nouveau moment.');
+  }catch(_){say('La demande n’a pas pu être envoyée. Réessayez dans un instant.',true);}
+  finally{$('moveSend').disabled=false;}
+};
+$('fForm').onsubmit=async e=>{
+  e.preventDefault();
+  const note=$('fNote'),say=(t,er)=>{note.textContent=t;note.classList.toggle('err',!!er);note.classList.remove('hide');note.scrollIntoView({behavior:'smooth',block:'center'});};
+  const f=(cData&&cData.fiche)||{},ch={};
+  FICHE_KEYS.forEach(k=>{
+    if(k==='days'){const v=[...$('f_days').querySelectorAll('input:checked')].map(i=>i.value);if(v.join()!==(f.days||[]).join())ch.days=v;}
+    else{const v=$('f_'+k).value.trim();if(v!==(f[k]||''))ch[k]=v.slice(0,600);}
+  });
+  const en=$('f_entry').value.trim();if(en)ch.entry=en.slice(0,200);
+  if(!Object.keys(ch).length){say('Aucun changement à envoyer.',true);return;}
+  $('fSend').disabled=true;
+  try{
+    await inboxSend('fiche',{changes:ch,contact:(ch.phone||f.phone||ch.email||f.email||'').slice(0,120)});
+    const LBL={addr:'Adresse',phone:'Téléphone',email:'Courriel',urgent:'À joindre en cas de problème',habitat:'Type d’habitat',rooms:'Nombre de pièces',basement:'Sous-sol',pets:'Animaux / enfants',vacuum:'Aspirateur',products:'Produits',trash:'Poubelles',days:'Journées',hours:'Heures',availNote:'Note',entry:'Méthode d’entrée'};
+    const fields={'Client':cData.name,'Code client':cCode};Object.entries(ch).forEach(([k,v])=>fields[LBL[k]||k]=k==='entry'?'(modifiée – voir l’Admin)':(Array.isArray(v)?v.join(', '):v)||'(effacé)');
+    notifyAdmin('message','Mise à jour de fiche – '+(cData.name||''),fields);
+    $('f_entry').value='';say('Merci ! Vos changements ont été envoyés. Ils seront appliqués à votre fiche après vérification.');
+  }catch(_){say('Les changements n’ont pas pu être envoyés. Réessayez dans un instant.',true);}
+  finally{$('fSend').disabled=false;}
+};
 async function openCode(code,remember,quiet){
   code=cleanCode(code);const err=t=>{if(quiet)return;$('vErr').textContent=t;$('vErr').classList.remove('hide');};
   $('vErr').classList.add('hide');
@@ -960,6 +1254,8 @@ async function openCode(code,remember,quiet){
     const x=await api.get('visits',code);
     if(!x){err('Ce code ne correspond à aucun dossier. Vérifiez-le ou écrivez-nous.');if(quiet)store.set('');return false;}
     cData=x;cCode=code;if(remember)store.set(code);
+    try{const cf=await api.get('confirm',code);cConfirm=(cf&&cf.keys)||[];}catch(_){cConfirm=[];}
+    setTab('visites');
     renderClientSpace();return true;
   }catch(e){err('Impossible de charger vos visites pour le moment. Réessayez dans un instant.');return false;}
   finally{$('vGo').disabled=false;}
@@ -985,13 +1281,16 @@ $('mForm').onsubmit=async e=>{
 function clientLink(code){return location.origin+location.pathname+'?code='+encodeURIComponent(code)+'#client';}
 
 /* ───────── Démarrage ───────── */
-function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};infoCache={};infos=[];Object.keys(loaded).forEach(k=>loaded[k]=false);}
+function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];inbox=[];invoices=[];confirms=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};infoCache={};infos=[];Object.keys(loaded).forEach(k=>loaded[k]=false);}
 function startPrivate(){
   unsubs.push(api.listen('employees',l=>{emps=l;empDenied=false;loaded.employees=true;renderEmp();renderAdmin();scheduleSync();},()=>{empDenied=true;renderEmp();}));
   unsubs.push(api.listen('shifts',l=>{shifts=l;loaded.shifts=true;renderEmp();renderAdmin();scheduleSync();},()=>{}));
   if(!isAdmin)unsubs.push(api.listen('clientInfo',l=>{infos=l;renderEmp();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('requests',l=>{requests=l;renderRequests();},()=>{}));
-  if(isAdmin)unsubs.push(api.listen('clients',l=>{clients=l;loaded.clients=true;renderClients();scheduleSync();},()=>{}));
+  if(isAdmin)unsubs.push(api.listen('clientInbox',l=>{inbox=l;renderInbox();},()=>{}));
+  if(isAdmin)unsubs.push(api.listen('invoices',l=>{invoices=l;loaded.invoices=true;renderInvoices();scheduleSync();},()=>{loaded.invoices=true;}));
+  if(isAdmin)unsubs.push(api.listen('confirm',l=>{confirms=l;renderAdmin();},()=>{}));
+  if(isAdmin)unsubs.push(api.listen('clients',l=>{clients=l;loaded.clients=true;renderAdmin();scheduleSync();},()=>{}));
 }
 function noData(t){
   $('revNote').textContent=t;$('revNote').classList.remove('hide');
