@@ -202,12 +202,53 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
 .fiche dl{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:3px 14px;margin:0;font-size:.92rem}
 .fiche dt{color:var(--mut)}.fiche dd{margin:0;overflow-wrap:anywhere}
 @media (max-width:520px){.fiche dl{grid-template-columns:1fr}.fiche dd{margin-bottom:6px}}
+.cspace{background:radial-gradient(110% 60% at 50% 0%,#fff 30%,var(--lilac) 75%,#efe3f2 100%);min-height:calc(100vh - 140px)}
+.cwrap{max-width:720px;margin:auto;padding:clamp(28px,6vw,64px) 20px 72px}
+.clogin{text-align:center}
+.miniroof{width:120px;height:auto;display:block;margin:0 auto 10px}
+.miniroof path{fill:none;stroke:url(#metal);stroke:#a86aaf;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.cspace h1{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:300;letter-spacing:-.03em;color:var(--plum);margin:0 0 10px;line-height:1.05}
+.clogin .lead{margin:0 auto}
+.codebox{background:#fff;border:1px solid var(--bd);border-radius:24px;padding:26px;margin:28px auto 0;max-width:440px;text-align:left;box-shadow:0 30px 60px -30px rgba(59,26,66,.35)}
+.codebox label[for=vCode]{color:#5c4f62;margin-top:0}
+#vCode{font-size:1.7rem;letter-spacing:.22em;text-align:center;text-transform:uppercase;padding:14px;font-weight:500;color:var(--plum)}
+#vCode::placeholder{letter-spacing:.08em;font-size:1.1rem;font-weight:400;color:#b3a7b8}
+.remember{display:flex!important;align-items:center;gap:8px;color:#5c4f62!important;font-size:.92rem;margin:14px 0 0!important;cursor:pointer}
+.remember input{width:auto;margin:0;accent-color:var(--orchid)}
+.codebox .metal{width:100%;margin-top:18px}
+.nocode{margin-top:22px;color:#5c4f62}
+.chead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.chead .kicker{margin-bottom:6px}
+.ch2{font-size:1.35rem;font-weight:400;color:var(--plum);margin:36px 0 12px}
+.nextcard{position:relative;border-radius:28px;padding:2px;background:linear-gradient(135deg,#d9d3dc,#b47abb 35%,#8a4a91 60%,#d9d3dc);box-shadow:0 30px 60px -30px rgba(59,26,66,.45)}
+.nextin{background:#fff;border-radius:26px;padding:clamp(22px,4vw,34px);display:grid;grid-template-columns:1fr auto;gap:18px 24px;align-items:end}
+.when{display:inline-block;background:var(--metal);color:#fff;border-radius:999px;padding:5px 14px;font-size:.92rem;font-weight:500;margin-bottom:12px}
+.nextday{font-size:clamp(2.2rem,7vw,3.4rem);font-weight:300;letter-spacing:-.03em;color:var(--plum);line-height:1;text-transform:capitalize}
+.nextdate{font-size:1.15rem;color:#5c4f62;margin-top:6px}
+.nexttime{text-align:right}
+.nexttime b{display:block;font-size:clamp(1.5rem,4vw,2rem);font-weight:400;color:var(--plum);letter-spacing:-.01em}
+.nexttime span{color:#5c4f62}
+.nextact{grid-column:1/-1;display:flex;gap:12px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--bd);padding-top:16px}
+.calbtn{border:1px solid var(--silver);background:#fff;color:var(--plum);border-radius:999px;padding:9px 16px;font:inherit;font-size:.95rem;cursor:pointer}
+.calbtn:hover{border-color:var(--orchid)}
+@media (max-width:520px){.nextin{grid-template-columns:1fr}.nexttime{text-align:left}}
+.vrow{display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:center;background:#fff;border:1px solid var(--bd);border-radius:18px;padding:12px 16px;margin-bottom:10px}
+.vdate{text-align:center;border-right:1px solid var(--bd);padding-right:12px}
+.vdate b{display:block;font-size:1.8rem;font-weight:300;line-height:1;color:var(--plum)}
+.vdate span{font-size:.8rem;color:var(--orchid);text-transform:lowercase}
+.vinfo b{font-weight:500;text-transform:capitalize;color:var(--ink)}
+.vinfo div{color:#5c4f62;font-size:.95rem}
+.vrow .calbtn{padding:7px 12px;font-size:.85rem}
+.empty{background:#fff;border:1px dashed var(--silver);border-radius:24px;padding:28px;text-align:center;color:#5c4f62}
+.cmsg form{background:#fff;border:1px solid var(--bd);border-radius:24px;padding:22px;margin-top:16px}
+.cmsg label{color:#5c4f62}
+.cmsg .metal{margin-top:16px}
 .hide{display:none!important}
 </style>
 </head>
 <body>
 <header><div class="bar"><div class="logo" data-go="accueil" role="link" aria-label="Jessiclean – accueil"><img src="img/logo-sm.jpg" alt="Jessiclean" width="123" height="50"></div>
-<nav><button data-v="accueil">Accueil</button><button data-v="client">Mes visites</button><button data-v="employes" id="tabEmp" class="hide">Mon horaire</button><button data-v="admin" id="tabAdmin" class="hide">Admin</button><button data-v="connexion" id="tabLogin" class="acct">Connexion</button></nav></div></header>
+<nav><button data-v="accueil">Accueil</button><button data-v="client">Espace client</button><button data-v="employes" id="tabEmp" class="hide">Mon horaire</button><button data-v="admin" id="tabAdmin" class="hide">Admin</button><button data-v="connexion" id="tabLogin" class="acct">Connexion</button></nav></div></header>
 <main>
 <div id="setupNote" class="note err hide"></div>
 
@@ -249,7 +290,7 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
   <ol class="step-list">
    <li><h3>Vous nous écrivez</h3><p>Remplissez la demande de soumission ci-dessous. On vous rappelle pour comprendre vos besoins.</p></li>
    <li><h3>On s’entend sur le plan</h3><p>Fréquence, pièces à prioriser, accès, produits : tout est noté dans votre dossier.</p></li>
-   <li><h3>Suivez vos visites en ligne</h3><p>Avec votre code personnel, consultez vos prochaines visites dans « Mes visites ».</p></li>
+   <li><h3>Suivez vos visites en ligne</h3><p>Avec votre code personnel, consultez vos prochaines visites dans votre espace client.</p></li>
   </ol>
  </div></section>
 
@@ -305,12 +346,38 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
  </div></section>
 </div>
 
-<section id="v-client" class="app hide">
- <div class="card"><h2 class="serif">Mes visites</h2>
-  <p class="mut">Entrez le code d’accès que Jessiclean vous a remis pour voir vos prochaines visites.</p>
-  <label for="vCode">Code d’accès</label><input id="vCode" maxlength="10" autocapitalize="characters" autocomplete="off">
-  <button class="btn" id="vGo">Voir mon horaire</button>
-  <div id="vOut" style="margin-top:12px"></div></div>
+<section id="v-client" class="site cspace hide" aria-label="Espace client">
+ <div class="cwrap">
+  <div id="cLogin" class="clogin">
+   <svg class="miniroof" viewBox="0 0 120 54" aria-hidden="true"><path d="M4 50 L60 6 L116 50" /><path d="M84 25 V12 H92 V31"/></svg>
+   <h1>Mon espace client</h1>
+   <p class="lead">Entrez le code personnel remis par Jessiclean pour voir vos prochaines visites.</p>
+   <form id="vForm" class="codebox" novalidate>
+    <label for="vCode">Votre code</label>
+    <input id="vCode" maxlength="14" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="AB3K 7Q9P">
+    <label class="remember"><input type="checkbox" id="vRemember" checked> Se souvenir de moi sur cet appareil</label>
+    <div id="vErr" class="note err hide" role="alert"></div>
+    <button class="metal" id="vGo" type="submit">Voir mes visites</button>
+   </form>
+   <p class="nocode">Pas encore client&nbsp;? <button class="textlink" data-go="accueil" data-scroll="soumission">Demandez une soumission</button></p>
+  </div>
+
+  <div id="cHome" class="hide">
+   <div class="chead"><div><p class="kicker">Mon espace client</p><h1 id="cHello"></h1></div><button class="textlink" id="vLogout" type="button">Changer de code</button></div>
+   <div id="cNext"></div>
+   <div id="cMoreWrap"><h2 class="ch2">Visites à venir</h2><div id="cUpcoming"></div></div>
+   <div class="cmsg">
+    <h2 class="ch2">Besoin de changer quelque chose&nbsp;?</h2>
+    <p class="lead">Déplacer une visite, ajouter une tâche, laisser une consigne : écrivez-nous, on vous répond rapidement.</p>
+    <form id="mForm" novalidate>
+     <div id="mNote" class="note hide" role="status"></div>
+     <label for="mText">Votre message</label><textarea id="mText" rows="3" maxlength="1200"></textarea>
+     <label for="mContact">Téléphone ou courriel pour vous répondre</label><input id="mContact" maxlength="120" autocomplete="tel">
+     <button class="metal" id="mSend" type="submit">Envoyer le message</button>
+    </form>
+   </div>
+  </div>
+ </div>
 </section>
 
 <section id="v-connexion" class="app hide">
@@ -332,7 +399,7 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
 </section>
 
 <section id="v-admin" class="app hide">
- <div class="card"><h2>Demandes de soumission <span class="mut" id="qCount"></span></h2><div id="qList"><p class="mut">Aucune demande pour le moment.</p></div></div>
+ <div class="card"><h2>Demandes et messages <span class="mut" id="qCount"></span></h2><div id="qList"><p class="mut">Aucune demande pour le moment.</p></div></div>
  <div class="card"><h2>Employées</h2>
   <p class="mut">Le courriel sert à la connexion : créez ensuite le compte dans Firebase (Authentication → Ajouter un utilisateur) avec ce même courriel.</p>
   <div class="chips" id="empChips"></div>
@@ -380,7 +447,7 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
 </section>
 </main>
 <div id="viewer" class="hide" role="dialog" aria-modal="true" aria-label="Pièce jointe"><img id="vImg" alt=""><div class="vbar"><span id="vName"></span><a id="vDl" download>Télécharger</a><button id="vClose">Fermer</button></div></div>
-<footer><div class="foot"><div><strong>Jessiclean</strong>Entretien ménager résidentiel et commercial<br><span class="mut" style="color:#a996ae">© <span id="yr"></span> Jessiclean</span></div><nav aria-label="Pied de page"><button data-go="client">Mes visites</button><button data-go="connexion">Espace équipe</button><button data-scroll="soumission" data-go="accueil">Demander une soumission</button></nav></div></footer>
+<footer><div class="foot"><div><strong>Jessiclean</strong>Entretien ménager résidentiel et commercial<br><span class="mut" style="color:#a996ae">© <span id="yr"></span> Jessiclean</span></div><nav aria-label="Pied de page"><button data-go="client">Espace client</button><button data-go="connexion">Espace équipe</button><button data-scroll="soumission" data-go="accueil">Demander une soumission</button></nav></div></footer>
 
 <script type="module">
 import { firebaseConfig, ADMIN_EMAILS } from './firebase-config.js';
@@ -541,7 +608,7 @@ function renderRequests(){
     (r.phone?'<div><a href="tel:'+esc(r.phone)+'">'+esc(r.phone)+'</a></div>':'')+(r.email?'<div><a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a></div>':'')+
     '<div class="fiche"><dl>'+line('Adresse',r.addr||r.city)+line('Type d’habitat',r.habitat)+line('Pièces',r.rooms)+line('Sous-sol',r.basement)+line('Animaux / enfants',r.pets)+line('Journées',r.days)+line('Heures',r.hours)+'</dl></div>'+
     (r.message?'<div class="mut" style="white-space:pre-wrap;margin-top:6px">'+esc(r.message)+'</div>':'')+'</div>'+
-    '<div class="acts"><button class="btn sm" data-qfiche="'+esc(r.id)+'">Créer la fiche client</button><button class="btn sec sm" data-qdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-qdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">Aucune demande pour le moment.</p>';
+    '<div class="acts">'+(/^Message/.test(r.service||'')?'':'<button class="btn sm" data-qfiche="'+esc(r.id)+'">Créer la fiche client</button>')+'<button class="btn sec sm" data-qdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-qdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">Aucune demande pour le moment.</p>';
 }
 $('qList').onclick=e=>{
   const dn=e.target.dataset.qdone,dl=e.target.dataset.qdel,fi=e.target.dataset.qfiche;
@@ -705,7 +772,7 @@ function renderClients(){
   const l=clients.filter(c=>(CFIELDS.map(f=>[].concat(c[f[1]]||'').join(' ')).join(' ')+' '+(c.notes||'')).toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||'','fr'));
   $('cCount').textContent=clients.length?'· '+clients.length:'';
   $('clList').innerHTML=clients.map(c=>'<option value="'+esc(c.name)+'">').join('');
-  $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.email?'<div class="mut"><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a></div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+ficheHTML(c,false,'Fiche complète')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+filesHTML(c.files,'c')+'</div><div class="acts"><button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
+  $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.email?'<div class="mut"><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a></div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+ficheHTML(c,false,'Fiche complète')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+filesHTML(c.files,'c')+'</div><div class="acts">'+(c.code?'<button class="btn sec sm" data-clink="'+esc(c.code)+'">Copier le lien client</button>':'')+'<button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
 }
 function resetClient(){cEditId=null;$('cFormTitle').textContent='Nouvelle fiche client';$('cCancel').classList.add('hide');CFIELDS.forEach(f=>{if(f[0])$(f[0]).value='';});$('cNotes').value='';$('cDays').querySelectorAll('input').forEach(i=>i.checked=false);loadFormFiles('c',[]);}
 $('cSearch').oninput=renderClients;
@@ -721,6 +788,9 @@ $('cSave').onclick=async()=>{
   finally{$('cSave').disabled=false;}
 };
 $('cList').onclick=e=>{
+  const lk=e.target.dataset.clink;
+  if(lk){const u=clientLink(lk),b=e.target;const done=()=>{const o=b.textContent;b.textContent='Lien copié ✓';setTimeout(()=>b.textContent=o,1800);};
+    if(navigator.clipboard)navigator.clipboard.writeText(u).then(done,()=>prompt('Copiez ce lien :',u));else prompt('Copiez ce lien :',u);return;}
   const ed=e.target.dataset.cedit,dl=e.target.dataset.cdel;
   if(dl&&confirm('Supprimer ce client ?')){const c0=clients.find(x=>x.id===dl);if(c0&&c0.code){api.del('visits',c0.code).catch(()=>{});delete visitsCache[c0.code];}api.del('clientInfo',dl).catch(()=>{});delete infoCache[dl];guard(api.del('clients',dl)).then(()=>deleteFiles('c',((c0&&c0.files)||[]).map(f=>f.id))).catch(()=>{});}
   if(ed){const c=clients.find(x=>x.id===ed);if(!c)return;cEditId=ed;loadFormFiles('c',c.files);
@@ -749,18 +819,83 @@ async function syncVisits(){
     }
   }finally{syncing=false;}
 }
-$('vCode').onkeydown=e=>{if(e.key==='Enter')$('vGo').click();};
-$('vGo').onclick=async()=>{
-  const code=$('vCode').value.trim().toUpperCase(),out=$('vOut');
-  if(!code)return;
-  if(!api){out.innerHTML='<p class="mut">Données non disponibles pour le moment.</p>';return;}
+/* ───────── Espace client ───────── */
+const CODE_KEY='jessiclean-code';
+const store={get(){try{return localStorage.getItem(CODE_KEY)||'';}catch(_){return '';}},set(v){try{v?localStorage.setItem(CODE_KEY,v):localStorage.removeItem(CODE_KEY);}catch(_){}}};
+const cleanCode=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const fmtH=t=>{const [h,m]=String(t||'').split(':');return h==null?'':(+h)+' h'+(m&&m!=='00'?' '+m:'');};
+const dObj=d=>new Date(d+'T12:00:00');
+function whenLabel(d){const n=Math.round((dObj(d)-dObj(today()))/864e5);return n<=0?'Aujourd’hui':n===1?'Demain':'Dans '+n+' jours';}
+let cData=null,cCode='';
+function icsFor(list){
+  const pad=n=>String(n).padStart(2,'0'),stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const dt=(d,t)=>d.replace(/-/g,'')+'T'+String(t||'00:00').replace(':','')+'00';
+  const ev=list.map((v,i)=>['BEGIN:VEVENT','UID:jessiclean-'+cCode+'-'+v.date+'-'+String(v.start).replace(':','')+'@jessiclean','DTSTAMP:'+stamp,'DTSTART:'+dt(v.date,v.start),'DTEND:'+dt(v.date,v.end),'SUMMARY:Ménage Jessiclean'+(v.emp?' avec '+v.emp:''),'END:VEVENT'].join('\r\n'));
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Jessiclean//Visites//FR','CALSCALE:GREGORIAN',...ev,'END:VCALENDAR'].join('\r\n');
+}
+function downloadIcs(list,name){
+  const url=URL.createObjectURL(new Blob([icsFor(list)],{type:'text/calendar;charset=utf-8'})),a=document.createElement('a');
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+function renderClientSpace(){
+  const x=cData;if(!x){$('cLogin').classList.remove('hide');$('cHome').classList.add('hide');return;}
+  $('cLogin').classList.add('hide');$('cHome').classList.remove('hide');
+  $('cHello').textContent='Bonjour '+(x.name||'')+'\u00a0!';
+  const l=(x.visits||[]).filter(v=>v.date>=today()).sort(byTime);
+  if(!l.length){
+    $('cNext').innerHTML='<div class="empty"><b style="color:var(--plum);font-weight:500">Aucune visite prévue pour le moment.</b><br>Dès qu’une visite sera planifiée, elle apparaîtra ici.</div>';
+    $('cMoreWrap').classList.add('hide');return;
+  }
+  const n=l[0],d=dObj(n.date);
+  $('cNext').innerHTML='<div class="nextcard"><div class="nextin"><div><span class="when">'+esc(whenLabel(n.date))+'</span>'+
+    '<div class="nextday">'+esc(d.toLocaleDateString('fr-CA',{weekday:'long'}))+'</div><div class="nextdate">'+esc(d.toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'}))+'</div></div>'+
+    '<div class="nexttime"><b>'+esc(fmtH(n.start))+' à '+esc(fmtH(n.end))+'</b>'+(n.emp?'<span>avec '+esc(n.emp)+'</span>':'')+'</div>'+
+    '<div class="nextact"><button class="calbtn" data-ics="0">Ajouter à mon calendrier</button>'+(l.length>1?'<button class="calbtn" data-ics="all">Ajouter toutes mes visites ('+l.length+')</button>':'')+'</div></div></div>';
+  const rest=l.slice(1);
+  $('cMoreWrap').classList.toggle('hide',!rest.length);
+  $('cUpcoming').innerHTML=rest.map((v,i)=>{const dd=dObj(v.date);return '<div class="vrow"><div class="vdate"><b>'+dd.getDate()+'</b><span>'+esc(dd.toLocaleDateString('fr-CA',{month:'short'}))+'</span></div>'+
+    '<div class="vinfo"><b>'+esc(dd.toLocaleDateString('fr-CA',{weekday:'long'}))+'</b><div>'+esc(fmtH(v.start))+' à '+esc(fmtH(v.end))+(v.emp?' · avec '+esc(v.emp):'')+'</div></div>'+
+    '<button class="calbtn" data-ics="'+(i+1)+'" aria-label="Ajouter au calendrier">📅</button></div>';}).join('');
+  $('cHome').dataset.count=l.length;
+  cData._list=l;
+}
+$('v-client').addEventListener('click',e=>{
+  const b=e.target.closest('[data-ics]');if(!b||!cData||!cData._list)return;
+  const l=cData._list;
+  if(b.dataset.ics==='all')downloadIcs(l,'visites-jessiclean.ics');
+  else{const v=l[+b.dataset.ics];if(v)downloadIcs([v],'visite-jessiclean-'+v.date+'.ics');}
+});
+async function openCode(code,remember,quiet){
+  code=cleanCode(code);const err=t=>{if(quiet)return;$('vErr').textContent=t;$('vErr').classList.remove('hide');};
+  $('vErr').classList.add('hide');
+  if(!code){err('Entrez votre code.');return false;}
+  if(!api){err('Le service n’est pas disponible pour le moment. Réessayez plus tard.');return false;}
+  $('vGo').disabled=true;
   try{
     const x=await api.get('visits',code);
-    if(!x){out.innerHTML='<p class="mut">Code introuvable. Vérifiez-le ou contactez Jessiclean.</p>';return;}
-    const l=(x.visits||[]).filter(v=>v.date>=today()).sort(byTime);
-    out.innerHTML='<p>Bonjour <b>'+esc(x.name)+'</b> !</p>'+(l.length?l.map(v=>'<div class="shift"><div><b style="text-transform:capitalize">'+esc(fmtDate(v.date))+'</b><div>'+esc(v.start)+' – '+esc(v.end)+'</div>'+(v.emp?'<div class="mut">Avec '+esc(v.emp)+'</div>':'')+'</div></div>').join(''):'<p class="mut">Aucune visite prévue pour le moment.</p>');
-  }catch(e){out.innerHTML='<p class="mut">Impossible de charger l’horaire pour le moment.</p>';}
+    if(!x){err('Ce code ne correspond à aucun dossier. Vérifiez-le ou écrivez-nous.');if(quiet)store.set('');return false;}
+    cData=x;cCode=code;if(remember)store.set(code);
+    renderClientSpace();return true;
+  }catch(e){err('Impossible de charger vos visites pour le moment. Réessayez dans un instant.');return false;}
+  finally{$('vGo').disabled=false;}
+}
+$('vCode').oninput=e=>{const c=cleanCode(e.target.value).slice(0,10);const f=c.length>4?c.slice(0,4)+' '+c.slice(4):c;if(e.target.value!==f)e.target.value=f;};
+$('vForm').onsubmit=e=>{e.preventDefault();openCode($('vCode').value,$('vRemember').checked);};
+$('vLogout').onclick=()=>{store.set('');cData=null;cCode='';$('vCode').value='';renderClientSpace();$('vCode').focus();};
+$('mForm').onsubmit=async e=>{
+  e.preventDefault();
+  const t=$('mText').value.trim(),c=$('mContact').value.trim(),note=$('mNote');
+  const say=(m,er)=>{note.textContent=m;note.classList.toggle('err',!!er);note.classList.remove('hide');};
+  if(!t){say('Écrivez votre message.',true);$('mText').focus();return;}
+  if(!c){say('Indiquez un téléphone ou un courriel pour qu’on puisse vous répondre.',true);$('mContact').focus();return;}
+  const isMail=c.includes('@');
+  const d={name:(cData&&cData.name)||'Client',phone:isMail?'':c.slice(0,30),email:isMail?c.slice(0,120):'',addr:'',service:'Message d’un client',habitat:'',rooms:'',basement:'',pets:'',days:[],hours:'',message:t+'\n\n(Code client : '+cCode+')',ts:Date.now(),done:false};
+  $('mSend').disabled=true;
+  try{await api.set('requests',uid(),d);$('mText').value='';say('Message envoyé. Merci ! Nous vous répondons bientôt.');}
+  catch(_){say('Le message n’a pas pu être envoyé. Réessayez dans un instant.',true);}
+  finally{$('mSend').disabled=false;}
 };
+function clientLink(code){return location.origin+location.pathname+'?code='+encodeURIComponent(code)+'#client';}
 
 /* ───────── Démarrage ───────── */
 function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};infoCache={};infos=[];Object.keys(loaded).forEach(k=>loaded[k]=false);}
@@ -788,6 +923,9 @@ show(location.hash.slice(1));
     noData('Les avis seront disponibles sous peu.');return;
   }
   api.listen('reviews',l=>{reviews=l;renderReviews();},()=>noData('Impossible de charger les avis.'));
+  {const qp=new URLSearchParams(location.search).get('code');
+   if(qp){history.replaceState(null,'',location.pathname+'#client');show('client');openCode(qp,true,false).then(ok=>{if(!ok)$('vCode').value=qp;});}
+   else if(store.get())openCode(store.get(),true,true);}
   api.onAuth(u=>{
     stopPrivate();
     user=u||null;

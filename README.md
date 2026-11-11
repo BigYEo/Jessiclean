@@ -50,7 +50,7 @@ Retirer l'employée dans Admin lui enlève immédiatement l'accès à l'horaire.
 
 **Fiche client** : 3 sections (Information client, Description de l'espace, Disponibilités). Les infos pratiques (adresse, contact en cas de problème, type d'habitat, pièces, sous-sol, animaux/enfants, méthode d'entrée, aspirateur, produits, poubelles) s'affichent aux employées sous « Infos du client » dans leur horaire. Le téléphone, le courriel, les disponibilités et les notes internes restent visibles par l'admin seulement.
 
-**Clients** : chaque fiche reçoit un **code d'accès** à 8 caractères. Donnez ce code au client : dans « Mes visites », il voit ses prochaines dates et heures, et le prénom de l'employée, mais jamais les notes ni les adresses.
+**Clients** : chaque fiche reçoit un **code d'accès** à 8 caractères. Donnez ce code au client, ou mieux, cliquez « Copier le lien client » et envoyez-lui le lien par texto ou courriel. Dans « Espace client », il voit ses prochaines dates et heures, et le prénom de l'employée, mais jamais les notes ni les adresses.
 
 **Quarts de travail** : le nom de client du quart doit être identique à celui de la fiche (la liste vous le propose) pour que le client le voie. L'horaire client se met à jour quand une administratrice a le site ouvert.
 
@@ -60,6 +60,8 @@ Retirer l'employée dans Admin lui enlève immédiatement l'accès à l'horaire.
 - Les photos sont réduites automatiquement ; les autres fichiers doivent faire **600 Ko maximum**.
 - Pièces jointes d'un **quart** : visibles par les employées. Pièces jointes d'un **client** : visibles par l'admin seulement.
 - Cliquez sur une pièce jointe pour l'ouvrir (photo) ou la télécharger (autre fichier).
+
+**Espace client** : le code est mémorisé sur l'appareil du client ; il peut ajouter ses visites à son calendrier et vous écrire (les messages arrivent dans Admin → Demandes et messages).
 
 ## Nom de domaine (facultatif)
 
