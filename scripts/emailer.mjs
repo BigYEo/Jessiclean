@@ -70,11 +70,17 @@ export async function brevoSend({ apiKey, sender, to, name, subject, html, fetch
   if (!res.ok) { const t = await res.text().catch(() => ''); throw new Error(`Brevo ${res.status} ${t.slice(0, 200)}`); }
 }
 
+export async function brevoPing({ apiKey, fetchImpl = fetch }) {
+  const res = await fetchImpl('https://api.brevo.com/v3/smtp/statistics/aggregatedReport?days=1', { headers: { 'api-key': apiKey, accept: 'application/json' } });
+  if (!res.ok) { const t = await res.text().catch(() => ''); throw new Error(`Brevo ${res.status} ${t.slice(0, 200)}`); }
+}
+
 const docs = snap => snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
 
 // Logique principale, testable avec une fausse base de données.
-export async function run({ db, send, now = new Date(), log = console.log }) {
-  const [clients, shifts, emps, mails] = await Promise.all(['clients', 'shifts', 'employees', 'mail'].map(c => db.collection(c).get().then(docs)));
+export async function run({ db, send, ping, now = new Date(), log = console.log }) {
+  const [clients, shifts, emps, mails, system] = await Promise.all(['clients', 'shifts', 'employees', 'mail', 'system'].map(c => db.collection(c).get().then(docs)));
+  const prevState = system.find(x => x.id === 'mailer') || {};
   let sent = 0, errors = 0, lastError = '';
 
   // 1) Courriels en attente (confirmations de soumission)
@@ -118,7 +124,14 @@ export async function run({ db, send, now = new Date(), log = console.log }) {
     }
   }
 
-  await db.collection('system').doc('mailer').set({ lastRun: now.getTime(), lastSent: sent, lastErrors: errors, lastError });
+  // 3) Garder la clé Brevo active (elle expire après 90 jours sans utilisation) : un appel par jour
+  let lastPing = prevState.lastPing || 0;
+  if (ping && sent === 0 && now.getTime() - lastPing > 24 * 36e5) {
+    try { await ping(); lastPing = now.getTime(); log('Vérification quotidienne Brevo : OK'); }
+    catch (e) { errors++; lastError = 'Clé Brevo : ' + String(e.message || e); log(lastError); }
+  }
+  if (sent > 0) lastPing = now.getTime();
+  await db.collection('system').doc('mailer').set({ lastRun: now.getTime(), lastSent: sent, lastErrors: errors, lastError, lastPing });
   log(`Terminé : ${sent} courriel(s) envoyé(s), ${errors} erreur(s).`);
   return { sent, errors };
 }
@@ -131,7 +144,7 @@ async function main() {
   admin.initializeApp({ credential: admin.credential.cert(JSON.parse(sa)) });
   const db = admin.firestore();
   const sender = process.env.SENDER_EMAIL || 'admin@jessiclean.ca';
-  await run({ db, send: m => brevoSend(Object.assign({ apiKey: key, sender }, m)) });
+  await run({ db, send: m => brevoSend(Object.assign({ apiKey: key, sender }, m)), ping: () => brevoPing({ apiKey: key }) });
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
