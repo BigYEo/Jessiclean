@@ -17,7 +17,8 @@ export const firebaseConfig = {
 
 // Courriels qui ont accès à l'onglet Admin (en minuscules)
 export const ADMIN_EMAILS = [
-  "jaykaa92@icloud.com"
+  "jaykaa92@icloud.com",
+  "admin@jessiclean.ca"
 ];
 
 // Notifications par courriel (Web3Forms, gratuit) : collez votre clé d'accès ici.

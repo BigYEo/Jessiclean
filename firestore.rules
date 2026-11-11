@@ -8,7 +8,7 @@ service cloud.firestore {
 
     function signedIn() { return request.auth != null && request.auth.token.email != null; }
     function email()    { return request.auth.token.email.lower(); }
-    function isAdmin()  { return signedIn() && email() in ['jaykaa92@icloud.com']; }
+    function isAdmin()  { return signedIn() && email() in ['jaykaa92@icloud.com', 'admin@jessiclean.ca']; }
     // Une employée a accès si une fiche « employees » porte son courriel comme identifiant
     function isStaff()  { return isAdmin() || (signedIn() && exists(/databases/$(database)/documents/employees/$(email()))); }
 
