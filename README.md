@@ -48,6 +48,8 @@ Pour modifier le site plus tard : ouvrez le fichier sur GitHub → ✏️ → **
 3. Donnez-lui l'adresse du site ; elle se connecte via **Connexion** (elle peut utiliser « Mot de passe oublié ? » pour choisir le sien).
 Retirer l'employée dans Admin lui enlève immédiatement l'accès à l'horaire.
 
+**Fiche client** : 3 sections (Information client, Description de l'espace, Disponibilités). Les infos pratiques (adresse, contact en cas de problème, type d'habitat, pièces, sous-sol, animaux/enfants, méthode d'entrée, aspirateur, produits, poubelles) s'affichent aux employées sous « Infos du client » dans leur horaire. Le téléphone, le courriel, les disponibilités et les notes internes restent visibles par l'admin seulement.
+
 **Clients** : chaque fiche reçoit un **code d'accès** à 8 caractères. Donnez ce code au client : dans « Mes visites », il voit ses prochaines dates et heures, et le prénom de l'employée, mais jamais les notes ni les adresses.
 
 **Quarts de travail** : le nom de client du quart doit être identique à celui de la fiche (la liste vous le propose) pour que le client le voie. L'horaire client se met à jour quand une administratrice a le site ouvert.

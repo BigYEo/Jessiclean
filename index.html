@@ -187,6 +187,18 @@ footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(sa
 .ph-spray{--img:url('https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?auto=format&fit=crop&w=1800&q=60')}
 .ph-caddy{--img:url('https://images.unsplash.com/photo-1646980241033-cd7abda2ee88?auto=format&fit=crop&w=1800&q=60')}
 @media (max-width:700px){.ph-kitchen{--img:url('https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=900&q=60')}.ph-living{--img:url('https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=900&q=60')}.ph-spray{--img:url('https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?auto=format&fit=crop&w=900&q=60')}.ph-caddy{--img:url('https://images.unsplash.com/photo-1646980241033-cd7abda2ee88?auto=format&fit=crop&w=900&q=60')}}
+.app fieldset{border:0;border-top:1px solid var(--bd);padding:14px 0 0;margin:18px 0 0;min-width:0}
+.app legend{font-weight:600;font-size:1.05rem;color:var(--ac);padding:0 10px 0 0}
+.daypick{display:flex;flex-wrap:wrap;gap:6px}
+.daypick label{display:inline-flex;align-items:center;gap:6px;margin:0;padding:6px 12px;border:1px solid var(--bd);border-radius:999px;color:var(--tx);font-size:.9rem;cursor:pointer;background:var(--bg)}
+.daypick label:has(input:checked){border-color:var(--ac);background:var(--ac2);color:var(--ac)}
+.daypick input{width:auto;margin:0;accent-color:var(--ac)}
+details.fiche{margin-top:8px}
+details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight:500}
+.fiche h4{margin:12px 0 4px;font-size:.92rem;color:var(--ac);font-weight:600}
+.fiche dl{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:3px 14px;margin:0;font-size:.92rem}
+.fiche dt{color:var(--mut)}.fiche dd{margin:0;overflow-wrap:anywhere}
+@media (max-width:520px){.fiche dl{grid-template-columns:1fr}.fiche dd{margin-bottom:6px}}
 .hide{display:none!important}
 </style>
 </head>
@@ -313,12 +325,33 @@ footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(sa
  <div class="card"><h2>Clients <span class="mut" id="cCount"></span></h2>
   <input id="cSearch" placeholder="Rechercher un client…" aria-label="Rechercher un client">
   <div id="cList"></div>
-  <h2 id="cFormTitle" style="margin-top:18px">Nouveau client</h2>
-  <label for="cName">Nom</label><input id="cName">
-  <div class="row st"><div><label for="cPhone">Téléphone</label><input id="cPhone" type="tel"></div><div><label for="cAddr">Adresse</label><input id="cAddr"></div></div>
-  <label for="cNotes">Notes (accès, clés, animaux, produits, préférences…)</label><textarea id="cNotes" rows="3"></textarea>
-  <label for="cFiles">Pièces jointes (photos, PDF…)</label><input type="file" id="cFiles" multiple accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"><div class="files" id="cFileList"></div>
-  <button class="btn" id="cSave">Enregistrer le client</button> <button class="btn sec hide" id="cCancel">Annuler</button></div>
+  <h2 id="cFormTitle" style="margin-top:22px">Nouvelle fiche client</h2>
+  <fieldset><legend>Information client</legend>
+   <label for="cName">Nom du client</label><input id="cName" autocomplete="off">
+   <label for="cAddr">Adresse domicile</label><input id="cAddr" autocomplete="off">
+   <div class="row st"><div><label for="cPhone">Contact (téléphone)</label><input id="cPhone" type="tel"></div><div><label for="cEmail">Courriel</label><input id="cEmail" type="email"></div></div>
+   <label for="cUrgent">À joindre en cas de problème</label><input id="cUrgent" placeholder="Nom et téléphone">
+  </fieldset>
+  <fieldset><legend>Description de l’espace</legend>
+   <div class="row st"><div><label for="cHabitat">Type d’habitat</label><select id="cHabitat"><option value=""></option><option>Maison</option><option>Condo / appartement</option><option>Jumelé</option><option>Maison de ville</option><option>Chalet</option><option>Commercial</option><option>Autre</option></select></div>
+   <div><label for="cRooms">Nombre de pièces</label><input id="cRooms" placeholder="Ex. : 3 ch., 2 s. de bain"></div></div>
+   <div class="row st"><div><label for="cBasement">Nettoyage du sous-sol</label><select id="cBasement"><option value=""></option><option>Oui</option><option>Non</option><option>Pas de sous-sol</option><option>Sur demande</option></select></div>
+   <div><label for="cPets">Animaux / enfants</label><input id="cPets" placeholder="Ex. : 1 chat, 2 enfants"></div></div>
+   <label for="cEntry">Méthode d’entrée</label><input id="cEntry" placeholder="Ex. : clé sous le pot, code 1234, client présent">
+   <div class="row st"><div><label for="cVacuum">Emplacement de l’aspirateur</label><input id="cVacuum"></div><div><label for="cProducts">Emplacement des produits</label><input id="cProducts"></div></div>
+   <label for="cTrash">Poubelles</label><input id="cTrash" placeholder="Ex. : sortir le bac bleu le mardi">
+  </fieldset>
+  <fieldset><legend>Disponibilités du client</legend>
+   <label>Préférence de journée</label>
+   <div class="daypick" id="cDays"><label><input type="checkbox" value="Lundi">Lundi</label><label><input type="checkbox" value="Mardi">Mardi</label><label><input type="checkbox" value="Mercredi">Mercredi</label><label><input type="checkbox" value="Jeudi">Jeudi</label><label><input type="checkbox" value="Vendredi">Vendredi</label><label><input type="checkbox" value="Samedi">Samedi</label><label><input type="checkbox" value="Dimanche">Dimanche</label></div>
+   <label for="cHours">Heures</label><input id="cHours" placeholder="Ex. : entre 9 h et 15 h">
+   <label for="cAvail">Note sur les disponibilités</label><textarea id="cAvail" rows="2"></textarea>
+  </fieldset>
+  <fieldset><legend>Notes internes et pièces jointes</legend>
+   <label for="cNotes">Notes (visibles par l’admin seulement)</label><textarea id="cNotes" rows="3"></textarea>
+   <label for="cFiles">Pièces jointes (photos, PDF…)</label><input type="file" id="cFiles" multiple accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"><div class="files" id="cFileList"></div>
+  </fieldset>
+  <button class="btn" id="cSave">Enregistrer la fiche</button> <button class="btn sec hide" id="cCancel">Annuler</button></div>
  <div class="card"><h2 id="formTitle">Nouveau quart de travail</h2>
   <div class="row"><div><label for="sDate">Date</label><input type="date" id="sDate"></div><div><label for="sEmp">Employée</label><select id="sEmp"></select></div></div>
   <div class="row"><div><label for="sStart">Début</label><input type="time" id="sStart" value="09:00"></div><div><label for="sEnd">Fin</label><input type="time" id="sEnd" value="12:00"></div></div>
@@ -404,7 +437,7 @@ function renderReviews(){
 }
 function shiftHTML(s,admin){
   return '<div class="shift"><div><b>'+esc(s.start)+' – '+esc(s.end)+'</b> · '+esc(s.client||'Client')+(admin?' <span class="mut">('+esc(empName(s.emp))+')</span>':'')+
-  (s.addr?'<div class="mut">📍 <a href="https://maps.google.com/?q='+encodeURIComponent(s.addr)+'" target="_blank" rel="noopener" style="color:inherit">'+esc(s.addr)+'</a></div>':'')+(s.notes?'<div class="mut">📝 '+esc(s.notes)+'</div>':'')+filesHTML(s.files,'s')+'</div>'+
+  (s.addr?'<div class="mut">📍 <a href="https://maps.google.com/?q='+encodeURIComponent(s.addr)+'" target="_blank" rel="noopener" style="color:inherit">'+esc(s.addr)+'</a></div>':'')+(s.notes?'<div class="mut">📝 '+esc(s.notes)+'</div>':'')+filesHTML(s.files,'s')+((ci=>ci?ficheHTML(ci,true,'Infos du client'):'')(s.client&&infoFor(s.client)))+'</div>'+
   (admin?'<div class="acts"><button class="btn sec sm" data-edit="'+esc(s.id)+'">Modifier</button><button class="btn del sm" data-sdel="'+esc(s.id)+'" aria-label="Supprimer">✕</button></div>':'')+'</div>';
 }
 function grouped(list,admin){
@@ -622,19 +655,39 @@ $('admList').onclick=e=>{
 };
 
 /* Clients */
+/* Fiche client : champs (staff:1 = visible par les employées dans leur horaire) */
+const CF=[
+ ['info','Information client',[['cName','name','Nom du client',1],['cAddr','addr','Adresse domicile',1],['cPhone','phone','Contact',0],['cEmail','email','Courriel',0],['cUrgent','urgent','À joindre en cas de problème',1]]],
+ ['space','Description de l’espace',[['cHabitat','habitat','Type d’habitat',1],['cRooms','rooms','Nombre de pièces',1],['cBasement','basement','Nettoyage du sous-sol',1],['cPets','pets','Animaux / enfants',1],['cEntry','entry','Méthode d’entrée',1],['cVacuum','vacuum','Emplacement de l’aspirateur',1],['cProducts','products','Emplacement des produits',1],['cTrash','trash','Poubelles',1]]],
+ ['dispo','Disponibilités',[[null,'days','Préférence de journée',0],['cHours','hours','Heures',0],['cAvail','availNote','Note',0]]]
+];
+const CFIELDS=CF.flatMap(g=>g[2]);
+const STAFF_KEYS=CFIELDS.filter(f=>f[3]).map(f=>f[1]);
+let infos=[];
+const nk=n=>(n||'').trim().toLowerCase();
+const infoFor=name=>(isAdmin?clients:infos).find(c=>nk(c.name)===nk(name));
+function ficheHTML(c,staffOnly,title){
+  const val=(k)=>{const v=c[k];return Array.isArray(v)?v.join(', '):(v||'');};
+  const body=CF.map(([,label,fields])=>{
+    const rows=fields.filter(f=>(!staffOnly||f[3])&&f[1]!=='name'&&val(f[1])).map(f=>'<dt>'+esc(f[2])+'</dt><dd>'+esc(val(f[1]))+'</dd>').join('');
+    return rows?'<h4>'+esc(label)+'</h4><dl>'+rows+'</dl>':'';
+  }).join('');
+  return body?'<details class="fiche"><summary>'+esc(title)+'</summary>'+body+'</details>':'';
+}
 function renderClients(){
   const q=$('cSearch').value.toLowerCase();
-  const l=clients.filter(c=>((c.name||'')+' '+(c.phone||'')+' '+(c.addr||'')+' '+(c.notes||'')).toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||'','fr'));
+  const l=clients.filter(c=>(CFIELDS.map(f=>[].concat(c[f[1]]||'').join(' ')).join(' ')+' '+(c.notes||'')).toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||'','fr'));
   $('cCount').textContent=clients.length?'· '+clients.length:'';
   $('clList').innerHTML=clients.map(c=>'<option value="'+esc(c.name)+'">').join('');
-  $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+filesHTML(c.files,'c')+'</div><div class="acts"><button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
+  $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.email?'<div class="mut"><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a></div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+ficheHTML(c,false,'Fiche complète')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+filesHTML(c.files,'c')+'</div><div class="acts"><button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
 }
-function resetClient(){cEditId=null;$('cFormTitle').textContent='Nouveau client';$('cCancel').classList.add('hide');['cName','cPhone','cAddr','cNotes'].forEach(i=>$(i).value='');loadFormFiles('c',[]);}
+function resetClient(){cEditId=null;$('cFormTitle').textContent='Nouvelle fiche client';$('cCancel').classList.add('hide');CFIELDS.forEach(f=>{if(f[0])$(f[0]).value='';});$('cNotes').value='';$('cDays').querySelectorAll('input').forEach(i=>i.checked=false);loadFormFiles('c',[]);}
 $('cSearch').oninput=renderClients;
 $('cCancel').onclick=resetClient;
 $('cSave').onclick=async()=>{
-  const d={name:$('cName').value.trim(),phone:$('cPhone').value.trim(),addr:$('cAddr').value.trim(),notes:$('cNotes').value.trim()};
-  if(!d.name){alert('Le nom du client est requis.');return;}
+  const d={notes:$('cNotes').value.trim(),days:[...$('cDays').querySelectorAll('input:checked')].map(i=>i.value)};
+  CFIELDS.forEach(f=>{if(f[0])d[f[1]]=$(f[0]).value.trim();});
+  if(!d.name){alert('Le nom du client est requis.');$('cName').focus();return;}
   const old=clients.find(x=>x.id===cEditId);d.code=(old&&old.code)||newCode();
   $('cSave').disabled=true;
   try{d.files=await saveFiles('c');await api.set('clients',cEditId||uid(),d);deleteFiles('c',removedFiles.c);resetClient();}
@@ -643,15 +696,16 @@ $('cSave').onclick=async()=>{
 };
 $('cList').onclick=e=>{
   const ed=e.target.dataset.cedit,dl=e.target.dataset.cdel;
-  if(dl&&confirm('Supprimer ce client ?')){const c0=clients.find(x=>x.id===dl);if(c0&&c0.code){api.del('visits',c0.code).catch(()=>{});delete visitsCache[c0.code];}guard(api.del('clients',dl)).then(()=>deleteFiles('c',((c0&&c0.files)||[]).map(f=>f.id))).catch(()=>{});}
+  if(dl&&confirm('Supprimer ce client ?')){const c0=clients.find(x=>x.id===dl);if(c0&&c0.code){api.del('visits',c0.code).catch(()=>{});delete visitsCache[c0.code];}api.del('clientInfo',dl).catch(()=>{});delete infoCache[dl];guard(api.del('clients',dl)).then(()=>deleteFiles('c',((c0&&c0.files)||[]).map(f=>f.id))).catch(()=>{});}
   if(ed){const c=clients.find(x=>x.id===ed);if(!c)return;cEditId=ed;loadFormFiles('c',c.files);
-    $('cName').value=c.name||'';$('cPhone').value=c.phone||'';$('cAddr').value=c.addr||'';$('cNotes').value=c.notes||'';
-    $('cFormTitle').textContent='Modifier le client';$('cCancel').classList.remove('hide');$('cFormTitle').scrollIntoView({behavior:'smooth',block:'center'});}
+    CFIELDS.forEach(f=>{if(f[0])$(f[0]).value=c[f[1]]||'';});$('cNotes').value=c.notes||'';
+    $('cDays').querySelectorAll('input').forEach(i=>i.checked=(c.days||[]).includes(i.value));
+    $('cFormTitle').textContent='Modifier la fiche de '+(c.name||'');$('cCancel').classList.remove('hide');$('cFormTitle').scrollIntoView({behavior:'smooth',block:'center'});}
 };
 
 /* ───────── Horaire visible par les clients ───────── */
 function newCode(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=new Uint32Array(8);crypto.getRandomValues(r);let s='';for(let i=0;i<8;i++)s+=a[r[i]%a.length];return s;}
-let visitsCache={},syncT=null,syncing=false;
+let visitsCache={},infoCache={},syncT=null,syncing=false;
 function scheduleSync(){if(!isAdmin||!api||!loaded.shifts||!loaded.employees||!loaded.clients)return;clearTimeout(syncT);syncT=setTimeout(syncVisits,1200);}
 async function syncVisits(){
   if(syncing){scheduleSync();return;}
@@ -659,6 +713,9 @@ async function syncVisits(){
   try{
     for(const c of clients){
       if(!c.code){const code=newCode();c.code=code;await api.update('clients',c.id,{code}).catch(()=>{});}
+      const info={name:c.name||''};STAFF_KEYS.forEach(k=>{if(k!=='name')info[k]=c[k]||'';});
+      const ih=JSON.stringify(info);
+      if(infoCache[c.id]!==ih){infoCache[c.id]=ih;await api.set('clientInfo',c.id,info).catch(()=>{infoCache[c.id]=null;});}
       const key=(c.name||'').trim().toLowerCase();
       const v=shifts.filter(s=>(s.client||'').trim().toLowerCase()===key&&s.date>=today()).sort(byTime).map(s=>({date:s.date,start:s.start,end:s.end,emp:s.emp?empName(s.emp).split(' ')[0]:''}));
       const payload={name:c.name,visits:v},h=JSON.stringify(payload);
@@ -680,10 +737,11 @@ $('vGo').onclick=async()=>{
 };
 
 /* ───────── Démarrage ───────── */
-function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};Object.keys(loaded).forEach(k=>loaded[k]=false);}
+function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};infoCache={};infos=[];Object.keys(loaded).forEach(k=>loaded[k]=false);}
 function startPrivate(){
   unsubs.push(api.listen('employees',l=>{emps=l;empDenied=false;loaded.employees=true;renderEmp();renderAdmin();scheduleSync();},()=>{empDenied=true;renderEmp();}));
   unsubs.push(api.listen('shifts',l=>{shifts=l;loaded.shifts=true;renderEmp();renderAdmin();scheduleSync();},()=>{}));
+  if(!isAdmin)unsubs.push(api.listen('clientInfo',l=>{infos=l;renderEmp();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('requests',l=>{requests=l;renderRequests();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('clients',l=>{clients=l;loaded.clients=true;renderClients();scheduleSync();},()=>{}));
 }

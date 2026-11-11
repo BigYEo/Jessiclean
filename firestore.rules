@@ -42,6 +42,12 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // Infos pratiques des clients (entrée, aspirateur, produits…) : visibles par l'équipe
+    match /clientInfo/{id} {
+      allow read: if isStaff();
+      allow write: if isAdmin();
+    }
+
     // Pièces jointes (stockées en texte, max ≈ 900 000 caractères par fichier)
     function okFile() {
       return request.resource.data.data is string && request.resource.data.data.size() <= 900000
