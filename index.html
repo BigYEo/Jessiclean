@@ -175,6 +175,18 @@ footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(sa
 .foot nav button{color:#e9dcec;padding:6px 10px}
 .foot nav button:hover{color:#fff}
 .foot strong{color:#fff;font-weight:500;font-size:1.15rem;display:block}
+
+/* Photos d'ambiance en arrière-plan (sections pâles seulement) */
+.photo{position:relative;isolation:isolate;background:linear-gradient(165deg,#ffffff 0%,var(--lilac) 55%,#efe2f2 100%)}
+.photo::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--img) center/cover no-repeat;opacity:.16;mix-blend-mode:multiply;filter:grayscale(.3) contrast(.85) blur(1px);
+ -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 82%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 82%,transparent 100%)}
+.ph-kitchen{background:linear-gradient(180deg,#efe3f2 0%,#fbf7fc 22%,var(--lilac) 70%,#efe2f2 100%)}
+.photo.alt{background:linear-gradient(195deg,#f3e6f5 0%,var(--lilac) 45%,#ffffff 100%)}
+.ph-kitchen{--img:url('https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=1800&q=60')}
+.ph-living{--img:url('https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1800&q=60')}
+.ph-spray{--img:url('https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?auto=format&fit=crop&w=1800&q=60')}
+.ph-caddy{--img:url('https://images.unsplash.com/photo-1646980241033-cd7abda2ee88?auto=format&fit=crop&w=1800&q=60')}
+@media (max-width:700px){.ph-kitchen{--img:url('https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=900&q=60')}.ph-living{--img:url('https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=900&q=60')}.ph-spray{--img:url('https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?auto=format&fit=crop&w=900&q=60')}.ph-caddy{--img:url('https://images.unsplash.com/photo-1646980241033-cd7abda2ee88?auto=format&fit=crop&w=900&q=60')}}
 .hide{display:none!important}
 </style>
 </head>
@@ -204,7 +216,7 @@ footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(sa
   </div>
  </section>
 
- <section class="sec" id="services" aria-labelledby="svcTitle"><div class="wrap">
+ <section class="sec photo ph-kitchen" id="services" aria-labelledby="svcTitle"><div class="wrap">
   <p class="kicker">Nos services</p>
   <h2 id="svcTitle">Un ménage pensé pour votre espace</h2>
   <p class="lead">Une visite ponctuelle ou un entretien régulier : on s’adapte à vos lieux, à votre horaire et à vos habitudes.</p>
@@ -216,7 +228,7 @@ footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(sa
   </div>
  </div></section>
 
- <section class="sec steps" aria-labelledby="stepsTitle"><div class="wrap">
+ <section class="sec steps photo alt ph-living" aria-labelledby="stepsTitle"><div class="wrap">
   <p class="kicker">Comment ça fonctionne</p>
   <h2 id="stepsTitle">Trois étapes, puis on s’occupe du reste</h2>
   <ol class="step-list">
@@ -236,7 +248,7 @@ footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(sa
   </div>
  </div></section>
 
- <section class="sec" id="soumission" aria-labelledby="qTitle"><div class="wrap quote">
+ <section class="sec photo ph-spray" id="soumission" aria-labelledby="qTitle"><div class="wrap quote">
   <div>
    <p class="kicker">Soumission gratuite</p>
    <h2 id="qTitle">Parlez-nous de votre espace</h2>
@@ -252,7 +264,7 @@ footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(sa
   </form>
  </div></section>
 
- <section class="sec reviews" aria-labelledby="revTitle"><div class="wrap">
+ <section class="sec reviews photo alt ph-caddy" aria-labelledby="revTitle"><div class="wrap">
   <div class="rev-head"><div><p class="kicker">Avis</p><h2 id="revTitle" style="margin:0">Ce que disent nos clients</h2></div><div class="score" id="avg"></div></div>
   <div id="revList"><p class="mut">Chargement…</p></div>
   <details class="give" id="revCard"><summary>Laisser un avis</summary>

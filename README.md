@@ -69,3 +69,7 @@ Pour `www.jessiclean.ca` : GitHub → Settings → Pages → **Custom domain**, 
 - Les fiches clients (notes, clés, codes) sont lisibles **seulement par l'admin**.
 - Les notes des quarts sont visibles par **toutes les employées connectées** : n'y mettez que ce qu'elles doivent savoir.
 - N'importe qui peut publier un avis ; vous pouvez supprimer les indésirables depuis l'accueil quand vous êtes connectée.
+
+## Crédits photos
+
+Les photos d'arrière-plan viennent d'[Unsplash](https://unsplash.com) (licence gratuite Unsplash) : Jason Briscoe, Minh Pham, Daiga Ellaby et Josue Michel. Pour les remplacer par vos propres photos, déposez-les dans `img/` et changez les lignes `.ph-…{--img:url(...)}` dans `index.html`.
