@@ -22,7 +22,7 @@ export const ADMIN_EMAILS = [
 
 // Notifications par courriel (Web3Forms, gratuit) : collez votre clé d'accès ici.
 // Obtenez-la sur https://web3forms.com (elle arrive par courriel). Laissez "" pour désactiver.
-export const NOTIFY_KEY = "68e12fce-f7fa-4448-a2f4-9075074b43ed";
+export const NOTIFY_KEY = "2f1e7219-c1ed-4312-b482-a3537c9f70e7";
 
 // Quoi vous envoyer par courriel
 export const NOTIFY_ON = { soumission: true, message: true, avis: true };
