@@ -71,7 +71,7 @@ service cloud.firestore {
         && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
         && request.resource.data.email is string && request.resource.data.email.size() <= 120
         && (request.resource.data.phone.size() > 0 || request.resource.data.email.size() > 0)
-        && request.resource.data.service is string && request.resource.data.service.size() <= 60
+        && request.resource.data['service'] is string && request.resource.data['service'].size() <= 60
         && request.resource.data.city is string && request.resource.data.city.size() <= 120
         && request.resource.data.message is string && request.resource.data.message.size() <= 1500
         && request.resource.data.ts is int && request.resource.data.done == false;
