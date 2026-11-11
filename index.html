@@ -450,7 +450,8 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
 <footer><div class="foot"><div><strong>Jessiclean</strong>Entretien ménager résidentiel et commercial<br><span class="mut" style="color:#a996ae">© <span id="yr"></span> Jessiclean</span></div><nav aria-label="Pied de page"><button data-go="client">Espace client</button><button data-go="connexion">Espace équipe</button><button data-scroll="soumission" data-go="accueil">Demander une soumission</button></nav></div></footer>
 
 <script type="module">
-import { firebaseConfig, ADMIN_EMAILS } from './firebase-config.js';
+import * as CFG from './firebase-config.js';
+const { firebaseConfig, ADMIN_EMAILS } = CFG;
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -462,6 +463,17 @@ let api=null,user=null,isAdmin=false,rating=0,editId=null,cEditId=null;
 let requests=[],reviews=[],shifts=[],emps=[],clients=[],empDenied=false;
 const loaded={shifts:false,employees:false,clients:false};
 let unsubs=[];
+
+/* ───────── Notifications par courriel (Web3Forms) ───────── */
+const NOTIFY_KEY=(CFG.NOTIFY_KEY||'').trim(),NOTIFY_ON=Object.assign({soumission:true,message:true,avis:true},CFG.NOTIFY_ON||{});
+function notifyAdmin(kind,subject,fields,replyto){
+  if(!NOTIFY_KEY||!NOTIFY_ON[kind]||window.__jcMockApi&&!window.__jcNotifyTest)return;
+  const body={access_key:NOTIFY_KEY,subject,from_name:'Site Jessiclean'};
+  if(replyto)body.replyto=replyto;
+  Object.entries(fields).forEach(([k,v])=>{v=Array.isArray(v)?v.join(', '):v;if(v)body[k]=String(v);});
+  body['Voir dans l’Admin']=location.origin+location.pathname+'#admin';
+  (window.__jcNotifyTest||fetch)('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(body),keepalive:true}).catch(()=>{});
+}
 
 /* ───────── Couche de données (Firebase) ───────── */
 async function makeFirebaseApi(){
@@ -574,7 +586,9 @@ $('rSend').onclick=()=>{
   const name=$('rName').value.trim(),text=$('rText').value.trim();
   if(!rating||!name||!text){alert('Choisissez une note et remplissez votre nom et commentaire.');return;}
   $('rSend').disabled=true;
+  const st=rating;
   guard(api.set('reviews',uid(),{name,text,stars:rating,ts:Date.now()})).then(()=>{
+    notifyAdmin('avis','Nouvel avis '+'★'.repeat(st)+' – '+name,{'Nom':name,'Note':st+' sur 5','Commentaire':text});
     $('rName').value='';$('rText').value='';rating=0;drawStars();
     $('revNote').textContent='Merci ! Votre avis a été publié.';$('revNote').classList.remove('hide');
   }).catch(()=>{}).finally(()=>$('rSend').disabled=false);
@@ -592,7 +606,9 @@ $('qForm').onsubmit=async e=>{
   if(d.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)){say('Vérifiez l’adresse courriel.',true);$('qEmail').focus();return;}
   if(!api){say('Le formulaire n’est pas encore relié. Réessayez plus tard.',true);return;}
   $('qSend').disabled=true;
-  try{await api.set('requests',uid(),d);$('qForm').reset();say('Demande envoyée. Merci ! Nous vous contactons très bientôt.');}
+  try{await api.set('requests',uid(),d);
+    notifyAdmin('soumission','Nouvelle demande de soumission – '+d.name,{'Nom':d.name,'Téléphone':d.phone,'Courriel':d.email,'Adresse':d.addr,'Service':d.service,'Type d’habitat':d.habitat,'Nombre de pièces':d.rooms,'Sous-sol':d.basement,'Animaux / enfants':d.pets,'Journées préférées':d.days,'Heures':d.hours,'Détails':d.message},d.email);
+    $('qForm').reset();say('Demande envoyée. Merci ! Nous vous contactons très bientôt.');}
   catch(err){say('La demande n’a pas pu être envoyée. Réessayez dans un instant.',true);}
   finally{$('qSend').disabled=false;}
 };
@@ -891,7 +907,9 @@ $('mForm').onsubmit=async e=>{
   const isMail=c.includes('@');
   const d={name:(cData&&cData.name)||'Client',phone:isMail?'':c.slice(0,30),email:isMail?c.slice(0,120):'',addr:'',service:'Message d’un client',habitat:'',rooms:'',basement:'',pets:'',days:[],hours:'',message:t+'\n\n(Code client : '+cCode+')',ts:Date.now(),done:false};
   $('mSend').disabled=true;
-  try{await api.set('requests',uid(),d);$('mText').value='';say('Message envoyé. Merci ! Nous vous répondons bientôt.');}
+  try{await api.set('requests',uid(),d);
+    notifyAdmin('message','Nouveau message de '+d.name,{'Client':d.name,'Code client':cCode,'Téléphone':d.phone,'Courriel':d.email,'Message':t},d.email);
+    $('mText').value='';say('Message envoyé. Merci ! Nous vous répondons bientôt.');}
   catch(_){say('Le message n’a pas pu être envoyé. Réessayez dans un instant.',true);}
   finally{$('mSend').disabled=false;}
 };

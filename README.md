@@ -63,6 +63,13 @@ Retirer l'employée dans Admin lui enlève immédiatement l'accès à l'horaire.
 
 **Espace client** : le code est mémorisé sur l'appareil du client ; il peut ajouter ses visites à son calendrier et vous écrire (les messages arrivent dans Admin → Demandes et messages).
 
+## Notifications par courriel
+
+Chaque nouvelle demande de soumission, message client ou avis vous est envoyé par courriel via [Web3Forms](https://web3forms.com) (gratuit).
+1. Sur web3forms.com, entrez votre courriel et cliquez « Create Access Key » ; la clé arrive par courriel.
+2. Collez-la dans `firebase-config.js` : `export const NOTIFY_KEY = "votre-clé";`
+3. Pour couper un type de courriel : `NOTIFY_ON = { soumission: true, message: true, avis: false }`.
+
 ## Nom de domaine (facultatif)
 
 Pour `www.jessiclean.ca` : GitHub → Settings → Pages → **Custom domain**, puis suivez les instructions DNS de GitHub, et ajoutez ce domaine dans les **Domaines autorisés** de Firebase.

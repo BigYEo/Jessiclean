@@ -19,3 +19,10 @@ export const firebaseConfig = {
 export const ADMIN_EMAILS = [
   "jaykaa92@icloud.com"
 ];
+
+// Notifications par courriel (Web3Forms, gratuit) : collez votre clé d'accès ici.
+// Obtenez-la sur https://web3forms.com (elle arrive par courriel). Laissez "" pour désactiver.
+export const NOTIFY_KEY = "";
+
+// Quoi vous envoyer par courriel
+export const NOTIFY_ON = { soumission: true, message: true, avis: true };
