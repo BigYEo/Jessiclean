@@ -420,7 +420,9 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
    <div id="qNote" class="note hide" role="status"></div>
    <fieldset><legend>Vos coordonnées</legend>
     <label for="qName">Nom</label><input id="qName" maxlength="80" autocomplete="name" required>
-    <label for="qAddr">Adresse</label><input id="qAddr" maxlength="200" autocomplete="street-address">
+    <label for="qAddr">Adresse <span class="hint">(numéro, rue, app.)</span></label><input id="qAddr" maxlength="110" autocomplete="address-line1" placeholder="Ex. : 12, rue des Pins, app. 3">
+    <label for="qCity">Ville</label><input id="qCity" maxlength="40" autocomplete="address-level2" list="qCities"><datalist id="qCities"><option value="Gatineau"><option value="Hull"><option value="Aylmer"><option value="Buckingham"><option value="Chelsea"><option value="Cantley"></datalist>
+    <div class="row"><div><label for="qPostal">Code postal</label><input id="qPostal" maxlength="7" autocomplete="postal-code" autocapitalize="characters" placeholder="J8X 1A1"></div><div><label for="qProv">Province</label><select id="qProv" autocomplete="address-level1"><option>Québec</option><option>Ontario</option></select></div></div>
     <div class="row st"><div><label for="qPhone">Téléphone</label><input id="qPhone" type="tel" maxlength="30" autocomplete="tel"></div><div><label for="qEmail">Courriel</label><input id="qEmail" type="email" maxlength="120" autocomplete="email"></div></div>
    </fieldset>
    <fieldset><legend>Votre espace</legend>
@@ -781,19 +783,23 @@ $('rSend').onclick=()=>{
 $('revList').onclick=e=>{const id=e.target.dataset.del;if(id&&confirm('Supprimer cet avis ?'))guard(api.del('reviews',id)).catch(()=>{});};
 
 /* Demandes de soumission */
+$('qPostal').oninput=e=>{const v=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);const f=v.length>3?v.slice(0,3)+' '+v.slice(3):v;if(e.target.value!==f)e.target.value=f;};
 $('qForm').onsubmit=async e=>{
   e.preventDefault();
   const g=id=>$(id).value.trim(),note=$('qNote');
-  const d={name:g('qName'),phone:g('qPhone'),email:g('qEmail'),addr:g('qAddr'),service:$('qService').value,habitat:$('qHabitat').value,rooms:g('qRooms'),basement:$('qBasement').value,pets:g('qPets'),days:[...$('qDays').querySelectorAll('input:checked')].map(i=>i.value),hours:g('qHours'),message:g('qMsg'),ts:Date.now(),done:false};
+  const city=g('qCity'),postal=g('qPostal').toUpperCase().replace(/\s+/g,''),prov=$('qProv').value;
+  const fullAddr=[g('qAddr'),[city,city||postal?'('+prov+')':'',postal.length===6?postal.slice(0,3)+' '+postal.slice(3):postal].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+  const d={name:g('qName'),phone:g('qPhone'),email:g('qEmail'),addr:fullAddr.slice(0,200),service:$('qService').value,habitat:$('qHabitat').value,rooms:g('qRooms'),basement:$('qBasement').value,pets:g('qPets'),days:[...$('qDays').querySelectorAll('input:checked')].map(i=>i.value),hours:g('qHours'),message:g('qMsg'),ts:Date.now(),done:false};
   const say=(t,err)=>{note.textContent=t;note.classList.toggle('err',!!err);note.classList.remove('hide');};
   if(!d.name){say('Indiquez votre nom.',true);$('qName').focus();return;}
   if(!d.phone&&!d.email){say('Indiquez un téléphone ou un courriel pour qu’on puisse vous joindre.',true);$('qPhone').focus();return;}
+  if(postal&&!/^[A-Z]\d[A-Z]\d[A-Z]\d$/.test(postal)){say('Vérifiez le code postal (format : J8X 1A1).',true);$('qPostal').focus();return;}
   if(d.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)){say('Vérifiez l’adresse courriel.',true);$('qEmail').focus();return;}
   if(!api){say('Le formulaire n’est pas encore relié. Réessayez plus tard.',true);return;}
   $('qSend').disabled=true;
   try{await api.set('requests',uid(),d);
     notifyAdmin('soumission','Nouvelle demande de soumission – '+d.name,{'Nom':d.name,'Téléphone':d.phone,'Courriel':d.email,'Adresse':d.addr,'Service':d.service,'Type d’habitat':d.habitat,'Nombre de pièces':d.rooms,'Sous-sol':d.basement,'Animaux / enfants':d.pets,'Journées préférées':d.days,'Heures':d.hours,'Détails':d.message},d.email);
-    $('qForm').reset();say('Demande envoyée. Merci ! Nous vous contactons très bientôt.');}
+    $('qForm').reset();$('qProv').value='Québec';say('Demande envoyée. Merci ! Nous vous contactons très bientôt.');}
   catch(err){say('La demande n’a pas pu être envoyée. Réessayez dans un instant.',true);}
   finally{$('qSend').disabled=false;}
 };
