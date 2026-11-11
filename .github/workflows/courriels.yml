@@ -1,0 +1,35 @@
+name: Courriels clients (confirmations et rappels)
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # toutes les 15 minutes
+  workflow_dispatch:          # bouton « Run workflow » pour lancer à la main
+
+concurrency:
+  group: courriels
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  envoyer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: scripts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installer
+        run: npm install --omit=dev --no-audit --no-fund
+      - name: Envoyer les courriels
+        run: node emailer.mjs
+        env:
+          TZ: America/Toronto
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          SENDER_EMAIL: admin@jessiclean.ca

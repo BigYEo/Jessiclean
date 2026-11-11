@@ -1,0 +1,9 @@
+{
+  "name": "jessiclean-courriels",
+  "private": true,
+  "type": "module",
+  "description": "Envoi automatique des confirmations et rappels aux clients de Jessiclean",
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

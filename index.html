@@ -566,7 +566,14 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
 
 <section id="v-admin" class="app hide">
  <div class="card"><h2>Demandes des clients <span class="mut" id="ibCount"></span></h2><p class="mut">Déplacements de visites et mises à jour de fiche envoyés depuis l’espace client.</p><div id="ibList"><p class="mut">Aucune demande pour le moment.</p></div></div>
- <div class="card"><h2>Soumissions et messages <span class="mut" id="qCount"></span></h2><div id="qList"><p class="mut">Aucune demande pour le moment.</p></div></div>
+ <div class="card" id="mailCard"><h2>Courriels aux clients</h2><div id="mailStatus" class="mut">Chargement…</div><div id="mailLog"></div></div>
+ <div class="card"><h2>Soumissions et messages <span class="mut" id="qCount"></span></h2>
+  <div id="qConfirmBox" class="note hide" style="background:var(--ac2)">
+   <b id="qConfirmTitle"></b>
+   <label for="qConfirmMsg">Message ajouté au courriel de confirmation</label><textarea id="qConfirmMsg" rows="4" maxlength="1500"></textarea>
+   <button class="btn" id="qConfirmSend">Confirmer et envoyer le courriel</button> <button class="btn sec" id="qConfirmCancel">Annuler</button>
+  </div>
+  <div id="qList"><p class="mut">Aucune demande pour le moment.</p></div></div>
  <div class="card"><h2>Factures <span class="mut" id="invCount"></span></h2>
   <div id="invList"><p class="mut">Aucune facture pour le moment.</p></div>
   <h2 id="invFormTitle" style="margin-top:22px">Nouvelle facture</h2>
@@ -605,6 +612,7 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
    <div class="daypick" id="cDays"><label><input type="checkbox" value="Lundi">Lundi</label><label><input type="checkbox" value="Mardi">Mardi</label><label><input type="checkbox" value="Mercredi">Mercredi</label><label><input type="checkbox" value="Jeudi">Jeudi</label><label><input type="checkbox" value="Vendredi">Vendredi</label><label><input type="checkbox" value="Samedi">Samedi</label><label><input type="checkbox" value="Dimanche">Dimanche</label></div>
    <label for="cHours">Heures</label><input id="cHours" placeholder="Ex. : entre 9 h et 15 h">
    <label for="cAvail">Note sur les disponibilités</label><textarea id="cAvail" rows="2"></textarea>
+   <label style="display:flex;align-items:center;gap:8px;margin-top:14px"><input type="checkbox" id="cRemind" checked style="width:auto;margin:0;accent-color:var(--ac)"> Envoyer un rappel par courriel 24 h avant chaque visite</label>
   </fieldset>
   <fieldset><legend>Notes internes et pièces jointes</legend>
    <label for="cNotes">Notes (visibles par l’admin seulement)</label><textarea id="cNotes" rows="3"></textarea>
@@ -800,11 +808,28 @@ function renderRequests(){
     '<div class="mut">Reçue le '+new Date(r.ts||0).toLocaleString('fr-CA',{dateStyle:'medium',timeStyle:'short'})+'</div>'+
     (r.phone?'<div><a href="tel:'+esc(r.phone)+'">'+esc(r.phone)+'</a></div>':'')+(r.email?'<div><a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a></div>':'')+
     '<div class="fiche"><dl>'+line('Adresse',r.addr||r.city)+line('Type d’habitat',r.habitat)+line('Pièces',r.rooms)+line('Sous-sol',r.basement)+line('Animaux / enfants',r.pets)+line('Journées',r.days)+line('Heures',r.hours)+'</dl></div>'+
-    (r.message?'<div class="mut" style="white-space:pre-wrap;margin-top:6px">'+esc(r.message)+'</div>':'')+'</div>'+
-    '<div class="acts">'+(/^Message/.test(r.service||'')?'':'<button class="btn sm" data-qfiche="'+esc(r.id)+'">Créer la fiche client</button>')+'<button class="btn sec sm" data-qdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-qdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">Aucune demande pour le moment.</p>';
+    (r.message?'<div class="mut" style="white-space:pre-wrap;margin-top:6px">'+esc(r.message)+'</div>':'')+
+    (r.confirmedAt?'<div style="margin-top:6px"><span class="chip-paid">✓ Soumission confirmée le '+esc(new Date(r.confirmedAt).toLocaleDateString('fr-CA',{day:'numeric',month:'long'}))+'</span> '+mailState(r.mailId)+'</div>':'')+'</div>'+
+    '<div class="acts">'+(/^Message/.test(r.service||'')||r.confirmedAt?'':(r.email?'<button class="btn sm" data-qconf="'+esc(r.id)+'">Confirmer la soumission</button>':'<span class="mut" title="Aucun courriel fourni">Pas de courriel</span>'))+(/^Message/.test(r.service||'')?'':'<button class="btn sec sm" data-qfiche="'+esc(r.id)+'">Créer la fiche client</button>')+'<button class="btn sec sm" data-qdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-qdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">Aucune demande pour le moment.</p>';
 }
+let qConfId=null;
+$('qConfirmCancel').onclick=()=>{qConfId=null;$('qConfirmBox').classList.add('hide');};
+$('qConfirmSend').onclick=async()=>{
+  const r=requests.find(x=>x.id===qConfId);if(!r)return;
+  const c=clients.find(x=>(r.email&&nk(x.email)===nk(r.email))||nk(x.name)===nk(r.name));
+  const mid=uid();
+  const mail={type:'confirm',to:r.email,name:r.name,service:r.service||'',message:$('qConfirmMsg').value.trim(),code:(c&&c.code)||'',ts:Date.now(),status:'pending'};
+  $('qConfirmSend').disabled=true;
+  try{await api.set('mail',mid,mail);await api.update('requests',r.id,{confirmedAt:Date.now(),mailId:mid,done:true});qConfId=null;$('qConfirmBox').classList.add('hide');}
+  catch(e){alert('Action impossible : '+msg(e));}
+  finally{$('qConfirmSend').disabled=false;}
+};
 $('qList').onclick=e=>{
-  const dn=e.target.dataset.qdone,dl=e.target.dataset.qdel,fi=e.target.dataset.qfiche;
+  const dn=e.target.dataset.qdone,dl=e.target.dataset.qdel,fi=e.target.dataset.qfiche,cf=e.target.dataset.qconf;
+  if(cf){const r=requests.find(x=>x.id===cf);if(!r)return;qConfId=cf;
+    $('qConfirmTitle').textContent='Confirmer la soumission de '+r.name+' ('+r.email+')';
+    $('qConfirmMsg').value='Merci de votre confiance ! Nous vous contacterons très bientôt pour planifier votre première visite.';
+    $('qConfirmBox').classList.remove('hide');$('qConfirmBox').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>$('qConfirmMsg').focus({preventScroll:true}),400);return;}
   if(dn){const r=requests.find(x=>x.id===dn);if(r)guard(api.update('requests',dn,{done:!r.done})).catch(()=>{});}
   if(dl&&confirm('Supprimer cette demande ?'))guard(api.del('requests',dl)).catch(()=>{});
   if(fi){const r=requests.find(x=>x.id===fi);if(!r)return;
@@ -816,6 +841,20 @@ $('qList').onclick=e=>{
     $('cFormTitle').textContent='Nouvelle fiche : '+r.name;$('cCancel').classList.remove('hide');
     $('cFormTitle').scrollIntoView({behavior:'smooth',block:'start'});}
 };
+
+/* Courriels aux clients (envoyés par le programme automatique) */
+let mails=[],mailer=null;
+function mailState(id){const m=mails.find(x=>x.id===id);if(!m)return '';
+  return m.status==='sent'?'<span class="chip-paid">Courriel envoyé</span>':m.status==='error'?'<span class="chip-due" title="'+esc(m.error||'')+'">Échec du courriel</span>':'<span class="chip-due" style="background:#fff4d6;color:#7a5a00">Courriel en attente</span>';}
+function renderMailer(){
+  if(!isAdmin)return;
+  const st=$('mailStatus');
+  if(!mailer||!mailer.lastRun){st.innerHTML='⚠️ Le programme d’envoi n’a pas encore fonctionné. Les confirmations et rappels resteront en attente tant qu’il n’est pas configuré (voir le guide).';}
+  else{const ago=Math.round((Date.now()-mailer.lastRun)/6e4);
+    st.innerHTML=(ago>180?'⚠️ ':'✅ ')+'Dernière vérification il y a '+(ago<60?ago+' min':Math.round(ago/60)+' h')+'. Les confirmations partent dans les 15 minutes environ ; les rappels, 24 h avant chaque visite.'+(ago>180?' <b>Le programme semble arrêté : vérifiez GitHub → Actions.</b>':'')+(mailer.lastError?'<br>Dernière erreur : '+esc(mailer.lastError):'');}
+  const l=[...mails].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,8);
+  $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.type==='reminder'?'Rappel':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
+}
 
 /* Confirmations, demandes des clients, factures (admin) */
 function isConfirmed(s){
@@ -1046,12 +1085,13 @@ function renderClients(){
   $('clList').innerHTML=clients.map(c=>'<option value="'+esc(c.name)+'">').join('');
   $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.email?'<div class="mut"><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a></div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+ficheHTML(c,false,'Fiche complète')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+filesHTML(c.files,'c')+'</div><div class="acts">'+(c.code?'<button class="btn sec sm" data-clink="'+esc(c.code)+'">Copier le lien client</button>':'')+'<button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
 }
-function resetClient(){cEditId=null;$('cFormTitle').textContent='Nouvelle fiche client';$('cCancel').classList.add('hide');CFIELDS.forEach(f=>{if(f[0])$(f[0]).value='';});$('cNotes').value='';$('cDays').querySelectorAll('input').forEach(i=>i.checked=false);loadFormFiles('c',[]);}
+function resetClient(){$('cRemind').checked=true;cEditId=null;$('cFormTitle').textContent='Nouvelle fiche client';$('cCancel').classList.add('hide');CFIELDS.forEach(f=>{if(f[0])$(f[0]).value='';});$('cNotes').value='';$('cDays').querySelectorAll('input').forEach(i=>i.checked=false);loadFormFiles('c',[]);}
 $('cSearch').oninput=renderClients;
 $('cCancel').onclick=resetClient;
 $('cSave').onclick=async()=>{
   const d={notes:$('cNotes').value.trim(),days:[...$('cDays').querySelectorAll('input:checked')].map(i=>i.value)};
   CFIELDS.forEach(f=>{if(f[0])d[f[1]]=$(f[0]).value.trim();});
+  d.remind=$('cRemind').checked;
   if(!d.name){alert('Le nom du client est requis.');$('cName').focus();return;}
   const old=clients.find(x=>x.id===cEditId);d.code=(old&&old.code)||newCode();
   $('cSave').disabled=true;
@@ -1066,7 +1106,7 @@ $('cList').onclick=e=>{
   const ed=e.target.dataset.cedit,dl=e.target.dataset.cdel;
   if(dl&&confirm('Supprimer ce client ?')){const c0=clients.find(x=>x.id===dl);if(c0&&c0.code){api.del('visits',c0.code).catch(()=>{});delete visitsCache[c0.code];}api.del('clientInfo',dl).catch(()=>{});delete infoCache[dl];guard(api.del('clients',dl)).then(()=>deleteFiles('c',((c0&&c0.files)||[]).map(f=>f.id))).catch(()=>{});}
   if(ed){const c=clients.find(x=>x.id===ed);if(!c)return;cEditId=ed;loadFormFiles('c',c.files);
-    CFIELDS.forEach(f=>{if(f[0])$(f[0]).value=c[f[1]]||'';});$('cNotes').value=c.notes||'';
+    CFIELDS.forEach(f=>{if(f[0])$(f[0]).value=c[f[1]]||'';});$('cNotes').value=c.notes||'';$('cRemind').checked=c.remind!==false;
     $('cDays').querySelectorAll('input').forEach(i=>i.checked=(c.days||[]).includes(i.value));
     $('cFormTitle').textContent='Modifier la fiche de '+(c.name||'');$('cCancel').classList.remove('hide');$('cFormTitle').scrollIntoView({behavior:'smooth',block:'center'});}
 };
@@ -1281,12 +1321,14 @@ $('mForm').onsubmit=async e=>{
 function clientLink(code){return location.origin+location.pathname+'?code='+encodeURIComponent(code)+'#client';}
 
 /* ───────── Démarrage ───────── */
-function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];inbox=[];invoices=[];confirms=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};infoCache={};infos=[];Object.keys(loaded).forEach(k=>loaded[k]=false);}
+function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];mails=[];mailer=null;inbox=[];invoices=[];confirms=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};infoCache={};infos=[];Object.keys(loaded).forEach(k=>loaded[k]=false);}
 function startPrivate(){
   unsubs.push(api.listen('employees',l=>{emps=l;empDenied=false;loaded.employees=true;renderEmp();renderAdmin();scheduleSync();},()=>{empDenied=true;renderEmp();}));
   unsubs.push(api.listen('shifts',l=>{shifts=l;loaded.shifts=true;renderEmp();renderAdmin();scheduleSync();},()=>{}));
   if(!isAdmin)unsubs.push(api.listen('clientInfo',l=>{infos=l;renderEmp();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('requests',l=>{requests=l;renderRequests();},()=>{}));
+  if(isAdmin)unsubs.push(api.listen('mail',l=>{mails=l;renderMailer();renderRequests();},()=>{}));
+  if(isAdmin)unsubs.push(api.listen('system',l=>{mailer=l.find(x=>x.id==='mailer')||null;renderMailer();},()=>{renderMailer();}));
   if(isAdmin)unsubs.push(api.listen('clientInbox',l=>{inbox=l;renderInbox();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('invoices',l=>{invoices=l;loaded.invoices=true;renderInvoices();scheduleSync();},()=>{loaded.invoices=true;}));
   if(isAdmin)unsubs.push(api.listen('confirm',l=>{confirms=l;renderAdmin();},()=>{}));

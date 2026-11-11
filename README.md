@@ -70,6 +70,22 @@ Retirer l'employée dans Admin lui enlève immédiatement l'accès à l'horaire.
 - **Factures** : **Admin → Factures**. Choisissez le client, la description et le montant ; cochez TPS/TVQ si vous êtes inscrite. Le client voit le montant dû, imprime ses factures et paie par virement Interac (courriel dans `firebase-config.js` → `PAYMENT`) ou par un lien de paiement en ligne optionnel. Cliquez « Marquer payée » à la réception du paiement.
 - Numéros de TPS/TVQ à afficher sur les factures : `firebase-config.js` → `TAX_NUMBERS`.
 
+## Courriels aux clients (confirmations et rappels)
+
+Un programme automatique (`scripts/emailer.mjs`, lancé toutes les 15 minutes par GitHub Actions : `.github/workflows/courriels.yml`) :
+- envoie le courriel de **confirmation** quand vous cliquez « Confirmer la soumission » dans l'Admin ;
+- envoie un **rappel 24 h avant** chaque visite aux clients qui ont un courriel dans leur fiche (case « Envoyer un rappel… » cochée).
+
+Configuration (une seule fois) :
+1. **Brevo** (gratuit, 300 courriels/jour) : créez un compte avec admin@jessiclean.ca, validez l'expéditeur admin@jessiclean.ca, authentifiez le domaine jessiclean.ca (enregistrements DNS chez GoDaddy), puis créez une **clé API**.
+2. **Firebase** : ⚙ Paramètres du projet → Comptes de service → **Générer une nouvelle clé privée** (fichier JSON).
+3. **GitHub** : dépôt → Settings → Secrets and variables → Actions → **New repository secret** :
+   - `BREVO_API_KEY` = la clé API Brevo
+   - `FIREBASE_SERVICE_ACCOUNT` = tout le contenu du fichier JSON
+4. GitHub → onglet **Actions** → « Courriels clients » → **Run workflow** pour tester.
+
+L'Admin affiche l'état du programme (« Dernière vérification il y a … »). GitHub peut suspendre les tâches planifiées d'un dépôt sans activité pendant 60 jours : si l'Admin indique que le programme semble arrêté, réactivez-le dans l'onglet Actions.
+
 ## Notifications par courriel
 
 Chaque nouvelle demande de soumission, message client ou avis vous est envoyé par courriel via [Web3Forms](https://web3forms.com) (gratuit).

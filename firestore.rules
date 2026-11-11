@@ -103,6 +103,14 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // Courriels aux clients : écrits par l'admin, envoyés par le programme automatique
+    match /mail/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /system/{id} {
+      allow read: if isAdmin();
+    }
+
     match /visits/{code} {
       allow get: if true;
       allow list: if false;
