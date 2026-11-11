@@ -52,6 +52,8 @@ Retirer l'employée dans Admin lui enlève immédiatement l'accès à l'horaire.
 
 **Quarts de travail** : le nom de client du quart doit être identique à celui de la fiche (la liste vous le propose) pour que le client le voie. L'horaire client se met à jour quand une administratrice a le site ouvert.
 
+**Demandes de soumission** : le formulaire de la page d'accueil envoie les demandes dans **Admin → Demandes de soumission**. L'onglet affiche « Admin (2) » quand des demandes attendent. Cliquez « Traitée » une fois le client rappelé.
+
 **Pièces jointes** : dans les fiches clients et les quarts, le champ « Pièces jointes » accepte des photos (prises avec le téléphone ou choisies), des PDF et des documents.
 - Les photos sont réduites automatiquement ; les autres fichiers doivent faire **600 Ko maximum**.
 - Pièces jointes d'un **quart** : visibles par les employées. Pièces jointes d'un **client** : visibles par l'admin seulement.

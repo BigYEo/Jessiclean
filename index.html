@@ -6,110 +6,266 @@
 <title>Jessiclean – Entretien ménager</title>
 <meta name="description" content="Jessiclean – entretien ménager résidentiel et commercial. Fiable, soigné, horaire flexible.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%238a4a91'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='white' font-family='Georgia,serif' font-weight='700'%3EJ%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#faf6fb;--card:#fff;--tx:#24182a;--mut:#6f6075;--ac:#8a4a91;--ac2:#f3e8f5;--bd:#e8dcea;--danger:#c0392b;--star:#c77dcf;--plum:#5b2a63}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16111a;--card:#211a26;--tx:#f1e9f3;--mut:#b3a3b8;--ac:#d9a3df;--ac2:#3a2a40;--bd:#3a2e40;--danger:#ff7b6b;--star:#e3a8ea;--on:#24182a}}
-:root[data-theme="dark"]{--bg:#16111a;--card:#211a26;--tx:#f1e9f3;--mut:#b3a3b8;--ac:#d9a3df;--ac2:#3a2a40;--bd:#3a2e40;--danger:#ff7b6b;--star:#e3a8ea;--on:#24182a}
+/* ── Jessiclean : jetons de couleur ──
+   orchidée #8A4A91 · prune #3B1A42 · lilas #F7F0F8 · argent #CFC8D3 · encre #1E1422 · vitre #8FB8DA */
+:root{--orchid:#8a4a91;--plum:#3b1a42;--lilac:#f7f0f8;--silver:#cfc8d3;--ink:#1e1422;--glass:#8fb8da;
+--bg:#fbf8fc;--card:#fff;--tx:#1e1422;--mut:#6c5f72;--ac:#8a4a91;--ac2:#f4eaf6;--bd:#e6dcea;--danger:#b8322a;--star:#a95cb1;--on:#fff;
+--font:"Jost","Futura","Century Gothic","Avenir Next",system-ui,sans-serif;--metal:linear-gradient(135deg,#b77fbe 0%,#8a4a91 45%,#5e2c66 100%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#140e17;--card:#1f1723;--tx:#f2eaf4;--mut:#b5a6bb;--ac:#dba8e1;--ac2:#35253b;--bd:#3a2d40;--danger:#ff8a7a;--star:#e2a9e8;--on:#1e1422}}
+:root[data-theme="dark"]{--bg:#140e17;--card:#1f1723;--tx:#f2eaf4;--mut:#b5a6bb;--ac:#dba8e1;--ac2:#35253b;--bd:#3a2d40;--danger:#ff8a7a;--star:#e2a9e8;--on:#1e1422}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:env(safe-area-inset-bottom,0px)}
-header{position:sticky;top:0;padding-top:env(safe-area-inset-top,0px);background:var(--card);border-bottom:1px solid var(--bd);z-index:5}
-.bar{max-width:860px;margin:auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.logo{cursor:pointer;display:flex;align-items:center;background:#fff;border-radius:10px;padding:2px 6px;line-height:0}
-.logo img{height:44px;width:auto;display:block}
-nav{display:flex;gap:4px;flex-wrap:wrap}
-nav button{border:0;background:none;color:var(--mut);padding:8px 12px;border-radius:999px;font:inherit;font-weight:600;cursor:pointer}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.55 var(--font);-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom,0px)}
+:focus-visible{outline:2.5px solid var(--glass);outline-offset:2px}
+a{color:var(--ac)}
+
+/* En-tête */
+header{position:sticky;top:0;padding-top:env(safe-area-inset-top,0px);background:color-mix(in srgb,var(--card) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);z-index:20}
+.bar{max-width:1120px;margin:auto;padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.logo{cursor:pointer;display:flex;align-items:center;background:#fff;border-radius:12px;padding:3px 8px;line-height:0}
+.logo img{height:50px;width:auto;display:block}
+nav{display:flex;gap:2px;flex-wrap:wrap}
+nav button{border:0;background:none;color:var(--mut);padding:9px 14px;border-radius:999px;font:inherit;font-size:.95rem;font-weight:500;cursor:pointer;transition:background .2s,color .2s}
+nav button:hover{color:var(--tx)}
 nav button.on{background:var(--ac2);color:var(--ac)}
 nav button.acct{border:1px solid var(--bd)}
-main{max-width:860px;margin:auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(10,60,60,.05)}
-h2{margin:0 0 10px;font-size:1.2rem}
+@media (max-width:560px){header nav button[data-v=accueil]{display:none}.bar{padding:6px 12px}.logo img{height:42px}nav button{padding:8px 11px;font-size:.9rem}}
+
+/* Zones applicatives (visites, équipe, admin) */
+main{display:block}
+.app{max-width:860px;margin:auto;padding:24px 16px 8px}
+#setupNote{max-width:860px;margin:16px auto 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:20px;margin-bottom:16px}
+h1,h2,h3{font-family:var(--font);font-weight:500;letter-spacing:-.01em;margin:0 0 10px}
+h2{font-size:1.3rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-label{display:block;font-size:.85rem;color:var(--mut);margin:10px 0 4px}
-input,select,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (max-width:480px){.row.st{grid-template-columns:1fr}}
-.btn{background:var(--ac);color:var(--on,#fff);border:0;border-radius:10px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;margin-top:12px}
+label{display:block;font-size:.86rem;color:var(--mut);margin:12px 0 5px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font:inherit;font-size:1rem;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 20%,transparent)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.row.st{grid-template-columns:1fr}}
+.btn{background:var(--ac);color:var(--on);border:0;border-radius:999px;padding:12px 20px;font:inherit;font-weight:600;cursor:pointer;margin-top:14px}
 .btn:disabled{opacity:.6;cursor:default}
-.btn.sec{background:var(--ac2);color:var(--ac)}.btn.sm{padding:6px 10px;margin:0;font-size:.85rem}
+.btn.sec{background:var(--ac2);color:var(--ac)}.btn.sm{padding:6px 12px;margin:0;font-size:.85rem}
 .btn.del{background:none;color:var(--danger);border:1px solid var(--danger)}
-.linkbtn{border:0;background:none;color:var(--ac);font:inherit;font-size:.88rem;cursor:pointer;padding:0;margin-top:10px;text-decoration:underline}
-.stars{font-size:1.8rem;color:var(--star);letter-spacing:2px;cursor:pointer;user-select:none}
-.stars span{opacity:.3}.stars span.f{opacity:1}
-.rev{border-top:1px solid var(--bd);padding:12px 0}.rev:first-child{border-top:0}
-.rev b{margin-right:6px}.mut{color:var(--mut);font-size:.88rem}
-.shift{border-left:4px solid var(--ac);background:var(--bg);border-radius:10px;padding:10px 12px;margin:8px 0;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.linkbtn{border:0;background:none;color:var(--ac);font:inherit;font-size:.9rem;cursor:pointer;padding:0;margin-top:12px;text-decoration:underline}
+.mut{color:var(--mut);font-size:.9rem}
+.shift{border-left:3px solid var(--ac);background:var(--bg);border-radius:12px;padding:12px 14px;margin:8px 0;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
 .shift>div:first-child{min-width:0;overflow-wrap:anywhere}
-.shift .acts{display:flex;gap:6px;flex-shrink:0}
-.day{font-weight:700;margin-top:14px;text-transform:capitalize}
+.shift .acts{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.shift.done{opacity:.6;border-left-color:var(--bd)}
+.day{font-weight:600;margin-top:16px;text-transform:capitalize}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .chip{background:var(--ac2);color:var(--ac);border-radius:999px;padding:4px 6px 4px 12px;font-size:.9rem;display:flex;gap:6px;align-items:center}
 .chip small{color:var(--mut)}
 .chip button{border:0;background:none;color:var(--danger);cursor:pointer;font-size:1rem}
-.note{background:var(--ac2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-bottom:12px}
+.note{background:var(--ac2);border-radius:12px;padding:11px 14px;font-size:.92rem;margin-bottom:12px}
 .note.err{color:var(--danger)}
-h1,h2,.serif{font-family:"Jost","Futura","Century Gothic",system-ui,sans-serif;font-weight:600;letter-spacing:.01em}
-.hero{position:relative;overflow:hidden;color:#2b1a31;margin-bottom:18px;padding:30px 24px 34px;border-radius:22px;text-align:center;
- background:radial-gradient(circle at 85% 10%,rgba(201,140,210,.35),transparent 45%),radial-gradient(circle at 10% 95%,rgba(150,180,220,.25),transparent 40%),linear-gradient(160deg,#ffffff 0%,#f6ecf8 60%,#ecdcf0 100%);
- border:1px solid #eadcee;box-shadow:0 12px 34px rgba(91,42,99,.12)}
-.hero>*{position:relative;z-index:1}
-.hero .hlogo{width:min(440px,92%);height:auto;display:block;margin:0 auto 14px;mix-blend-mode:multiply}
-.eyebrow{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:#8a4a91;font-weight:600;margin-bottom:10px}
-.hero h1{font-size:2rem;line-height:1.2;margin:0 auto 12px;color:#5b2a63;max-width:560px}
-.hero p{max-width:480px;margin:0 auto;color:#5e4d63;font-size:1.02rem}
-.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;justify-content:center}
-.cta button{border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#9d5ba4,#6e3a76);color:#fff;box-shadow:0 4px 14px rgba(110,58,118,.3)}
-.cta button.ghost{background:#fff;color:#6e3a76;border:1.5px solid #c9a6cf;box-shadow:none}
-.badges{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:22px;font-size:.88rem;color:#6e3a76;justify-content:center;font-weight:600}
-@media (max-width:480px){.hero h1{font-size:1.6rem}.hero{padding:22px 16px 28px}}
-.svc{background:var(--card);border:1px solid var(--bd);border-top:3px solid var(--ac);border-radius:12px;padding:14px}
-.svc b{display:block;margin-bottom:4px}
-.svc small{display:block;color:var(--mut);font-size:.85rem}
-.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
-.why b{display:block;color:var(--ac);margin-bottom:2px}
-.why span{color:var(--mut);font-size:.92rem}
 .who{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-footer{text-align:center;color:var(--mut);font-size:.82rem;padding:10px 16px 28px}
 .files{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .file{display:inline-flex;align-items:center;gap:4px;background:var(--ac2);color:var(--ac);border:0;border-radius:999px;padding:4px 10px;font:inherit;font-size:.82rem;cursor:pointer;max-width:100%}
 .file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
 .file .x{border:0;background:none;color:var(--danger);cursor:pointer;font-size:.95rem;padding:0 0 0 4px}
 .file:disabled{opacity:.6}
 input[type=file]{padding:8px;font-size:.88rem}
-#viewer{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:10px}
-#viewer img{max-width:100%;max-height:calc(100vh - 110px);border-radius:8px;background:#fff}
+#viewer{position:fixed;inset:0;background:rgba(20,10,24,.9);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:10px}
+#viewer img{max-width:100%;max-height:calc(100vh - 110px);border-radius:10px;background:#fff}
 #viewer .vbar{display:flex;gap:10px;align-items:center;color:#fff;font-size:.9rem;max-width:100%}
 #viewer .vbar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#viewer a,#viewer button{background:#fff;color:#0a4a58;border:0;border-radius:999px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;flex-shrink:0}
+#viewer a,#viewer button{background:#fff;color:var(--plum);border:0;border-radius:999px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;flex-shrink:0}
+.stars{font-size:2rem;color:var(--star);letter-spacing:4px;cursor:pointer;user-select:none;line-height:1}
+.stars span{opacity:.28;transition:opacity .15s}.stars span.f{opacity:1}
+
+/* ── Vitrine (toujours aux couleurs de la marque) ── */
+.site{color:var(--ink);background:#fff;--tx:#1e1422;--mut:#6c5f72;--ac:#8a4a91;--ac2:#f4eaf6;--bd:#e6dcea;--bg:#fbf8fc;--card:#fff;--on:#fff;--star:#a95cb1;--danger:#b8322a}
+.wrap{max-width:1120px;margin:auto;padding:0 24px}
+.sec{padding:clamp(64px,10vw,120px) 0}
+.kicker{color:var(--orchid);font-size:1rem;font-weight:500;margin:0 0 14px}
+.sec h2{font-size:clamp(2rem,4.6vw,3.3rem);font-weight:300;line-height:1.08;letter-spacing:-.025em;color:var(--plum);margin:0 0 18px;max-width:16ch}
+.lead{font-size:1.12rem;color:#5c4f62;max-width:52ch;margin:0}
+
+/* Héros : le toit du logo */
+.hero{position:relative;text-align:center;padding:clamp(28px,6vw,64px) 0 clamp(64px,9vw,110px);overflow:hidden;
+ background:radial-gradient(120% 70% at 50% 0%,#fff 35%,var(--lilac) 75%,#efe3f2 100%)}
+.roof{position:absolute;left:50%;top:clamp(10px,3vw,30px);width:min(1180px,150vw);height:auto;transform:translateX(-50%);pointer-events:none;overflow:visible}
+.roof path{fill:none;stroke:url(#metal);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
+.hero .inner{position:relative;padding-top:clamp(70px,13vw,170px)}
+.hlogo{width:min(520px,86vw);height:auto;display:block;margin:0 auto;mix-blend-mode:multiply}
+.hero h1{font-size:clamp(2.7rem,8vw,5.6rem);font-weight:300;line-height:1;letter-spacing:-.035em;color:var(--plum);margin:clamp(18px,3vw,30px) auto 18px;max-width:12ch;text-wrap:balance}
+.hero p{font-size:clamp(1.05rem,1.6vw,1.22rem);color:#5c4f62;max-width:40ch;margin:0 auto}
+.cta{display:flex;gap:12px 22px;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:32px}
+.metal{border:0;border-radius:999px;padding:16px 30px;font:inherit;font-size:1.05rem;font-weight:500;letter-spacing:.01em;cursor:pointer;color:#fff;background:var(--metal);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 10px 26px -8px rgba(94,44,102,.55);position:relative;overflow:hidden;text-decoration:none;display:inline-block}
+.metal::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 48%,transparent 62%);transform:translateX(-120%);transition:transform .7s}
+.metal:hover::after,.metal:focus-visible::after{transform:translateX(120%)}
+.textlink{border:0;background:none;font:inherit;font-size:1.02rem;color:var(--plum);cursor:pointer;padding:6px 2px;border-bottom:1.5px solid var(--silver)}
+.textlink:hover{border-color:var(--orchid)}
+.spark{position:absolute;width:var(--s,26px);height:var(--s,26px);pointer-events:none;color:#c58acc;filter:drop-shadow(0 0 6px rgba(197,138,204,.9))}
+.spark svg{width:100%;height:100%;display:block}
+
+/* Animation d'ouverture : une seule séquence */
+@media (prefers-reduced-motion:no-preference){
+ .roof path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.6s cubic-bezier(.6,.1,.25,1) .15s forwards}
+ .spark{opacity:0;transform:scale(.2) rotate(-30deg);animation:glint .9s cubic-bezier(.2,1.6,.4,1) forwards;animation-delay:var(--d,1.5s)}
+ .hero .inner>*{opacity:0;animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+ .hero .inner>:nth-child(1){animation-delay:.35s}.hero .inner>:nth-child(2){animation-delay:.55s}
+ .hero .inner>:nth-child(3){animation-delay:.7s}.hero .inner>:nth-child(4){animation-delay:.85s}
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes glint{60%{opacity:1;transform:scale(1.25) rotate(10deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* Services : liste éditoriale */
+.svc-list{margin-top:44px;border-top:1px solid var(--silver)}
+.svc-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr) auto;gap:12px 40px;align-items:baseline;padding:26px 0;border-bottom:1px solid var(--silver)}
+.svc-row h3{font-size:clamp(1.45rem,2.6vw,2rem);font-weight:400;letter-spacing:-.02em;color:var(--plum);margin:0}
+.svc-row p{margin:0;color:#5c4f62}
+.svc-row button{justify-self:start;border:0;background:none;font:inherit;font-size:.95rem;color:var(--orchid);cursor:pointer;white-space:nowrap;padding:4px 0}
+.svc-row button:hover{text-decoration:underline}
+@media (max-width:720px){.svc-row{grid-template-columns:1fr;gap:6px}}
+
+/* Étapes */
+.steps{background:var(--lilac)}
+.step-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin:48px 0 0;padding:0;list-style:none;counter-reset:s}
+.step-list li{counter-increment:s;border-top:2px solid var(--orchid);padding-top:20px}
+.step-list li::before{content:counter(s);display:block;font-size:3.4rem;font-weight:300;line-height:1;color:var(--orchid);margin-bottom:14px}
+.step-list h3{font-size:1.3rem;font-weight:500;color:var(--plum);margin:0 0 6px}
+.step-list p{margin:0;color:#5c4f62}
+@media (max-width:760px){.step-list{grid-template-columns:1fr}}
+
+/* Bande prune */
+.band{background:radial-gradient(90% 120% at 100% 0%,#5a2a63 0%,var(--plum) 55%,#2a1230 100%);color:#efe6f1;position:relative;overflow:hidden}
+.band h2{color:#fff}
+.band .kicker{color:#d7b2dc}
+.promise{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;margin-top:48px}
+.promise h3{font-size:1.6rem;font-weight:400;color:#fff;margin:0 0 8px;letter-spacing:-.01em}
+.promise p{margin:0;color:#cdbcd2}
+@media (max-width:760px){.promise{grid-template-columns:1fr;gap:28px}}
+
+/* Soumission */
+.quote{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,6vw,80px);align-items:start}
+.qform{background:#fff;border:1px solid var(--bd);border-radius:24px;padding:clamp(20px,3vw,34px);box-shadow:0 30px 60px -30px rgba(59,26,66,.35)}
+.qform label{color:#5c4f62}
+.qform .metal{width:100%;margin-top:20px}
+.contact-alt{margin-top:28px;color:#5c4f62}
+@media (max-width:820px){.quote{grid-template-columns:1fr}}
+
+/* Avis */
+.reviews{background:var(--lilac)}
+.rev-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.score{font-size:1.05rem;color:var(--plum)}
+.score b{font-size:2.6rem;font-weight:300;letter-spacing:-.02em;margin-right:6px}
+#revList{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-top:40px}
+.rev{background:#fff;border-radius:20px;padding:24px;border:1px solid var(--bd);display:flex;flex-direction:column;gap:12px}
+.rev q{font-size:1.12rem;line-height:1.5;color:var(--ink);quotes:"« " " »"}
+.rev .by{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#5c4f62;font-size:.92rem;margin-top:auto}
+.rev .st{color:var(--star);letter-spacing:2px}
+details.give{margin-top:36px;background:#fff;border:1px solid var(--bd);border-radius:20px;padding:6px 24px}
+details.give summary{cursor:pointer;padding:16px 0;font-size:1.1rem;color:var(--plum);list-style:none}
+details.give summary::-webkit-details-marker{display:none}
+details.give summary::after{content:"+";float:right;font-size:1.4rem;line-height:1;color:var(--orchid)}
+details.give[open] summary::after{content:"–"}
+details.give[open]{padding-bottom:24px}
+
+/* Pied de page */
+footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(safe-area-inset-bottom,0px))}
+.foot{max-width:1120px;margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center;font-size:.95rem}
+.foot nav button{color:#e9dcec;padding:6px 10px}
+.foot nav button:hover{color:#fff}
+.foot strong{color:#fff;font-weight:500;font-size:1.15rem;display:block}
 .hide{display:none!important}
 </style>
 </head>
 <body>
-<header><div class="bar"><div class="logo" data-go="accueil" role="link" aria-label="Jessiclean – accueil"><img src="img/logo-sm.jpg" alt="Jessiclean" width="108" height="44"></div>
+<header><div class="bar"><div class="logo" data-go="accueil" role="link" aria-label="Jessiclean – accueil"><img src="img/logo-sm.jpg" alt="Jessiclean" width="123" height="50"></div>
 <nav><button data-v="accueil">Accueil</button><button data-v="client">Mes visites</button><button data-v="employes" id="tabEmp" class="hide">Mon horaire</button><button data-v="admin" id="tabAdmin" class="hide">Admin</button><button data-v="connexion" id="tabLogin" class="acct">Connexion</button></nav></div></header>
 <main>
 <div id="setupNote" class="note err hide"></div>
 
-<section id="v-accueil">
- <div class="hero"><img class="hlogo" src="img/logo.jpg" alt="Jessiclean" width="900" height="367"><div class="eyebrow">Entretien ménager · Résidentiel et commercial</div><h1>Un espace impeccable, sans effort de votre part</h1><p>Jessiclean prend soin de votre maison et de vos locaux avec rigueur, discrétion et constance.</p>
-  <div class="cta"><button data-scroll="svcCard">Nos services</button><button class="ghost" data-scroll="revCard">Laisser un avis</button></div>
-  <div class="badges"><span>✓ Fiable</span><span>✓ Soigné</span><span>✓ Horaire flexible</span></div></div>
- <div class="card" id="svcCard"><h2 class="serif">Nos services</h2><div class="grid">
-  <div class="svc"><b>Ménage régulier</b><small>Chaque semaine ou aux deux semaines, selon vos besoins</small></div>
-  <div class="svc"><b>Grand ménage</b><small>Nettoyage en profondeur, de haut en bas</small></div>
-  <div class="svc"><b>Déménagement</b><small>Nettoyage avant ou après votre déménagement</small></div>
-  <div class="svc"><b>Commercial</b><small>Bureaux, commerces et espaces de travail</small></div></div></div>
- <div class="card"><h2 class="serif">Pourquoi Jessiclean</h2><div class="why"><div><b>Fiable</b><span>Ponctualité et constance, visite après visite.</span></div><div><b>Soigné</b><span>Une attention aux détails dans chaque pièce.</span></div><div><b>Flexible</b><span>Un horaire adapté à votre quotidien.</span></div></div></div>
- <div class="card" id="revCard"><h2 class="serif">Laissez votre avis</h2>
-  <div id="revNote" class="note hide"></div>
-  <div class="stars" id="stars" role="radiogroup" aria-label="Note"></div>
-  <label for="rName">Votre nom</label><input id="rName" maxlength="40">
-  <label for="rText">Votre commentaire</label><textarea id="rText" rows="3" maxlength="500"></textarea>
-  <button class="btn" id="rSend">Publier mon avis</button></div>
- <div class="card"><h2 class="serif">Avis de nos clients <span class="mut" id="avg"></span></h2><div id="revList"><p class="mut">Chargement…</p></div></div>
-</section>
+<div id="v-accueil" class="site">
+ <section class="hero" aria-labelledby="heroTitle">
+  <svg class="roof" viewBox="0 0 1200 430" aria-hidden="true">
+   <defs><linearGradient id="metal" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9d3dc"/><stop offset=".35" stop-color="#b47abb"/><stop offset=".55" stop-color="#8a4a91"/><stop offset=".8" stop-color="#c6bfca"/><stop offset="1" stop-color="#b47abb"/></linearGradient></defs>
+   <path pathLength="1" d="M30 425 L600 38 L1170 425"/>
+   <path pathLength="1" d="M120 425 L600 98 L1080 425" style="stroke-width:1.2;opacity:.55"/>
+   <path pathLength="1" d="M842 200 V112 H888 V230"/>
+  </svg>
+  <span class="spark" style="left:calc(50% - 13px);top:clamp(2px,1.6vw,18px);--d:1.45s;--s:30px"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0Z"/></svg></span>
+  <span class="spark" style="left:calc(50% + min(300px,24vw));top:clamp(60px,10vw,130px);--d:1.7s;--s:22px"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0Z"/></svg></span>
+  <span class="spark" style="right:8%;bottom:22%;--d:1.9s;--s:34px"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0Z"/></svg></span>
+  <span class="spark" style="left:9%;bottom:30%;--d:2.05s;--s:16px"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0Z"/></svg></span>
+  <div class="wrap inner">
+   <img class="hlogo" src="img/logo.jpg" alt="Jessiclean" width="900" height="367">
+   <h1 id="heroTitle">Votre maison,<br>en mieux.</h1>
+   <p>Ménage résidentiel et commercial, fait avec soin et à l’heure convenue. Vous rentrez, tout brille.</p>
+   <div class="cta"><button class="metal" data-scroll="soumission">Demander une soumission</button><button class="textlink" data-scroll="services">Voir nos services</button></div>
+  </div>
+ </section>
 
-<section id="v-client" class="hide">
+ <section class="sec" id="services" aria-labelledby="svcTitle"><div class="wrap">
+  <p class="kicker">Nos services</p>
+  <h2 id="svcTitle">Un ménage pensé pour votre espace</h2>
+  <p class="lead">Une visite ponctuelle ou un entretien régulier : on s’adapte à vos lieux, à votre horaire et à vos habitudes.</p>
+  <div class="svc-list">
+   <div class="svc-row"><h3>Ménage régulier</h3><p>Chaque semaine ou aux deux semaines, la même attention à chaque visite.</p><button data-svc="Ménage régulier">Demander une soumission</button></div>
+   <div class="svc-row"><h3>Grand ménage</h3><p>De haut en bas : plinthes, armoires, électroménagers, recoins oubliés.</p><button data-svc="Grand ménage">Demander une soumission</button></div>
+   <div class="svc-row"><h3>Déménagement</h3><p>Avant de partir ou avant d’emménager, un logement prêt à être habité.</p><button data-svc="Déménagement">Demander une soumission</button></div>
+   <div class="svc-row"><h3>Commercial</h3><p>Bureaux, commerces et espaces de travail, en dehors de vos heures d’ouverture.</p><button data-svc="Commercial">Demander une soumission</button></div>
+  </div>
+ </div></section>
+
+ <section class="sec steps" aria-labelledby="stepsTitle"><div class="wrap">
+  <p class="kicker">Comment ça fonctionne</p>
+  <h2 id="stepsTitle">Trois étapes, puis on s’occupe du reste</h2>
+  <ol class="step-list">
+   <li><h3>Vous nous écrivez</h3><p>Remplissez la demande de soumission ci-dessous. On vous rappelle pour comprendre vos besoins.</p></li>
+   <li><h3>On s’entend sur le plan</h3><p>Fréquence, pièces à prioriser, accès, produits : tout est noté dans votre dossier.</p></li>
+   <li><h3>Suivez vos visites en ligne</h3><p>Avec votre code personnel, consultez vos prochaines visites dans « Mes visites ».</p></li>
+  </ol>
+ </div></section>
+
+ <section class="sec band" aria-labelledby="whyTitle"><div class="wrap">
+  <p class="kicker">Pourquoi Jessiclean</p>
+  <h2 id="whyTitle">Le genre de propreté qui se remarque</h2>
+  <div class="promise">
+   <div><h3>Fiable</h3><p>On arrive à l’heure prévue, visite après visite. Si quelque chose change, vous le savez d’avance.</p></div>
+   <div><h3>Soigné</h3><p>Les détails qu’on voit et ceux qu’on ne voit pas : poignées, interrupteurs, dessus des cadres.</p></div>
+   <div><h3>Discret</h3><p>Vos clés, vos codes et vos consignes restent confidentiels et sont gérés avec rigueur.</p></div>
+  </div>
+ </div></section>
+
+ <section class="sec" id="soumission" aria-labelledby="qTitle"><div class="wrap quote">
+  <div>
+   <p class="kicker">Soumission gratuite</p>
+   <h2 id="qTitle">Parlez-nous de votre espace</h2>
+   <p class="lead">Quelques détails suffisent. On vous contacte pour préciser vos besoins et vous proposer un prix.</p>
+  </div>
+  <form class="qform" id="qForm" novalidate>
+   <div id="qNote" class="note hide" role="status"></div>
+   <label for="qName">Nom</label><input id="qName" maxlength="80" autocomplete="name" required>
+   <div class="row st"><div><label for="qPhone">Téléphone</label><input id="qPhone" type="tel" maxlength="30" autocomplete="tel"></div><div><label for="qEmail">Courriel</label><input id="qEmail" type="email" maxlength="120" autocomplete="email"></div></div>
+   <div class="row st"><div><label for="qService">Service</label><select id="qService"><option>Ménage régulier</option><option>Grand ménage</option><option>Déménagement</option><option>Commercial</option><option>Autre</option></select></div><div><label for="qCity">Ville ou quartier</label><input id="qCity" maxlength="120" autocomplete="address-level2"></div></div>
+   <label for="qMsg">Votre espace et vos besoins</label><textarea id="qMsg" rows="4" maxlength="1500" placeholder="Ex. : maison de 3 chambres, 2 salles de bain, un chat, aux deux semaines"></textarea>
+   <button class="metal" id="qSend" type="submit">Envoyer ma demande</button>
+  </form>
+ </div></section>
+
+ <section class="sec reviews" aria-labelledby="revTitle"><div class="wrap">
+  <div class="rev-head"><div><p class="kicker">Avis</p><h2 id="revTitle" style="margin:0">Ce que disent nos clients</h2></div><div class="score" id="avg"></div></div>
+  <div id="revList"><p class="mut">Chargement…</p></div>
+  <details class="give" id="revCard"><summary>Laisser un avis</summary>
+   <div id="revNote" class="note hide" role="status"></div>
+   <div class="stars" id="stars" role="radiogroup" aria-label="Note"></div>
+   <label for="rName">Votre nom</label><input id="rName" maxlength="40">
+   <label for="rText">Votre commentaire</label><textarea id="rText" rows="3" maxlength="500"></textarea>
+   <button class="btn" id="rSend">Publier mon avis</button>
+  </details>
+ </div></section>
+</div>
+
+<section id="v-client" class="app hide">
  <div class="card"><h2 class="serif">Mes visites</h2>
   <p class="mut">Entrez le code d’accès que Jessiclean vous a remis pour voir vos prochaines visites.</p>
   <label for="vCode">Code d’accès</label><input id="vCode" maxlength="10" autocapitalize="characters" autocomplete="off">
@@ -117,7 +273,7 @@ input[type=file]{padding:8px;font-size:.88rem}
   <div id="vOut" style="margin-top:12px"></div></div>
 </section>
 
-<section id="v-connexion" class="hide">
+<section id="v-connexion" class="app hide">
  <div class="card" id="loginCard"><h2 class="serif">Espace équipe</h2>
   <p class="mut">Réservé aux employées et à l’administration de Jessiclean.</p>
   <div id="loginMsg" class="note hide"></div>
@@ -128,14 +284,15 @@ input[type=file]{padding:8px;font-size:.88rem}
  <div class="card hide" id="meCard"><div class="who"><div>Connectée en tant que <b id="meEmail"></b><div class="mut" id="meRole"></div></div><button class="btn sec sm" id="lOut">Se déconnecter</button></div></div>
 </section>
 
-<section id="v-employes" class="hide">
+<section id="v-employes" class="app hide">
  <div class="card"><h2>Mon horaire</h2>
   <div id="empNote" class="note hide"></div>
   <label for="empSel">Employée</label><select id="empSel"></select>
   <div id="empList"><p class="mut">Chargement…</p></div></div>
 </section>
 
-<section id="v-admin" class="hide">
+<section id="v-admin" class="app hide">
+ <div class="card"><h2>Demandes de soumission <span class="mut" id="qCount"></span></h2><div id="qList"><p class="mut">Aucune demande pour le moment.</p></div></div>
  <div class="card"><h2>Employées</h2>
   <p class="mut">Le courriel sert à la connexion : créez ensuite le compte dans Firebase (Authentication → Ajouter un utilisateur) avec ce même courriel.</p>
   <div class="chips" id="empChips"></div>
@@ -162,7 +319,7 @@ input[type=file]{padding:8px;font-size:.88rem}
 </section>
 </main>
 <div id="viewer" class="hide" role="dialog" aria-modal="true" aria-label="Pièce jointe"><img id="vImg" alt=""><div class="vbar"><span id="vName"></span><a id="vDl" download>Télécharger</a><button id="vClose">Fermer</button></div></div>
-<footer>© <span id="yr"></span> Jessiclean · Entretien ménager</footer>
+<footer><div class="foot"><div><strong>Jessiclean</strong>Entretien ménager résidentiel et commercial<br><span class="mut" style="color:#a996ae">© <span id="yr"></span> Jessiclean</span></div><nav aria-label="Pied de page"><button data-go="client">Mes visites</button><button data-go="connexion">Espace équipe</button><button data-scroll="soumission" data-go="accueil">Demander une soumission</button></nav></div></footer>
 
 <script type="module">
 import { firebaseConfig, ADMIN_EMAILS } from './firebase-config.js';
@@ -174,7 +331,7 @@ const admins=(ADMIN_EMAILS||[]).map(e=>String(e).trim().toLowerCase());
 $('yr').textContent=new Date().getFullYear();
 
 let api=null,user=null,isAdmin=false,rating=0,editId=null,cEditId=null;
-let reviews=[],shifts=[],emps=[],clients=[],empDenied=false;
+let requests=[],reviews=[],shifts=[],emps=[],clients=[],empDenied=false;
 const loaded={shifts:false,employees:false,clients:false};
 let unsubs=[];
 
@@ -204,12 +361,16 @@ function show(v){
   if(v==='admin'&&!isAdmin)v=user?'employes':'connexion';
   if(v==='employes'&&!user)v='connexion';
   VIEWS.forEach(k=>$('v-'+k).classList.toggle('hide',k!==v));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  document.querySelectorAll('header nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);
 }
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{show(b.dataset.v);scrollTo(0,0);});
+document.querySelectorAll('header nav button').forEach(b=>b.onclick=()=>{show(b.dataset.v);scrollTo(0,0);});
 document.querySelector('.logo').onclick=()=>{show('accueil');scrollTo(0,0);};
-document.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>$(b.dataset.scroll).scrollIntoView({behavior:'smooth'}));
+document.querySelectorAll('[data-go],[data-scroll]').forEach(b=>{if(b.classList.contains('logo'))return;b.onclick=()=>{
+  if(b.dataset.go)show(b.dataset.go);
+  if(b.dataset.scroll)requestAnimationFrame(()=>$(b.dataset.scroll).scrollIntoView({behavior:'smooth'}));else scrollTo(0,0);
+};});
+document.querySelectorAll('[data-svc]').forEach(b=>b.onclick=()=>{$('qService').value=b.dataset.svc;$('soumission').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('qName').focus({preventScroll:true}),600);});
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
 
 /* ───────── Étoiles ───────── */
@@ -225,8 +386,9 @@ const byTime=(a,b)=>(a.date+a.start).localeCompare(b.date+b.start);
 
 function renderReviews(){
   const l=[...reviews].sort((a,b)=>(b.ts||0)-(a.ts||0));
-  $('avg').textContent=l.length?'· '+(l.reduce((s,r)=>s+(+r.stars||0),0)/l.length).toFixed(1)+' ★ ('+l.length+')':'';
-  $('revList').innerHTML=l.length?l.map(r=>'<div class="rev"><b>'+esc(r.name)+'</b><span style="color:var(--star)">'+'★'.repeat(Math.max(0,Math.min(5,+r.stars||0)))+'</span><div>'+esc(r.text)+'</div>'+(isAdmin?'<button class="btn del sm" data-del="'+esc(r.id)+'">Supprimer</button>':'')+'</div>').join(''):'<p class="mut">Soyez le premier à laisser un avis !</p>';
+  const n=l.length,avg=n?(l.reduce((s,r)=>s+(+r.stars||0),0)/n):0;
+  $('avg').innerHTML=n?'<b>'+avg.toFixed(1).replace('.',',')+'</b> sur 5 · '+n+' avis':'';
+  $('revList').innerHTML=n?l.map(r=>{const k=Math.max(0,Math.min(5,+r.stars||0));return '<figure class="rev" style="margin:0"><q>'+esc(r.text)+'</q><figcaption class="by"><span>'+esc(r.name)+'</span><span class="st" aria-label="'+k+' sur 5">'+'★'.repeat(k)+'</span></figcaption>'+(isAdmin?'<button class="btn del sm" data-del="'+esc(r.id)+'">Supprimer</button>':'')+'</figure>';}).join(''):'<p class="mut">Aucun avis pour l’instant. Soyez la première personne à en laisser un.</p>';
 }
 function shiftHTML(s,admin){
   return '<div class="shift"><div><b>'+esc(s.start)+' – '+esc(s.end)+'</b> · '+esc(s.client||'Client')+(admin?' <span class="mut">('+esc(empName(s.emp))+')</span>':'')+
@@ -290,6 +452,39 @@ $('rSend').onclick=()=>{
   }).catch(()=>{}).finally(()=>$('rSend').disabled=false);
 };
 $('revList').onclick=e=>{const id=e.target.dataset.del;if(id&&confirm('Supprimer cet avis ?'))guard(api.del('reviews',id)).catch(()=>{});};
+
+/* Demandes de soumission */
+$('qForm').onsubmit=async e=>{
+  e.preventDefault();
+  const g=id=>$(id).value.trim(),note=$('qNote');
+  const d={name:g('qName'),phone:g('qPhone'),email:g('qEmail'),service:$('qService').value,city:g('qCity'),message:g('qMsg'),ts:Date.now(),done:false};
+  const say=(t,err)=>{note.textContent=t;note.classList.toggle('err',!!err);note.classList.remove('hide');};
+  if(!d.name){say('Indiquez votre nom.',true);$('qName').focus();return;}
+  if(!d.phone&&!d.email){say('Indiquez un téléphone ou un courriel pour qu’on puisse vous joindre.',true);$('qPhone').focus();return;}
+  if(d.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)){say('Vérifiez l’adresse courriel.',true);$('qEmail').focus();return;}
+  if(!api){say('Le formulaire n’est pas encore relié. Réessayez plus tard.',true);return;}
+  $('qSend').disabled=true;
+  try{await api.set('requests',uid(),d);$('qForm').reset();say('Demande envoyée. Merci ! Nous vous contactons très bientôt.');}
+  catch(err){say('La demande n’a pas pu être envoyée. Réessayez dans un instant.',true);}
+  finally{$('qSend').disabled=false;}
+};
+function renderRequests(){
+  const open=requests.filter(r=>!r.done).length;
+  $('tabAdmin').textContent=open?'Admin ('+open+')':'Admin';
+  if(!isAdmin)return;
+  $('qCount').textContent=requests.length?'· '+open+' à traiter':'';
+  const l=[...requests].sort((a,b)=>(a.done-b.done)||((b.ts||0)-(a.ts||0)));
+  $('qList').innerHTML=l.length?l.map(r=>'<div class="shift'+(r.done?' done':'')+'"><div><b>'+esc(r.name)+'</b> · '+esc(r.service)+(r.city?' · '+esc(r.city):'')+
+    '<div class="mut">'+new Date(r.ts||0).toLocaleString('fr-CA',{dateStyle:'medium',timeStyle:'short'})+'</div>'+
+    (r.phone?'<div><a href="tel:'+esc(r.phone)+'">'+esc(r.phone)+'</a></div>':'')+(r.email?'<div><a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a></div>':'')+
+    (r.message?'<div class="mut" style="white-space:pre-wrap">'+esc(r.message)+'</div>':'')+'</div>'+
+    '<div class="acts"><button class="btn sec sm" data-qdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-qdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">Aucune demande pour le moment.</p>';
+}
+$('qList').onclick=e=>{
+  const dn=e.target.dataset.qdone,dl=e.target.dataset.qdel;
+  if(dn){const r=requests.find(x=>x.id===dn);if(r)guard(api.update('requests',dn,{done:!r.done})).catch(()=>{});}
+  if(dl&&confirm('Supprimer cette demande ?'))guard(api.del('requests',dl)).catch(()=>{});
+};
 
 /* Connexion */
 function loginMsg(t,err){$('loginMsg').textContent=t;$('loginMsg').classList.toggle('err',!!err);$('loginMsg').classList.toggle('hide',!t);}
@@ -473,10 +668,11 @@ $('vGo').onclick=async()=>{
 };
 
 /* ───────── Démarrage ───────── */
-function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};Object.keys(loaded).forEach(k=>loaded[k]=false);}
+function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};Object.keys(loaded).forEach(k=>loaded[k]=false);}
 function startPrivate(){
   unsubs.push(api.listen('employees',l=>{emps=l;empDenied=false;loaded.employees=true;renderEmp();renderAdmin();scheduleSync();},()=>{empDenied=true;renderEmp();}));
   unsubs.push(api.listen('shifts',l=>{shifts=l;loaded.shifts=true;renderEmp();renderAdmin();scheduleSync();},()=>{}));
+  if(isAdmin)unsubs.push(api.listen('requests',l=>{requests=l;renderRequests();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('clients',l=>{clients=l;loaded.clients=true;renderClients();scheduleSync();},()=>{}));
 }
 function noData(t){

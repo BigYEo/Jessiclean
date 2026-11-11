@@ -57,6 +57,21 @@ service cloud.firestore {
       allow create, update: if isAdmin() && okFile();
     }
 
+    // Demandes de soumission : tout le monde peut en envoyer ; seule l'admin les lit
+    match /requests/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['name', 'phone', 'email', 'service', 'city', 'message', 'ts', 'done'])
+        && request.resource.data.keys().hasAll(['name', 'phone', 'email', 'service', 'city', 'message', 'ts', 'done'])
+        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
+        && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
+        && request.resource.data.email is string && request.resource.data.email.size() <= 120
+        && (request.resource.data.phone.size() > 0 || request.resource.data.email.size() > 0)
+        && request.resource.data.service is string && request.resource.data.service.size() <= 60
+        && request.resource.data.city is string && request.resource.data.city.size() <= 120
+        && request.resource.data.message is string && request.resource.data.message.size() <= 1500
+        && request.resource.data.ts is int && request.resource.data.done == false;
+      allow read, update, delete: if isAdmin();
+    }
+
     // Horaire client : lisible seulement avec le code exact (pas de liste possible)
     match /visits/{code} {
       allow get: if true;
