@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jessiclean – Entretien ménager</title>
 <meta name="description" content="Jessiclean – entretien ménager résidentiel et commercial. Fiable, soigné, horaire flexible.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e8f86'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='white' font-family='Georgia,serif' font-weight='700'%3EJ%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%238a4a91'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='white' font-family='Georgia,serif' font-weight='700'%3EJ%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f4faf9;--card:#fff;--tx:#17302e;--mut:#5d7775;--ac:#0e9c8f;--ac2:#e8f6f4;--bd:#d6e6e3;--danger:#c0392b;--star:#f5a623}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1e1d;--card:#172928;--tx:#e6f2f0;--mut:#93b0ad;--ac:#2fc5b6;--ac2:#1d3533;--bd:#264240;--danger:#ff7b6b;--star:#ffb84a}}
-:root[data-theme="dark"]{--bg:#0f1e1d;--card:#172928;--tx:#e6f2f0;--mut:#93b0ad;--ac:#2fc5b6;--ac2:#1d3533;--bd:#264240;--danger:#ff7b6b;--star:#ffb84a}
+:root{--bg:#faf6fb;--card:#fff;--tx:#24182a;--mut:#6f6075;--ac:#8a4a91;--ac2:#f3e8f5;--bd:#e8dcea;--danger:#c0392b;--star:#c77dcf;--plum:#5b2a63}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16111a;--card:#211a26;--tx:#f1e9f3;--mut:#b3a3b8;--ac:#d9a3df;--ac2:#3a2a40;--bd:#3a2e40;--danger:#ff7b6b;--star:#e3a8ea;--on:#24182a}}
+:root[data-theme="dark"]{--bg:#16111a;--card:#211a26;--tx:#f1e9f3;--mut:#b3a3b8;--ac:#d9a3df;--ac2:#3a2a40;--bd:#3a2e40;--danger:#ff7b6b;--star:#e3a8ea;--on:#24182a}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:env(safe-area-inset-bottom,0px)}
 header{position:sticky;top:0;padding-top:env(safe-area-inset-top,0px);background:var(--card);border-bottom:1px solid var(--bd);z-index:5}
 .bar{max-width:860px;margin:auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.logo{font-weight:800;font-size:1.3rem;color:var(--ac);cursor:pointer}
+.logo{cursor:pointer;display:flex;align-items:center;background:#fff;border-radius:10px;padding:2px 6px;line-height:0}
+.logo img{height:44px;width:auto;display:block}
 nav{display:flex;gap:4px;flex-wrap:wrap}
 nav button{border:0;background:none;color:var(--mut);padding:8px 12px;border-radius:999px;font:inherit;font-weight:600;cursor:pointer}
 nav button.on{background:var(--ac2);color:var(--ac)}
@@ -28,7 +29,7 @@ label{display:block;font-size:.85rem;color:var(--mut);margin:10px 0 4px}
 input,select,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (max-width:480px){.row.st{grid-template-columns:1fr}}
-.btn{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;margin-top:12px}
+.btn{background:var(--ac);color:var(--on,#fff);border:0;border-radius:10px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;margin-top:12px}
 .btn:disabled{opacity:.6;cursor:default}
 .btn.sec{background:var(--ac2);color:var(--ac)}.btn.sm{padding:6px 10px;margin:0;font-size:.85rem}
 .btn.del{background:none;color:var(--danger);border:1px solid var(--danger)}
@@ -47,19 +48,20 @@ input,select,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-
 .chip button{border:0;background:none;color:var(--danger);cursor:pointer;font-size:1rem}
 .note{background:var(--ac2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-bottom:12px}
 .note.err{color:var(--danger)}
-.logo,.hero h1,.serif{font-family:"Playfair Display",Georgia,"Times New Roman",serif}
-.logo{letter-spacing:.02em}
-.hero{position:relative;overflow:hidden;color:#fff;margin-bottom:18px;padding:46px 24px 38px;border-radius:22px;background:linear-gradient(140deg,#0a4a58 0%,#0e8f86 100%);box-shadow:0 10px 30px rgba(10,74,88,.18)}
-.hero::after{content:"";position:absolute;right:-70px;top:-70px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.08)}
-.hero::before{content:"";position:absolute;right:50px;bottom:-90px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
+h1,h2,.serif{font-family:"Jost","Futura","Century Gothic",system-ui,sans-serif;font-weight:600;letter-spacing:.01em}
+.hero{position:relative;overflow:hidden;color:#2b1a31;margin-bottom:18px;padding:30px 24px 34px;border-radius:22px;text-align:center;
+ background:radial-gradient(circle at 85% 10%,rgba(201,140,210,.35),transparent 45%),radial-gradient(circle at 10% 95%,rgba(150,180,220,.25),transparent 40%),linear-gradient(160deg,#ffffff 0%,#f6ecf8 60%,#ecdcf0 100%);
+ border:1px solid #eadcee;box-shadow:0 12px 34px rgba(91,42,99,.12)}
 .hero>*{position:relative;z-index:1}
-.eyebrow{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;opacity:.85;margin-bottom:12px}
-.hero h1{font-size:2.1rem;line-height:1.18;margin:0 0 14px}
-.hero p{max-width:460px;opacity:.93;font-size:1.02rem;margin:0}
-.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-.cta button{border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer;background:#fff;color:#0a4a58}
-.cta button.ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.7)}
-.badges{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:24px;font-size:.88rem;opacity:.95}
+.hero .hlogo{width:min(440px,92%);height:auto;display:block;margin:0 auto 14px;mix-blend-mode:multiply}
+.eyebrow{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:#8a4a91;font-weight:600;margin-bottom:10px}
+.hero h1{font-size:2rem;line-height:1.2;margin:0 auto 12px;color:#5b2a63;max-width:560px}
+.hero p{max-width:480px;margin:0 auto;color:#5e4d63;font-size:1.02rem}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;justify-content:center}
+.cta button{border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#9d5ba4,#6e3a76);color:#fff;box-shadow:0 4px 14px rgba(110,58,118,.3)}
+.cta button.ghost{background:#fff;color:#6e3a76;border:1.5px solid #c9a6cf;box-shadow:none}
+.badges{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:22px;font-size:.88rem;color:#6e3a76;justify-content:center;font-weight:600}
+@media (max-width:480px){.hero h1{font-size:1.6rem}.hero{padding:22px 16px 28px}}
 .svc{background:var(--card);border:1px solid var(--bd);border-top:3px solid var(--ac);border-radius:12px;padding:14px}
 .svc b{display:block;margin-bottom:4px}
 .svc small{display:block;color:var(--mut);font-size:.85rem}
@@ -83,13 +85,13 @@ input[type=file]{padding:8px;font-size:.88rem}
 </style>
 </head>
 <body>
-<header><div class="bar"><div class="logo" data-go="accueil">Jessiclean</div>
+<header><div class="bar"><div class="logo" data-go="accueil" role="link" aria-label="Jessiclean – accueil"><img src="img/logo-sm.jpg" alt="Jessiclean" width="108" height="44"></div>
 <nav><button data-v="accueil">Accueil</button><button data-v="client">Mes visites</button><button data-v="employes" id="tabEmp" class="hide">Mon horaire</button><button data-v="admin" id="tabAdmin" class="hide">Admin</button><button data-v="connexion" id="tabLogin" class="acct">Connexion</button></nav></div></header>
 <main>
 <div id="setupNote" class="note err hide"></div>
 
 <section id="v-accueil">
- <div class="hero"><div class="eyebrow">Entretien ménager · Résidentiel et commercial</div><h1>Un espace impeccable, sans effort de votre part</h1><p>Jessiclean prend soin de votre maison et de vos locaux avec rigueur, discrétion et constance.</p>
+ <div class="hero"><img class="hlogo" src="img/logo.jpg" alt="Jessiclean" width="900" height="367"><div class="eyebrow">Entretien ménager · Résidentiel et commercial</div><h1>Un espace impeccable, sans effort de votre part</h1><p>Jessiclean prend soin de votre maison et de vos locaux avec rigueur, discrétion et constance.</p>
   <div class="cta"><button data-scroll="svcCard">Nos services</button><button class="ghost" data-scroll="revCard">Laisser un avis</button></div>
   <div class="badges"><span>✓ Fiable</span><span>✓ Soigné</span><span>✓ Horaire flexible</span></div></div>
  <div class="card" id="svcCard"><h2 class="serif">Nos services</h2><div class="grid">
