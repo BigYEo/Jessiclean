@@ -17,5 +17,5 @@ export const firebaseConfig = {
 
 // Courriels qui ont accès à l'onglet Admin (en minuscules)
 export const ADMIN_EMAILS = [
-  "admin@exemple.com"
+  "jaykaa92@icloud.com"
 ];

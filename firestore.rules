@@ -1,7 +1,7 @@
 rules_version = '2';
 
 // Règles de sécurité Jessiclean
-// ⚠ Remplacez admin@exemple.com par votre courriel (en minuscules),
+// ⚠ Remplacez jaykaa92@icloud.com par votre courriel (en minuscules),
 //   le même que dans firebase-config.js.
 
 service cloud.firestore {
@@ -9,7 +9,7 @@ service cloud.firestore {
 
     function signedIn() { return request.auth != null && request.auth.token.email != null; }
     function email()    { return request.auth.token.email.lower(); }
-    function isAdmin()  { return signedIn() && email() in ['admin@exemple.com']; }
+    function isAdmin()  { return signedIn() && email() in ['jaykaa92@icloud.com']; }
     // Une employée a accès si une fiche « employees » porte son courriel comme identifiant
     function isStaff()  { return isAdmin() || (signedIn() && exists(/databases/$(database)/documents/employees/$(email()))); }
 
