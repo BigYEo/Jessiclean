@@ -265,6 +265,47 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
 .zone{margin-top:26px}
 .zone ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .zone li{background:#fff;border:1px solid var(--bd);border-radius:999px;padding:5px 14px;color:var(--plum);font-size:.95rem}
+/* ── Lisibilité : textes plus grands et plus contrastés (clientèle de tous âges) ── */
+body{font-size:19px;line-height:1.6}
+nav button{font-size:1.02rem;padding:10px 15px}
+h2{font-size:1.5rem}
+label{font-size:1rem;color:#4d4153;margin:14px 0 6px}
+.app label{color:var(--mut)}
+input,select,textarea{font-size:1.1rem;padding:13px 14px}
+.btn{font-size:1.05rem;padding:14px 22px}
+.btn.sm{font-size:.95rem;padding:8px 14px}
+.mut{font-size:.98rem}
+.kicker{font-size:1.15rem;font-weight:600;margin-bottom:12px}
+.sec h2{font-size:clamp(2.5rem,5.4vw,4rem);font-weight:400;line-height:1.1;letter-spacing:-.02em;max-width:18ch}
+.lead{font-size:clamp(1.18rem,1.7vw,1.32rem);color:#4d4153;line-height:1.6}
+.hero h1{font-size:clamp(3.1rem,9.5vw,6.4rem);font-weight:400;letter-spacing:-.03em;line-height:1.02}
+.hero p{font-size:clamp(1.2rem,1.9vw,1.4rem);color:#4d4153;max-width:42ch}
+.metal{font-size:1.15rem;font-weight:600;padding:18px 34px}
+.textlink{font-size:1.15rem}
+.svc-row h3{font-size:clamp(1.75rem,3vw,2.3rem);font-weight:500}
+.svc-row p,.step-list p{color:#4d4153;font-size:1.08rem}
+.svc-row button{font-size:1.05rem;font-weight:500}
+.step-list li::before{font-size:3.8rem;font-weight:400}
+.step-list h3{font-size:1.6rem}
+.promise h3{font-size:2rem;font-weight:500}
+.promise p{font-size:1.1rem;color:#ddd0e1}
+.rev q{font-size:1.22rem}
+.qform legend{font-size:1.3rem}
+.app legend{font-size:1.2rem}
+.cspace h1{font-size:clamp(2.6rem,7vw,3.8rem);font-weight:400}
+.ch2{font-size:1.6rem;font-weight:500}
+.nextday{font-weight:400}
+.nexttime b{font-weight:500}
+.foot{font-size:1.02rem}
+.foot strong{font-size:1.3rem}
+.daypick label{font-size:1rem;padding:8px 14px}
+.zone li{font-size:1.02rem}
+.when{font-size:1rem}
+.calbtn{font-size:1.02rem}
+@media (max-width:480px){.hero h1{font-size:3rem}.sec h2{font-size:2.3rem}}
+@media (max-width:560px){header .bar{flex-wrap:nowrap;padding:6px 8px;gap:4px}.logo img{height:36px}.logo{padding:2px 2px;flex-shrink:0}header nav{flex-wrap:nowrap;gap:0}header nav button{font-size:.95rem;padding:9px 9px;white-space:nowrap}}
+.policy-note{font-size:.95rem;color:#5c4f62;margin:14px 0 0}
+.policy-note a{color:var(--plum)}
 .hide{display:none!important}
 </style>
 </head>
@@ -354,6 +395,7 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
     <label for="qMsg">Autres détails</label><textarea id="qMsg" rows="3" maxlength="1500" placeholder="Ce qui est important pour vous, la fréquence souhaitée…"></textarea>
    </fieldset>
    <button class="metal" id="qSend" type="submit">Envoyer ma demande</button>
+   <p class="policy-note">Vos renseignements servent uniquement à préparer votre soumission. Voir notre <a href="politique-confidentialite.html">politique de confidentialité</a>.</p>
   </form>
  </div></section>
 
@@ -398,6 +440,7 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
      <label for="mText">Votre message</label><textarea id="mText" rows="3" maxlength="1200"></textarea>
      <label for="mContact">Téléphone ou courriel pour vous répondre</label><input id="mContact" maxlength="120" autocomplete="tel">
      <button class="metal" id="mSend" type="submit">Envoyer le message</button>
+     <p class="policy-note">Voir notre <a href="politique-confidentialite.html">politique de confidentialité</a>.</p>
     </form>
    </div>
   </div>
@@ -471,7 +514,7 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
 </section>
 </main>
 <div id="viewer" class="hide" role="dialog" aria-modal="true" aria-label="Pièce jointe"><img id="vImg" alt=""><div class="vbar"><span id="vName"></span><a id="vDl" download>Télécharger</a><button id="vClose">Fermer</button></div></div>
-<footer><div class="foot"><div><strong>Jessiclean</strong>Entretien ménager résidentiel et commercial en Outaouais<br><a href="tel:+18195980121" style="color:#fff;text-decoration:none;font-size:1.1rem">819 598-0121</a><br><span class="mut" style="color:#a996ae">© <span id="yr"></span> Jessiclean</span></div><nav aria-label="Pied de page"><button data-go="client">Espace client</button><button data-go="connexion">Espace équipe</button><button data-scroll="soumission" data-go="accueil">Demander une soumission</button></nav></div></footer>
+<footer><div class="foot"><div><strong>Jessiclean</strong>Entretien ménager résidentiel et commercial en Outaouais<br><a href="tel:+18195980121" style="color:#fff;text-decoration:none;font-size:1.1rem">819 598-0121</a><br><span class="mut" style="color:#a996ae">© <span id="yr"></span> Jessiclean</span></div><nav aria-label="Pied de page"><button data-go="client">Espace client</button><button data-go="connexion">Espace équipe</button><button data-scroll="soumission" data-go="accueil">Demander une soumission</button><a href="politique-confidentialite.html" style="color:#e9dcec;padding:6px 10px;text-decoration:none">Politique de confidentialité</a></nav></div></footer>
 
 <script type="module">
 import * as CFG from './firebase-config.js';
