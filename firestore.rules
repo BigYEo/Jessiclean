@@ -49,6 +49,7 @@ service cloud.firestore {
     }
 
     // Pièces jointes (stockées en texte, max ≈ 900 000 caractères par fichier)
+    function okStr(k, n) { return request.resource.data[k] is string && request.resource.data[k].size() <= n; }
     function okFile() {
       return request.resource.data.data is string && request.resource.data.data.size() <= 900000
         && request.resource.data.name is string && request.resource.data.name.size() <= 200;
@@ -65,16 +66,15 @@ service cloud.firestore {
 
     // Demandes de soumission : tout le monde peut en envoyer ; seule l'admin les lit
     match /requests/{id} {
-      allow create: if request.resource.data.keys().hasOnly(['name', 'phone', 'email', 'service', 'city', 'message', 'ts', 'done'])
-        && request.resource.data.keys().hasAll(['name', 'phone', 'email', 'service', 'city', 'message', 'ts', 'done'])
-        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
-        && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
-        && request.resource.data.email is string && request.resource.data.email.size() <= 120
-        && (request.resource.data.phone.size() > 0 || request.resource.data.email.size() > 0)
-        && request.resource.data['service'] is string && request.resource.data['service'].size() <= 60
-        && request.resource.data.city is string && request.resource.data.city.size() <= 120
-        && request.resource.data.message is string && request.resource.data.message.size() <= 1500
-        && request.resource.data.ts is int && request.resource.data.done == false;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'phone', 'email', 'addr', 'service', 'habitat', 'rooms', 'basement', 'pets', 'days', 'hours', 'message', 'ts', 'done'])
+        && request.resource.data.keys().hasAll(['name', 'phone', 'email', 'addr', 'service', 'habitat', 'rooms', 'basement', 'pets', 'days', 'hours', 'message', 'ts', 'done'])
+        && okStr('name', 80) && request.resource.data['name'].size() > 0
+        && okStr('phone', 30) && okStr('email', 120)
+        && (request.resource.data['phone'].size() > 0 || request.resource.data['email'].size() > 0)
+        && okStr('addr', 200) && okStr('service', 60) && okStr('habitat', 60) && okStr('rooms', 80)
+        && okStr('basement', 40) && okStr('pets', 120) && okStr('hours', 80) && okStr('message', 1500)
+        && request.resource.data['days'] is list && request.resource.data['days'].size() <= 7
+        && request.resource.data['ts'] is int && request.resource.data['done'] == false;
       allow read, update, delete: if isAdmin();
     }
 

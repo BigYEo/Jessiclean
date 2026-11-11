@@ -190,6 +190,9 @@ footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(sa
 .app fieldset{border:0;border-top:1px solid var(--bd);padding:14px 0 0;margin:18px 0 0;min-width:0}
 .app legend{font-weight:600;font-size:1.05rem;color:var(--ac);padding:0 10px 0 0}
 .daypick{display:flex;flex-wrap:wrap;gap:6px}
+.qform fieldset{border:0;border-top:1px solid var(--bd);padding:14px 0 0;margin:18px 0 0;min-width:0}
+.qform fieldset:first-of-type{border-top:0;margin-top:0;padding-top:0}
+.qform legend{font-weight:500;font-size:1.08rem;color:var(--plum);padding:0 10px 0 0}
 .daypick label{display:inline-flex;align-items:center;gap:6px;margin:0;padding:6px 12px;border:1px solid var(--bd);border-radius:999px;color:var(--tx);font-size:.9rem;cursor:pointer;background:var(--bg)}
 .daypick label:has(input:checked){border-color:var(--ac);background:var(--ac2);color:var(--ac)}
 .daypick input{width:auto;margin:0;accent-color:var(--ac)}
@@ -268,10 +271,23 @@ details.fiche summary{cursor:pointer;color:var(--ac);font-size:.9rem;font-weight
   </div>
   <form class="qform" id="qForm" novalidate>
    <div id="qNote" class="note hide" role="status"></div>
-   <label for="qName">Nom</label><input id="qName" maxlength="80" autocomplete="name" required>
-   <div class="row st"><div><label for="qPhone">Téléphone</label><input id="qPhone" type="tel" maxlength="30" autocomplete="tel"></div><div><label for="qEmail">Courriel</label><input id="qEmail" type="email" maxlength="120" autocomplete="email"></div></div>
-   <div class="row st"><div><label for="qService">Service</label><select id="qService"><option>Ménage régulier</option><option>Grand ménage</option><option>Déménagement</option><option>Commercial</option><option>Autre</option></select></div><div><label for="qCity">Ville ou quartier</label><input id="qCity" maxlength="120" autocomplete="address-level2"></div></div>
-   <label for="qMsg">Votre espace et vos besoins</label><textarea id="qMsg" rows="4" maxlength="1500" placeholder="Ex. : maison de 3 chambres, 2 salles de bain, un chat, aux deux semaines"></textarea>
+   <fieldset><legend>Vos coordonnées</legend>
+    <label for="qName">Nom</label><input id="qName" maxlength="80" autocomplete="name" required>
+    <label for="qAddr">Adresse</label><input id="qAddr" maxlength="200" autocomplete="street-address">
+    <div class="row st"><div><label for="qPhone">Téléphone</label><input id="qPhone" type="tel" maxlength="30" autocomplete="tel"></div><div><label for="qEmail">Courriel</label><input id="qEmail" type="email" maxlength="120" autocomplete="email"></div></div>
+   </fieldset>
+   <fieldset><legend>Votre espace</legend>
+    <div class="row st"><div><label for="qService">Service souhaité</label><select id="qService"><option>Ménage régulier</option><option>Grand ménage</option><option>Déménagement</option><option>Commercial</option><option>Autre</option></select></div>
+    <div><label for="qHabitat">Type d’habitat</label><select id="qHabitat"><option value=""></option><option>Maison</option><option>Condo / appartement</option><option>Jumelé</option><option>Maison de ville</option><option>Chalet</option><option>Commercial</option><option>Autre</option></select></div></div>
+    <div class="row st"><div><label for="qRooms">Nombre de pièces</label><input id="qRooms" maxlength="80" placeholder="Ex. : 3 ch., 2 s. de bain"></div>
+    <div><label for="qBasement">Nettoyage du sous-sol</label><select id="qBasement"><option value=""></option><option>Oui</option><option>Non</option><option>Pas de sous-sol</option></select></div></div>
+    <label for="qPets">Animaux / enfants</label><input id="qPets" maxlength="120" placeholder="Ex. : 1 chat, 2 enfants">
+   </fieldset>
+   <fieldset><legend>Vos disponibilités</legend>
+    <label>Journées préférées</label><div class="daypick" id="qDays"><label><input type="checkbox" value="Lundi">Lundi</label><label><input type="checkbox" value="Mardi">Mardi</label><label><input type="checkbox" value="Mercredi">Mercredi</label><label><input type="checkbox" value="Jeudi">Jeudi</label><label><input type="checkbox" value="Vendredi">Vendredi</label><label><input type="checkbox" value="Samedi">Samedi</label><label><input type="checkbox" value="Dimanche">Dimanche</label></div>
+    <label for="qHours">Heures</label><input id="qHours" maxlength="80" placeholder="Ex. : entre 9 h et 15 h">
+    <label for="qMsg">Autres détails</label><textarea id="qMsg" rows="3" maxlength="1500" placeholder="Ce qui est important pour vous, la fréquence souhaitée…"></textarea>
+   </fieldset>
    <button class="metal" id="qSend" type="submit">Envoyer ma demande</button>
   </form>
  </div></section>
@@ -502,7 +518,7 @@ $('revList').onclick=e=>{const id=e.target.dataset.del;if(id&&confirm('Supprimer
 $('qForm').onsubmit=async e=>{
   e.preventDefault();
   const g=id=>$(id).value.trim(),note=$('qNote');
-  const d={name:g('qName'),phone:g('qPhone'),email:g('qEmail'),service:$('qService').value,city:g('qCity'),message:g('qMsg'),ts:Date.now(),done:false};
+  const d={name:g('qName'),phone:g('qPhone'),email:g('qEmail'),addr:g('qAddr'),service:$('qService').value,habitat:$('qHabitat').value,rooms:g('qRooms'),basement:$('qBasement').value,pets:g('qPets'),days:[...$('qDays').querySelectorAll('input:checked')].map(i=>i.value),hours:g('qHours'),message:g('qMsg'),ts:Date.now(),done:false};
   const say=(t,err)=>{note.textContent=t;note.classList.toggle('err',!!err);note.classList.remove('hide');};
   if(!d.name){say('Indiquez votre nom.',true);$('qName').focus();return;}
   if(!d.phone&&!d.email){say('Indiquez un téléphone ou un courriel pour qu’on puisse vous joindre.',true);$('qPhone').focus();return;}
@@ -519,16 +535,26 @@ function renderRequests(){
   if(!isAdmin)return;
   $('qCount').textContent=requests.length?'· '+open+' à traiter':'';
   const l=[...requests].sort((a,b)=>(a.done-b.done)||((b.ts||0)-(a.ts||0)));
-  $('qList').innerHTML=l.length?l.map(r=>'<div class="shift'+(r.done?' done':'')+'"><div><b>'+esc(r.name)+'</b> · '+esc(r.service)+(r.city?' · '+esc(r.city):'')+
-    '<div class="mut">'+new Date(r.ts||0).toLocaleString('fr-CA',{dateStyle:'medium',timeStyle:'short'})+'</div>'+
+  const line=(lab,v)=>v&&(!Array.isArray(v)||v.length)?'<dt>'+lab+'</dt><dd>'+esc([].concat(v).join(', '))+'</dd>':'';
+  $('qList').innerHTML=l.length?l.map(r=>'<div class="shift'+(r.done?' done':'')+'"><div><b>'+esc(r.name)+'</b> · '+esc(r.service)+
+    '<div class="mut">Reçue le '+new Date(r.ts||0).toLocaleString('fr-CA',{dateStyle:'medium',timeStyle:'short'})+'</div>'+
     (r.phone?'<div><a href="tel:'+esc(r.phone)+'">'+esc(r.phone)+'</a></div>':'')+(r.email?'<div><a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a></div>':'')+
-    (r.message?'<div class="mut" style="white-space:pre-wrap">'+esc(r.message)+'</div>':'')+'</div>'+
-    '<div class="acts"><button class="btn sec sm" data-qdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-qdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">Aucune demande pour le moment.</p>';
+    '<div class="fiche"><dl>'+line('Adresse',r.addr||r.city)+line('Type d’habitat',r.habitat)+line('Pièces',r.rooms)+line('Sous-sol',r.basement)+line('Animaux / enfants',r.pets)+line('Journées',r.days)+line('Heures',r.hours)+'</dl></div>'+
+    (r.message?'<div class="mut" style="white-space:pre-wrap;margin-top:6px">'+esc(r.message)+'</div>':'')+'</div>'+
+    '<div class="acts"><button class="btn sm" data-qfiche="'+esc(r.id)+'">Créer la fiche client</button><button class="btn sec sm" data-qdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-qdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">Aucune demande pour le moment.</p>';
 }
 $('qList').onclick=e=>{
-  const dn=e.target.dataset.qdone,dl=e.target.dataset.qdel;
+  const dn=e.target.dataset.qdone,dl=e.target.dataset.qdel,fi=e.target.dataset.qfiche;
   if(dn){const r=requests.find(x=>x.id===dn);if(r)guard(api.update('requests',dn,{done:!r.done})).catch(()=>{});}
   if(dl&&confirm('Supprimer cette demande ?'))guard(api.del('requests',dl)).catch(()=>{});
+  if(fi){const r=requests.find(x=>x.id===fi);if(!r)return;
+    resetClient();
+    const set=(id,v)=>{if(v)$(id).value=v;};
+    set('cName',r.name);set('cAddr',r.addr||r.city);set('cPhone',r.phone);set('cEmail',r.email);set('cHabitat',r.habitat);set('cRooms',r.rooms);set('cBasement',r.basement);set('cPets',r.pets);set('cHours',r.hours);
+    $('cDays').querySelectorAll('input').forEach(i=>i.checked=(r.days||[]).includes(i.value));
+    $('cNotes').value='Demande de soumission : '+(r.service||'')+(r.message?'\n'+r.message:'');
+    $('cFormTitle').textContent='Nouvelle fiche : '+r.name;$('cCancel').classList.remove('hide');
+    $('cFormTitle').scrollIntoView({behavior:'smooth',block:'start'});}
 };
 
 /* Connexion */
