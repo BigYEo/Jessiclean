@@ -473,6 +473,28 @@ footer ul.plain li{color:#d9c9de}
  .mcall svg{width:20px;height:20px;fill:none;stroke:var(--plum);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
  .mquote{border:0;border-radius:999px;padding:14px 18px;font:inherit;font-weight:600;font-size:1.05rem;color:#fff;background:var(--metal)}
 }
+/* ═══ Correctifs mobile (Admin, menu, champs date/heure iPhone) ═══ */
+.row>div{min-width:0}
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;width:100%;min-width:0;max-width:100%;min-height:52px;line-height:1.3;text-align:left}
+input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;min-height:1.3em}
+@media (max-width:640px){
+ .shift{flex-direction:column;align-items:stretch;gap:12px}
+ .shift>div:first-child{width:100%}
+ .shift .acts{justify-content:flex-start;flex-wrap:wrap;width:100%}
+ .shift .acts .btn{flex:0 1 auto}
+ .chip-paid,.chip-due{white-space:normal;display:inline-block;margin:4px 6px 0 0}
+ header .bar{gap:6px}
+ header nav{flex:1 1 auto;min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;justify-content:flex-start;mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);padding:0 10px}
+ header nav::-webkit-scrollbar{display:none}
+ header nav button{flex:0 0 auto}
+ body.logged header nav [data-v=client]{display:none}
+ body.logged .logo img{height:30px}
+ body.logged header nav button{font-size:.92rem}
+ header nav button{padding:9px 8px}
+ header nav>button:not(.hide):first-of-type{margin-left:auto}
+ .card{padding:16px}
+ .app{padding:18px 12px 8px}
+}
 .hide{display:none!important}
 </style>
 </head>
@@ -923,6 +945,7 @@ function renderAdmin(){
 $('showPast').onchange=renderAdmin;
 function renderAccount(){
   const on=!!user;
+  document.body.classList.toggle('logged',on);
   $('tabLogin').textContent=on?'Mon compte':'Connexion';
   $('tabEmp').classList.toggle('hide',!on);
   $('tabAdmin').classList.toggle('hide',!isAdmin);
