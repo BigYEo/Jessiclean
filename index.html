@@ -351,6 +351,22 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
 .opt{display:inline-flex!important;align-items:center;gap:10px;margin:0!important;padding:12px 18px;border:1.5px solid var(--bd);border-radius:999px;background:#fff;color:var(--plum)!important;font-size:1.05rem;cursor:pointer}
 .opt:has(input:checked){border-color:var(--orchid);background:var(--ac2)}
 .opt input{width:20px;height:20px;margin:0;accent-color:var(--orchid)}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.presets button{border:1.5px solid var(--bd);background:#fff;color:var(--plum);border-radius:999px;padding:9px 16px;font:inherit;font-size:1rem;cursor:pointer}
+.presets button[aria-pressed=true]{border-color:var(--orchid);background:var(--ac2);font-weight:600}
+.hrange{position:relative;height:48px;margin:10px 4px 0}
+.rtrack{position:absolute;left:0;right:0;top:50%;height:8px;margin-top:-4px;background:#ece3ee;border-radius:999px}
+.rfill{position:absolute;top:0;bottom:0;background:var(--metal);border-radius:999px}
+.hrange input[type=range]{position:absolute;left:0;top:0;width:100%;height:48px;margin:0;padding:0;background:none;border:0;-webkit-appearance:none;appearance:none;pointer-events:none;box-shadow:none}
+.hrange input[type=range]:focus{box-shadow:none}
+.hrange input[type=range]::-webkit-slider-runnable-track{background:none;height:48px}
+.hrange input[type=range]::-moz-range-track{background:none}
+.hrange input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:30px;height:30px;margin-top:9px;border-radius:50%;background:#fff;border:3px solid var(--orchid);box-shadow:0 3px 10px rgba(59,26,66,.3);cursor:grab}
+.hrange input[type=range]::-moz-range-thumb{pointer-events:auto;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--orchid);box-shadow:0 3px 10px rgba(59,26,66,.3);cursor:grab}
+.hrange input[type=range]:focus-visible::-webkit-slider-thumb{outline:3px solid var(--glass);outline-offset:2px}
+.hrange.off{opacity:.35}
+.rticks{display:flex;justify-content:space-between;font-size:.85rem;color:#7a6d80;margin:2px 4px 0}
+.rout{margin-top:10px;font-size:1.2rem;color:var(--plum);font-weight:500}
 .policy-note{font-size:.95rem;color:#5c4f62;margin:14px 0 0}
 .policy-note a{color:var(--plum)}
 .hide{display:none!important}
@@ -440,7 +456,19 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
    </fieldset>
    <fieldset><legend>Vos disponibilités</legend>
     <label>Journées préférées</label><div class="daypick" id="qDays"><label><input type="checkbox" value="Lundi">Lundi</label><label><input type="checkbox" value="Mardi">Mardi</label><label><input type="checkbox" value="Mercredi">Mercredi</label><label><input type="checkbox" value="Jeudi">Jeudi</label><label><input type="checkbox" value="Vendredi">Vendredi</label><label><input type="checkbox" value="Samedi">Samedi</label><label><input type="checkbox" value="Dimanche">Dimanche</label></div>
-    <label for="qHours">Heures</label><input id="qHours" maxlength="80" placeholder="Ex. : entre 9 h et 15 h">
+    <label id="qHoursLbl">Plage de disponibilité</label>
+    <p class="hint" style="margin:0 0 10px">Le moment où l’on peut être chez vous. La durée du ménage varie selon votre espace.</p>
+    <div class="presets" role="group" aria-labelledby="qHoursLbl">
+     <button type="button" data-r="14-24">Matin</button><button type="button" data-r="24-34">Après-midi</button><button type="button" data-r="34-44">Soir</button><button type="button" data-r="16-34">Toute la journée</button><button type="button" data-r="flex">Flexible</button>
+    </div>
+    <div class="hrange" id="qRange">
+     <div class="rtrack"><div class="rfill" id="qFill"></div></div>
+     <input type="range" id="qFrom" min="0" max="48" step="1" value="16" aria-label="Disponible à partir de">
+     <input type="range" id="qTo" min="0" max="48" step="1" value="34" aria-label="Disponible jusqu’à">
+    </div>
+    <div class="rticks" aria-hidden="true"><span>0 h</span><span>6 h</span><span>12 h</span><span>18 h</span><span>24 h</span></div>
+    <div class="rout" id="qHoursOut" aria-live="polite"></div>
+    <input type="hidden" id="qHours">
     <label for="qMsg">Autres détails</label><textarea id="qMsg" rows="3" maxlength="1500" placeholder="Ce qui est important pour vous, la fréquence souhaitée…"></textarea>
    </fieldset>
    <button class="metal" id="qSend" type="submit">Envoyer ma demande</button>
@@ -794,6 +822,24 @@ $('revList').onclick=e=>{const id=e.target.dataset.del;if(id&&confirm('Supprimer
 
 /* Demandes de soumission */
 $('qPostal').oninput=e=>{const v=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);const f=v.length>3?v.slice(0,3)+' '+v.slice(3):v;if(e.target.value!==f)e.target.value=f;};
+/* Plage de disponibilité (demi-heures de 0 à 48) */
+const hh=v=>{v=+v;if(v===0||v===48)return 'minuit';const h=Math.floor(v/2),m=v%2?' 30':'';return h===12&&!m?'midi':h+' h'+m;};
+let qFlex=false;
+function setRange(a,b,flex){
+  qFlex=!!flex;a=+a;b=+b;
+  if(!qFlex){if(b-a<2){if(document.activeElement===$('qFrom'))a=Math.max(0,b-2);else b=Math.min(48,a+2);}if(b-a<2){a=Math.max(0,b-2);}}
+  $('qFrom').value=a;$('qTo').value=b;
+  $('qFrom').style.zIndex=a>=40?3:1;$('qTo').style.zIndex=2;
+  $('qFill').style.left=(a/48*100)+'%';$('qFill').style.width=((b-a)/48*100)+'%';
+  $('qRange').classList.toggle('off',qFlex);
+  const txt=qFlex?'Flexible : n’importe quel moment':'Disponible de '+hh(a)+' à '+hh(b);
+  $('qHoursOut').textContent=txt;$('qHours').value=txt;
+  document.querySelectorAll('.presets [data-r]').forEach(btn=>{const r=btn.dataset.r;btn.setAttribute('aria-pressed',String(r==='flex'?qFlex:(!qFlex&&r===a+'-'+b)));});
+}
+$('qFrom').oninput=()=>{let a=+$('qFrom').value,b=+$('qTo').value;if(a>b-2){a=b-2;if(a<0){a=0;b=2;}}setRange(a,b,false);};
+$('qTo').oninput=()=>{let a=+$('qFrom').value,b=+$('qTo').value;if(b<a+2){b=a+2;if(b>48){b=48;a=46;}}setRange(a,b,false);};
+document.querySelectorAll('.presets [data-r]').forEach(btn=>btn.onclick=()=>{const r=btn.dataset.r;if(r==='flex')setRange($('qFrom').value,$('qTo').value,!qFlex);else{const [a,b]=r.split('-');setRange(a,b,false);}});
+setRange(16,34,false);
 $('qForm').onsubmit=async e=>{
   e.preventDefault();
   const g=id=>$(id).value.trim(),note=$('qNote');
@@ -809,7 +855,7 @@ $('qForm').onsubmit=async e=>{
   $('qSend').disabled=true;
   try{await api.set('requests',uid(),d);
     notifyAdmin('soumission','Nouvelle demande de soumission – '+d.name,{'Nom':d.name,'Téléphone':d.phone,'Courriel':d.email,'Adresse':d.addr,'Service':d.service,'Type d’habitat':d.habitat,'Nombre de pièces':d.rooms,'Sous-sol':d.basement,'Animaux / enfants':d.pets,'Journées préférées':d.days,'Heures':d.hours,'Détails':d.message},d.email);
-    $('qForm').reset();$('qProv').value='Québec';say('Demande envoyée. Merci ! Nous vous contactons très bientôt.');}
+    $('qForm').reset();$('qProv').value='Québec';setRange(16,34,false);say('Demande envoyée. Merci ! Nous vous contactons très bientôt.');}
   catch(err){say('La demande n’a pas pu être envoyée. Réessayez dans un instant.',true);}
   finally{$('qSend').disabled=false;}
 };
