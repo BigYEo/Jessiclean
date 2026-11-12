@@ -345,6 +345,12 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
 .inv .vact{grid-column:1/-1}
 .chip-due,.chip-paid{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.85rem;font-weight:600;margin-left:6px}
 .chip-due{background:#fdecea;color:#a3271b}.chip-paid{background:#e6f4ec;color:#2f7d4f}
+.replyby{border:0;padding:0;margin:16px 0 0;min-width:0}
+.replyby legend{font-size:1rem;color:#4d4153;padding:0;margin-bottom:8px}
+.optrow{display:flex;gap:10px;flex-wrap:wrap}
+.opt{display:inline-flex!important;align-items:center;gap:10px;margin:0!important;padding:12px 18px;border:1.5px solid var(--bd);border-radius:999px;background:#fff;color:var(--plum)!important;font-size:1.05rem;cursor:pointer}
+.opt:has(input:checked){border-color:var(--orchid);background:var(--ac2)}
+.opt input{width:20px;height:20px;margin:0;accent-color:var(--orchid)}
 .policy-note{font-size:.95rem;color:#5c4f62;margin:14px 0 0}
 .policy-note a{color:var(--plum)}
 .hide{display:none!important}
@@ -538,7 +544,11 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
     <form id="mForm" novalidate>
      <div id="mNote" class="note hide" role="status"></div>
      <label for="mText">Votre message</label><textarea id="mText" rows="3" maxlength="1200"></textarea>
-     <label for="mContact">Téléphone ou courriel pour vous répondre</label><input id="mContact" maxlength="120" autocomplete="tel">
+     <fieldset class="replyby"><legend>Comment souhaitez-vous recevoir la réponse&nbsp;?</legend>
+      <div class="optrow"><label class="opt"><input type="radio" name="mBy" value="sms" checked> Par texto (SMS)</label><label class="opt"><input type="radio" name="mBy" value="email"> Par courriel</label></div>
+     </fieldset>
+     <div id="mSmsBox"><label for="mPhone">Numéro de cellulaire</label><input id="mPhone" type="tel" maxlength="30" autocomplete="tel"></div>
+     <div id="mMailBox" class="hide"><label for="mEmail">Adresse courriel</label><input id="mEmail" type="email" maxlength="120" autocomplete="email"></div>
      <button class="metal" id="mSend" type="submit">Envoyer le message</button>
      <p class="policy-note">Voir notre <a href="politique-confidentialite.html">politique de confidentialité</a>.</p>
     </form>
@@ -1215,7 +1225,9 @@ function renderClientSpace(){
   cData._inv=inv;
   // contacts pré-remplis
   if(!$('moveContact').value)$('moveContact').value=f.phone||f.email||'';
-  if(!$('mContact').value)$('mContact').value=f.phone||f.email||'';
+  if(!$('mPhone').value)$('mPhone').value=f.phone||'';
+  if(!$('mEmail').value)$('mEmail').value=f.email||'';
+  if(!mByTouched){setReplyBy(f.phone||!f.email?'sms':'email');}
 }
 function invoiceHTML(i,client){
   const dt=dObj(i.date).toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'});
@@ -1309,18 +1321,23 @@ async function openCode(code,remember,quiet){
 $('vCode').oninput=e=>{const c=cleanCode(e.target.value).slice(0,10);const f=c.length>4?c.slice(0,4)+' '+c.slice(4):c;if(e.target.value!==f)e.target.value=f;};
 $('vForm').onsubmit=e=>{e.preventDefault();openCode($('vCode').value,$('vRemember').checked);};
 $('vLogout').onclick=()=>{store.set('');cData=null;cCode='';$('vCode').value='';renderClientSpace();$('vCode').focus();};
+let mByTouched=false;
+function setReplyBy(v){document.querySelectorAll('input[name=mBy]').forEach(i=>i.checked=i.value===v);$('mSmsBox').classList.toggle('hide',v!=='sms');$('mMailBox').classList.toggle('hide',v!=='email');}
+document.querySelectorAll('input[name=mBy]').forEach(i=>i.onchange=()=>{mByTouched=true;setReplyBy(i.value);});
 $('mForm').onsubmit=async e=>{
   e.preventDefault();
-  const t=$('mText').value.trim(),c=$('mContact').value.trim(),note=$('mNote');
+  const t=$('mText').value.trim(),note=$('mNote'),by=(document.querySelector('input[name=mBy]:checked')||{}).value||'sms';
+  const phone=$('mPhone').value.trim(),email=$('mEmail').value.trim();
   const say=(m,er)=>{note.textContent=m;note.classList.toggle('err',!!er);note.classList.remove('hide');};
   if(!t){say('Écrivez votre message.',true);$('mText').focus();return;}
-  if(!c){say('Indiquez un téléphone ou un courriel pour qu’on puisse vous répondre.',true);$('mContact').focus();return;}
-  const isMail=c.includes('@');
-  const d={name:(cData&&cData.name)||'Client',phone:isMail?'':c.slice(0,30),email:isMail?c.slice(0,120):'',addr:'',service:'Message d’un client',habitat:'',rooms:'',basement:'',pets:'',days:[],hours:'',message:t+'\n\n(Code client : '+cCode+')',ts:Date.now(),done:false};
+  if(by==='sms'&&phone.replace(/\D/g,'').length<10){say('Indiquez un numéro de cellulaire valide pour recevoir la réponse par texto.',true);$('mPhone').focus();return;}
+  if(by==='email'&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){say('Indiquez une adresse courriel valide pour recevoir la réponse par courriel.',true);$('mEmail').focus();return;}
+  const pref=by==='sms'?'par texto (SMS) au '+phone:'par courriel à '+email;
+  const d={name:(cData&&cData.name)||'Client',phone:by==='sms'?phone.slice(0,30):'',email:by==='email'?email.slice(0,120):'',addr:'',service:'Message d’un client',habitat:'',rooms:'',basement:'',pets:'',days:[],hours:'',message:('Réponse souhaitée : '+pref+'\n\n'+t+'\n\n(Code client : '+cCode+')').slice(0,1500),ts:Date.now(),done:false};
   $('mSend').disabled=true;
   try{await api.set('requests',uid(),d);
-    notifyAdmin('message','Nouveau message de '+d.name,{'Client':d.name,'Code client':cCode,'Téléphone':d.phone,'Courriel':d.email,'Message':t},d.email);
-    $('mText').value='';say('Message envoyé. Merci ! Nous vous répondons bientôt.');}
+    notifyAdmin('message','Nouveau message de '+d.name+(by==='sms'?' (répondre par texto)':' (répondre par courriel)'),{'Client':d.name,'Code client':cCode,'Réponse souhaitée':pref,'Message':t},by==='email'?email:'');
+    $('mText').value='';say('Message envoyé. Merci ! Nous vous répondrons '+(by==='sms'?'par texto':'par courriel')+' très bientôt.');}
   catch(_){say('Le message n’a pas pu être envoyé. Réessayez dans un instant.',true);}
   finally{$('mSend').disabled=false;}
 };
