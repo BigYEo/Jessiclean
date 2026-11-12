@@ -399,6 +399,16 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
  .hero p{font-size:1.1rem}
  .cta{margin-top:18px}
 }
+.svc-row{grid-template-columns:64px minmax(0,1.15fr) minmax(0,1.2fr) 272px;align-items:center;gap:14px 24px;padding:24px 18px;margin:0 -18px;border-radius:22px;cursor:pointer;transition:background .25s,box-shadow .25s}
+.svc-row:hover{background:rgba(255,255,255,.78);box-shadow:0 18px 40px -26px rgba(59,26,66,.45)}
+.svc-ic{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:#fff;border:1px solid var(--bd);box-shadow:0 8px 20px -14px rgba(59,26,66,.5)}
+.svc-ic svg{width:36px;height:36px;fill:none;stroke:var(--plum);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.svc-ic svg .f{fill:var(--orchid);stroke:none}
+.svc-reg{background:linear-gradient(145deg,#fff,#f3e8f5)}.svc-grand{background:linear-gradient(145deg,#fff,#ece3f7)}
+.svc-dem{background:linear-gradient(145deg,#fff,#f6e9ef)}.svc-com{background:linear-gradient(145deg,#fff,#e9edf6)}
+.svc-row .svcbtn{justify-self:end;border:1.5px solid var(--orchid);background:#fff;color:var(--plum);font:inherit;font-size:1.02rem;font-weight:600;padding:12px 20px;border-radius:999px;cursor:pointer;white-space:nowrap;text-decoration:none;transition:background .25s,color .25s,border-color .25s,box-shadow .25s}
+.svc-row:hover .svcbtn,.svc-row .svcbtn:focus-visible{background:var(--metal);color:#fff;border-color:transparent;box-shadow:0 10px 22px -12px rgba(94,44,102,.7)}
+@media (max-width:860px){.svc-row{grid-template-columns:56px 1fr;gap:6px 16px;padding:20px 14px;margin:0 -14px}.svc-ic{width:56px;height:56px;grid-row:span 2}.svc-ic svg{width:30px;height:30px}.svc-row p{grid-column:2}.svc-row .svcbtn{grid-column:1/-1;justify-self:stretch;margin-top:10px;text-align:center}}
 .hide{display:none!important}
 </style>
 </head>
@@ -433,10 +443,10 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
   <h2 id="svcTitle">Un ménage pensé pour votre espace</h2>
   <p class="lead">Une visite ponctuelle ou un entretien régulier, de jour comme de soir, 7 jours sur 7 : on s’adapte à vos lieux, à votre horaire et à vos habitudes.</p>
   <div class="svc-list">
-   <div class="svc-row"><h3>Ménage régulier</h3><p>Chaque semaine ou aux deux semaines, la même attention à chaque visite.</p><button data-svc="Ménage régulier">Demander une soumission</button></div>
-   <div class="svc-row"><h3>Grand ménage</h3><p>De haut en bas : plinthes, armoires, électroménagers, recoins oubliés.</p><button data-svc="Grand ménage">Demander une soumission</button></div>
-   <div class="svc-row"><h3>Déménagement</h3><p>Avant de partir ou avant d’emménager, un logement prêt à être habité.</p><button data-svc="Déménagement">Demander une soumission</button></div>
-   <div class="svc-row"><h3>Commercial</h3><p>Bureaux, commerces et espaces de travail, en dehors de vos heures d’ouverture.</p><button data-svc="Commercial">Demander une soumission</button></div>
+   <div class="svc-row" data-svcrow="Ménage régulier"><span class="svc-ic svc-reg"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="7" width="22" height="20" rx="3"/><path d="M5 13h22M11 4v6M21 4v6"/><path d="M11.5 20l3 3 6-6"/></svg></span><h3>Ménage régulier</h3><p>Chaque semaine ou aux deux semaines, la même attention à chaque visite.</p><button class="svcbtn" data-svc="Ménage régulier">Planifier mon ménage</button></div>
+   <div class="svc-row" data-svcrow="Grand ménage"><span class="svc-ic svc-grand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M12 12h7l2 4v11a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V16z"/><path d="M13 12V8h5v4M18 8h4l2 2"/><path d="M26 3l.8 2.2L29 6l-2.2.8L26 9l-.8-2.2L23 6l2.2-.8z" class="f"/><path d="M5 9l.6 1.4L7 11l-1.4.6L5 13l-.6-1.4L3 11l1.4-.6z" class="f"/></svg></span><h3>Grand ménage</h3><p>De haut en bas : plinthes, armoires, électroménagers, recoins oubliés.</p><button class="svcbtn" data-svc="Grand ménage">Réserver un grand ménage</button></div>
+   <div class="svc-row" data-svcrow="Déménagement"><span class="svc-ic svc-dem"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 10l12-5 12 5v13l-12 5-12-5z"/><path d="M4 10l12 5 12-5M16 15v13"/><path d="M10 7.5l12 5"/></svg></span><h3>Déménagement</h3><p>Avant de partir ou avant d’emménager, un logement prêt à être habité.</p><button class="svcbtn" data-svc="Déménagement">Préparer mon déménagement</button></div>
+   <div class="svc-row" data-svcrow="Commercial"><span class="svc-ic svc-com"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 28V6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v22M20 13h5a1 1 0 0 1 1 1v14M3 28h26"/><path d="M10 10h2M14 10h2M10 15h2M14 15h2M10 20h2M14 20h2M14 28v-4h-4v4"/></svg></span><h3>Commercial</h3><p>Bureaux, commerces et espaces de travail, en dehors de vos heures d’ouverture.</p><button class="svcbtn" data-svc="Commercial">Soumission pour mon commerce</button></div>
   </div>
  </div></section>
 
@@ -765,6 +775,7 @@ document.querySelectorAll('[data-go],[data-scroll]').forEach(b=>{if(b.classList.
   if(b.dataset.go)show(b.dataset.go);
   if(b.dataset.scroll)requestAnimationFrame(()=>$(b.dataset.scroll).scrollIntoView({behavior:'smooth'}));else scrollTo(0,0);
 };});
+document.querySelectorAll('[data-svcrow]').forEach(r=>r.onclick=e=>{if(e.target.closest('button'))return;r.querySelector('[data-svc]').click();});
 document.querySelectorAll('[data-svc]').forEach(b=>b.onclick=()=>{$('qService').value=b.dataset.svc;$('soumission').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('qName').focus({preventScroll:true}),600);});
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
 
