@@ -369,6 +369,34 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
 .rout{margin-top:10px;font-size:1.2rem;color:var(--plum);font-weight:500}
 .policy-note{font-size:.95rem;color:#5c4f62;margin:14px 0 0}
 .policy-note a{color:var(--plum)}
+/* Bannière compacte : le bouton de soumission visible dès l'arrivée */
+@media (min-width:700px){
+ .hero{padding:clamp(14px,2.4vw,30px) 0 clamp(36px,4.5vw,60px)}
+ .roof{width:min(940px,120vw);top:clamp(6px,1.2vw,14px)}
+ .hero .inner{padding-top:clamp(52px,6.2vw,82px)}
+ .hlogo{width:min(340px,40vw)}
+ .hero h1{font-size:clamp(2.6rem,4.6vw,4rem);max-width:none;margin:14px auto 10px}
+ .hero h1 br{display:none}
+ .hero p{font-size:1.2rem;max-width:52ch}
+ .cta{margin-top:20px}
+ .spark{transform:scale(.8)}
+}
+@media (min-width:700px) and (max-height:700px){
+ .hero .inner{padding-top:44px}
+ .hlogo{width:min(280px,34vw)}
+ .hero h1{font-size:clamp(2.4rem,4vw,3.4rem);margin:10px auto 8px}
+ .hero p{font-size:1.1rem}
+ .cta{margin-top:16px}
+ .metal{padding:15px 30px}
+}
+@media (max-width:699px){
+ .hero{padding-top:14px;padding-bottom:44px}
+ .hero .inner{padding-top:56px}
+ .hlogo{width:min(300px,76vw)}
+ .hero h1{font-size:2.6rem;margin:12px auto 10px}
+ .hero p{font-size:1.1rem}
+ .cta{margin-top:18px}
+}
 .hide{display:none!important}
 </style>
 </head>
@@ -392,7 +420,7 @@ details.past summary{cursor:pointer;padding:14px 0;font-size:1.15rem;color:var(-
   <span class="spark" style="left:9%;bottom:30%;--d:2.05s;--s:16px"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0Z"/></svg></span>
   <div class="wrap inner">
    <img class="hlogo" src="img/logo.jpg" alt="Jessiclean" width="900" height="367">
-   <h1 id="heroTitle">Votre maison,<br>en mieux.</h1>
+   <h1 id="heroTitle">Votre maison, <br>en mieux.</h1>
    <p>Ménage résidentiel et commercial dans l’Outaouais, fait avec soin et à l’heure convenue. Vous rentrez, tout brille.</p>
    <div class="cta"><button class="metal" data-scroll="soumission">Demander une soumission</button><a class="textlink" href="tel:+18195980121">Appeler 819 598-0121</a></div>
   </div>
