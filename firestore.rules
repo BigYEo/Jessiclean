@@ -109,6 +109,7 @@ service cloud.firestore {
     }
     match /system/{id} {
       allow read: if isAdmin();
+      allow write: if isAdmin() && id == 'github';
     }
 
     match /visits/{code} {

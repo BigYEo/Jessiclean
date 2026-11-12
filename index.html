@@ -743,7 +743,14 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 
 <section id="v-admin" class="app hide">
  <div class="card"><h2>Demandes des clients <span class="mut" id="ibCount"></span></h2><p class="mut">Déplacements de visites et mises à jour de fiche envoyés depuis l’espace client.</p><div id="ibList"><p class="mut">Aucune demande pour le moment.</p></div></div>
- <div class="card" id="mailCard"><h2>Courriels aux clients</h2><div id="mailStatus" class="mut">Chargement…</div><div id="mailLog"></div></div>
+ <div class="card" id="mailCard"><h2>Courriels aux clients</h2><div id="mailStatus" class="mut">Chargement…</div>
+  <div id="ghBox" class="note" style="margin-top:12px">
+   <b id="ghState">Envoi immédiat : non configuré</b>
+   <div id="ghSetup"><p class="mut" style="margin:6px 0">Collez une clé GitHub (accès « Actions : lecture et écriture » au dépôt Jessiclean seulement) pour que les confirmations partent en moins d’une minute.</p>
+   <div class="row st"><input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_…"><button class="btn sm" id="ghSave" style="margin:0">Enregistrer la clé</button></div></div>
+   <div id="ghActions" class="hide" style="margin-top:8px"><button class="btn sm" id="ghRun" style="margin:0">Envoyer maintenant</button> <button class="btn sec sm" id="ghEdit" style="margin:0">Changer la clé</button> <span class="mut" id="ghMsg"></span></div>
+  </div>
+  <div id="mailLog"></div></div>
  <div class="card"><h2>Soumissions et messages <span class="mut" id="qCount"></span></h2>
   <div id="qConfirmBox" class="note hide" style="background:var(--ac2)">
    <b id="qConfirmTitle"></b>
@@ -1059,7 +1066,7 @@ $('qConfirmSend').onclick=async()=>{
   const mid=uid();
   const mail={type:'confirm',to:r.email,name:r.name,service:r.service||'',message:$('qConfirmMsg').value.trim(),code:(c&&c.code)||'',ts:Date.now(),status:'pending'};
   $('qConfirmSend').disabled=true;
-  try{await api.set('mail',mid,mail);await api.update('requests',r.id,{confirmedAt:Date.now(),mailId:mid,done:true});qConfId=null;$('qConfirmBox').classList.add('hide');}
+  try{await api.set('mail',mid,mail);await api.update('requests',r.id,{confirmedAt:Date.now(),mailId:mid,done:true});qConfId=null;$('qConfirmBox').classList.add('hide');triggerMailer(true);}
   catch(e){alert('Action impossible : '+msg(e));}
   finally{$('qConfirmSend').disabled=false;}
 };
@@ -1082,7 +1089,25 @@ $('qList').onclick=e=>{
 };
 
 /* Courriels aux clients (envoyés par le programme automatique) */
-let mails=[],mailer=null;
+let mails=[],mailer=null,ghToken='';
+const GH_DISPATCH='https://api.github.com/repos/BigYEo/Jessiclean/actions/workflows/courriels.yml/dispatches';
+async function triggerMailer(quiet){
+  if(!ghToken){if(!quiet)$('ghMsg').textContent='Aucune clé enregistrée.';return false;}
+  try{
+    const r=await fetch(GH_DISPATCH,{method:'POST',headers:{Authorization:'Bearer '+ghToken,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},body:JSON.stringify({ref:'main'})});
+    if(r.status===204){$('ghMsg').textContent='Envoi lancé : environ 30 à 60 secondes.';return true;}
+    $('ghMsg').textContent=r.status===401||r.status===403?'Clé refusée par GitHub (expirée ou sans le droit « Actions »).':'GitHub a répondu '+r.status+'.';
+  }catch(e){$('ghMsg').textContent='Impossible de joindre GitHub.';}
+  return false;
+}
+function renderGh(){
+  $('ghState').textContent=ghToken?'⚡ Envoi immédiat activé':'Envoi immédiat : non configuré';
+  $('ghSetup').classList.toggle('hide',!!ghToken);$('ghActions').classList.toggle('hide',!ghToken);
+}
+$('ghSave').onclick=async()=>{const t=$('ghToken').value.trim();if(!/^(github_pat_|ghp_)/.test(t)){alert('La clé doit commencer par github_pat_');return;}
+  try{await api.set('system','github',{token:t,ts:Date.now()});$('ghToken').value='';ghToken=t;renderGh();await triggerMailer();}catch(e){alert('Action impossible : '+msg(e));}};
+$('ghEdit').onclick=()=>{$('ghSetup').classList.remove('hide');$('ghActions').classList.add('hide');};
+$('ghRun').onclick=()=>triggerMailer();
 function mailState(id){const m=mails.find(x=>x.id===id);if(!m)return '';
   return m.status==='sent'?'<span class="chip-paid">Courriel envoyé</span>':m.status==='error'?'<span class="chip-due" title="'+esc(m.error||'')+'">Échec du courriel</span>':'<span class="chip-due" style="background:#fff4d6;color:#7a5a00">Courriel en attente</span>';}
 function renderMailer(){
@@ -1090,7 +1115,7 @@ function renderMailer(){
   const st=$('mailStatus');
   if(!mailer||!mailer.lastRun){st.innerHTML='⚠️ Le programme d’envoi n’a pas encore fonctionné. Les confirmations et rappels resteront en attente tant qu’il n’est pas configuré (voir le guide).';}
   else{const ago=Math.round((Date.now()-mailer.lastRun)/6e4);
-    st.innerHTML=(ago>180?'⚠️ ':'✅ ')+'Dernière vérification il y a '+(ago<60?ago+' min':Math.round(ago/60)+' h')+'. Les confirmations partent dans les 15 minutes environ ; les rappels, 24 h avant chaque visite.'+(ago>180?' <b>Le programme semble arrêté : vérifiez GitHub → Actions.</b>':'')+(mailer.lastError?'<br>Dernière erreur : '+esc(mailer.lastError):'');}
+    st.innerHTML=(ago>180?'⚠️ ':'✅ ')+'Dernière vérification il y a '+(ago<60?ago+' min':Math.round(ago/60)+' h')+'. '+(ghToken?'Les confirmations partent en moins d’une minute':'Les confirmations partent dans les 15 minutes environ')+' ; les rappels, 24 h avant chaque visite.'+(ago>180?' <b>Le programme semble arrêté : vérifiez GitHub → Actions.</b>':'')+(mailer.lastError?'<br>Dernière erreur : '+esc(mailer.lastError):'');}
   const l=[...mails].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,8);
   $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.type==='reminder'?'Rappel':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
 }
@@ -1567,14 +1592,14 @@ $('mForm').onsubmit=async e=>{
 function clientLink(code){return location.origin+location.pathname+'?code='+encodeURIComponent(code)+'#client';}
 
 /* ───────── Démarrage ───────── */
-function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];mails=[];mailer=null;inbox=[];invoices=[];confirms=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};infoCache={};infos=[];Object.keys(loaded).forEach(k=>loaded[k]=false);}
+function stopPrivate(){unsubs.forEach(u=>{try{u()}catch(_){}});unsubs=[];mails=[];mailer=null;ghToken='';inbox=[];invoices=[];confirms=[];requests=[];renderRequests();shifts=[];emps=[];clients=[];empDenied=false;empSelTouched=false;visitsCache={};infoCache={};infos=[];Object.keys(loaded).forEach(k=>loaded[k]=false);}
 function startPrivate(){
   unsubs.push(api.listen('employees',l=>{emps=l;empDenied=false;loaded.employees=true;renderEmp();renderAdmin();scheduleSync();},()=>{empDenied=true;renderEmp();}));
   unsubs.push(api.listen('shifts',l=>{shifts=l;loaded.shifts=true;renderEmp();renderAdmin();scheduleSync();},()=>{}));
   if(!isAdmin)unsubs.push(api.listen('clientInfo',l=>{infos=l;renderEmp();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('requests',l=>{requests=l;renderRequests();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('mail',l=>{mails=l;renderMailer();renderRequests();},()=>{}));
-  if(isAdmin)unsubs.push(api.listen('system',l=>{mailer=l.find(x=>x.id==='mailer')||null;renderMailer();},()=>{renderMailer();}));
+  if(isAdmin)unsubs.push(api.listen('system',l=>{mailer=l.find(x=>x.id==='mailer')||null;const g=l.find(x=>x.id==='github');ghToken=(g&&g.token)||'';renderGh();renderMailer();},()=>{renderMailer();}));
   if(isAdmin)unsubs.push(api.listen('clientInbox',l=>{inbox=l;renderInbox();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('invoices',l=>{invoices=l;loaded.invoices=true;renderInvoices();scheduleSync();},()=>{loaded.invoices=true;}));
   if(isAdmin)unsubs.push(api.listen('confirm',l=>{confirms=l;renderAdmin();},()=>{}));

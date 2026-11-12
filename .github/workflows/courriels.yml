@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: "*/15 * * * *"   # toutes les 15 minutes
   workflow_dispatch:          # bouton « Run workflow » pour lancer à la main
+  push:                       # aussi à chaque mise à jour du site
+    branches: [main]
 
 concurrency:
   group: courriels

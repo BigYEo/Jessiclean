@@ -84,6 +84,8 @@ Configuration (une seule fois) :
    - `FIREBASE_SERVICE_ACCOUNT` = tout le contenu du fichier JSON
 4. GitHub → onglet **Actions** → « Courriels clients » → **Run workflow** pour tester.
 
+**Envoi immédiat (optionnel)** : dans Admin → Courriels aux clients, collez une clé GitHub *fine-grained* (dépôt Jessiclean seulement, permission « Actions : Read and write »). Le bouton « Confirmer la soumission » lance alors l'envoi tout de suite (30 à 60 secondes). Le programme tourne aussi à chaque mise à jour du site.
+
 L'Admin affiche l'état du programme (« Dernière vérification il y a … »). GitHub peut suspendre les tâches planifiées d'un dépôt sans activité pendant 60 jours : si l'Admin indique que le programme semble arrêté, réactivez-le dans l'onglet Actions.
 
 ## Notifications par courriel
