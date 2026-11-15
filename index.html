@@ -546,14 +546,30 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .bas input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;height:100vh}
 .bas:has(input:focus-visible) .bah span{outline:3px solid var(--glass);outline-offset:3px}
 .bahint{margin:14px 0 0;color:#6c5f72;font-size:.95rem;text-align:center}
-body.logged header nav .navfaq{display:none}
+body.logged header nav .navsec{display:none}
 @media (max-width:380px){header nav button{padding:8px 7px!important;font-size:.9rem!important}.logo img{height:32px!important}}
+.navmenu{display:none;align-items:center;gap:8px;border:1.5px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:9px 14px;font:inherit;font-size:.98rem;font-weight:600;cursor:pointer;flex-shrink:0}
+.navmenu .bars{width:16px;height:2px;background:currentColor;position:relative;border-radius:2px}
+.navmenu .bars::before,.navmenu .bars::after{content:"";position:absolute;left:0;width:16px;height:2px;background:currentColor;border-radius:2px;transition:transform .2s}
+.navmenu .bars::before{top:-5px}.navmenu .bars::after{top:5px}
+.navmenu[aria-expanded=true] .bars{background:transparent}
+.navmenu[aria-expanded=true] .bars::before{transform:translateY(5px) rotate(45deg)}.navmenu[aria-expanded=true] .bars::after{transform:translateY(-5px) rotate(-45deg)}
+.navpanel{position:absolute;left:0;right:0;top:100%;padding:0 12px 12px}
+.npin{max-width:420px;margin-left:auto;background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:10px;box-shadow:0 24px 50px -24px rgba(59,26,66,.45);display:flex;flex-direction:column}
+.npin .nph{margin:10px 14px 4px;font-size:.85rem;color:var(--mut);font-weight:600}
+.npin button,.npin a{border:0;background:none;text-align:left;font:inherit;font-size:1.08rem;color:var(--tx);padding:12px 14px;border-radius:14px;cursor:pointer;text-decoration:none}
+.npin button:hover,.npin button.on{background:var(--ac2);color:var(--ac)}
+.npin .npcall{margin-top:6px;background:var(--metal);color:#fff;text-align:center;font-weight:600}
+@media (max-width:1199px){header nav .navsec{display:none}.navmenu{display:inline-flex}}
+@media (max-width:560px){body:not(.logged) header nav [data-v=connexion]{display:none}.navmenu{padding:8px 12px}}
+body.logged .navmenu{display:none}
+header nav .navsec.on{background:var(--ac2);color:var(--ac)}
 .hide{display:none!important}
 </style>
 </head>
 <body>
 <header><div class="bar"><div class="logo" data-go="accueil" role="link" aria-label="Jessiclean – accueil"><img src="img/logo-sm.jpg" alt="Jessiclean" width="123" height="50"></div>
-<nav><button data-v="accueil">Accueil</button><button class="navfaq" data-go="accueil" data-scroll="faq">FAQ</button><button data-v="client">Espace client</button><button data-v="employes" id="tabEmp" class="hide">Mon horaire</button><button data-v="admin" id="tabAdmin" class="hide">Admin</button><button data-v="connexion" id="tabLogin" class="acct">Connexion</button></nav><button class="hdr-cta" data-go="accueil" data-scroll="soumission">Soumission gratuite</button></div></header>
+<nav><button data-v="accueil">Accueil</button><button class="navsec" data-go="accueil" data-scroll="services" data-sec="services">Services</button><button class="navsec" data-go="accueil" data-scroll="realisations" data-sec="realisations">Réalisations</button><button class="navsec" data-go="accueil" data-scroll="avis" data-sec="avis">Avis</button><button class="navsec" data-go="accueil" data-scroll="faq" data-sec="faq">FAQ</button><button data-v="client">Espace client</button><button data-v="employes" id="tabEmp" class="hide">Mon horaire</button><button data-v="admin" id="tabAdmin" class="hide">Admin</button><button data-v="connexion" id="tabLogin" class="acct">Connexion</button></nav><button class="navmenu" id="navMenu" type="button" aria-expanded="false" aria-controls="navPanel"><span class="bars" aria-hidden="true"></span>Menu</button><button class="hdr-cta" data-go="accueil" data-scroll="soumission">Soumission gratuite</button></div><div class="navpanel hide" id="navPanel"><div class="npin"><p class="nph">Sur cette page</p><button data-go="accueil" data-scroll="services" data-sec="services">Services</button><button data-go="accueil" data-scroll="realisations" data-sec="realisations">Réalisations</button><button data-go="accueil" data-scroll="fonctionnement" data-sec="fonctionnement">Comment ça fonctionne</button><button data-go="accueil" data-scroll="pourquoi" data-sec="pourquoi">Pourquoi Jessiclean</button><button data-go="accueil" data-scroll="soumission" data-sec="soumission">Soumission gratuite</button><button data-go="accueil" data-scroll="avis" data-sec="avis">Avis</button><button data-go="accueil" data-scroll="faq" data-sec="faq">FAQ</button><p class="nph">Espaces</p><button data-go="client">Espace client</button><button data-go="connexion">Espace équipe</button><a class="npcall" href="tel:+18195980121">Appeler 819 598-0121</a></div></div></header>
 <main>
 <div id="setupNote" class="note err hide"></div>
 
@@ -606,7 +622,7 @@ body.logged header nav .navfaq{display:none}
   <div class="gal"><figure class="gi gi-logo" data-cat="marque"><button type="button" data-full="img/realisations/logo-couverture.jpg" data-cap="Jessiclean – entretien ménager"><img src="img/realisations/logo-couverture-mini.jpg" alt="Jessiclean – entretien ménager" loading="lazy" decoding="async"></button><figcaption>Jessiclean – entretien ménager</figcaption></figure><figure class="gi gi-logo" data-cat="marque"><button type="button" data-full="img/realisations/logo-carre.jpg" data-cap="Logo Jessiclean"><img src="img/realisations/logo-carre-mini.jpg" alt="Logo Jessiclean" loading="lazy" decoding="async"></button><figcaption>Logo Jessiclean</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-bois-grange.jpg" data-cap="Chambre avec mur de bois"><img src="img/realisations/chambre-bois-grange-mini.jpg" alt="Chambre avec mur de bois après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre avec mur de bois</figcaption></figure><figure class="gi" data-cat="vie"><button type="button" data-full="img/realisations/cuisine-salle-a-manger.jpg" data-cap="Coin repas"><img src="img/realisations/cuisine-salle-a-manger-mini.jpg" alt="Coin repas après le ménage" loading="lazy" decoding="async"></button><figcaption>Coin repas</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-palmier.jpg" data-cap="Salle de bain double lavabo"><img src="img/realisations/sdb-palmier-mini.jpg" alt="Salle de bain double lavabo après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain double lavabo</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-tropicale.jpg" data-cap="Chambre d’amis"><img src="img/realisations/chambre-tropicale-mini.jpg" alt="Chambre d’amis après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre d’amis</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-sous-sol.jpg" data-cap="Salle de bain avec douche"><img src="img/realisations/sdb-sous-sol-mini.jpg" alt="Salle de bain avec douche après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain avec douche</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-douce.jpg" data-cap="Chambre au sous-sol"><img src="img/realisations/chambre-douce-mini.jpg" alt="Chambre au sous-sol après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre au sous-sol</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-poudre.jpg" data-cap="Salle d’eau"><img src="img/realisations/sdb-poudre-mini.jpg" alt="Salle d’eau après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle d’eau</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-claire.jpg" data-cap="Chambre lumineuse"><img src="img/realisations/chambre-claire-mini.jpg" alt="Chambre lumineuse après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre lumineuse</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-bain-mer.jpg" data-cap="Salle de bain avec bain podium"><img src="img/realisations/sdb-bain-mer-mini.jpg" alt="Salle de bain avec bain podium après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain avec bain podium</figcaption></figure><figure class="gi" data-cat="vie"><button type="button" data-full="img/realisations/salon-clair.jpg" data-cap="Salon"><img src="img/realisations/salon-clair-mini.jpg" alt="Salon après le ménage" loading="lazy" decoding="async"></button><figcaption>Salon</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-chalet.jpg" data-cap="Chambre de chalet"><img src="img/realisations/chambre-chalet-mini.jpg" alt="Chambre de chalet après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre de chalet</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-bain-pierre.jpg" data-cap="Salle de bain avec mur de pierre"><img src="img/realisations/sdb-bain-pierre-mini.jpg" alt="Salle de bain avec mur de pierre après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain avec mur de pierre</figcaption></figure><figure class="gi" data-cat="vie"><button type="button" data-full="img/realisations/salle-a-manger.jpg" data-cap="Salle à manger"><img src="img/realisations/salle-a-manger-mini.jpg" alt="Salle à manger après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle à manger</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-rouge.jpg" data-cap="Chambre principale"><img src="img/realisations/chambre-rouge-mini.jpg" alt="Chambre principale après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre principale</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-douche.jpg" data-cap="Salle de bain avec douche en coin"><img src="img/realisations/sdb-douche-mini.jpg" alt="Salle de bain avec douche en coin après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain avec douche en coin</figcaption></figure><figure class="gi" data-cat="vie"><button type="button" data-full="img/realisations/salon-chalet.jpg" data-cap="Salon de chalet"><img src="img/realisations/salon-chalet-mini.jpg" alt="Salon de chalet après le ménage" loading="lazy" decoding="async"></button><figcaption>Salon de chalet</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-bois.jpg" data-cap="Chambre"><img src="img/realisations/chambre-bois-mini.jpg" alt="Chambre après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-moderne.jpg" data-cap="Salle de bain moderne"><img src="img/realisations/sdb-moderne-mini.jpg" alt="Salle de bain moderne après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain moderne</figcaption></figure></div>
  </div></section>
 
- <section class="sec steps photo alt ph-living" aria-labelledby="stepsTitle"><div class="wrap">
+ <section class="sec steps photo alt ph-living" id="fonctionnement" aria-labelledby="stepsTitle"><div class="wrap">
   <h2 id="stepsTitle">Trois étapes, puis on s’occupe du reste</h2>
   <ol class="step-list">
    <li><h3>Vous nous écrivez</h3><p>Remplissez la demande de soumission ci-dessous. On vous rappelle pour comprendre vos besoins.</p></li>
@@ -615,7 +631,7 @@ body.logged header nav .navfaq{display:none}
   </ol>
  </div></section>
 
- <section class="sec band" aria-labelledby="whyTitle"><div class="wrap">
+ <section class="sec band" id="pourquoi" aria-labelledby="whyTitle"><div class="wrap">
   <h2 id="whyTitle">Le genre de propreté qui se remarque</h2>
   <div class="promise">
    <div><h3>Disponible</h3><p>24 h sur 24, 7 jours sur 7 : tôt le matin, en soirée ou la fin de semaine, on s’adapte à votre horaire.</p></div>
@@ -946,11 +962,26 @@ function show(v){
   if(v==='employes'&&!user)v='connexion';
   VIEWS.forEach(k=>$('v-'+k).classList.toggle('hide',k!==v));
   document.body.dataset.view=v;
+  setTimeout(()=>typeof markSec==='function'&&markSec());
   document.querySelectorAll('header nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);
 }
 document.querySelectorAll('header nav button').forEach(b=>b.onclick=()=>{show(b.dataset.v);scrollTo(0,0);});
 document.querySelector('.logo').onclick=()=>{show('accueil');scrollTo(0,0);};
+const navMenu=$('navMenu'),navPanel=$('navPanel');
+function setMenu(open){navPanel.classList.toggle('hide',!open);navMenu.setAttribute('aria-expanded',String(open));}
+navMenu.onclick=e=>{e.stopPropagation();setMenu(navPanel.classList.contains('hide'));};
+navPanel.addEventListener('click',e=>{if(e.target.closest('button,a'))setMenu(false);});
+document.addEventListener('click',e=>{if(!navPanel.classList.contains('hide')&&!e.target.closest('#navPanel,#navMenu'))setMenu(false);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!navPanel.classList.contains('hide')){setMenu(false);navMenu.focus();}});
+/* section visible = bouton allumé */
+const secIds=['services','realisations','fonctionnement','pourquoi','soumission','avis','faq'];
+function markSec(){
+  const onHome=document.body.dataset.view==='accueil';let cur='';
+  if(onHome)secIds.forEach(id=>{const el=$(id);if(el&&el.getBoundingClientRect().top<innerHeight*0.4)cur=id;});
+  document.querySelectorAll('[data-sec]').forEach(b=>b.classList.toggle('on',b.dataset.sec===cur));
+}
+addEventListener('scroll',()=>requestAnimationFrame(markSec),{passive:true});
 function goTo(id){
   const el=$(id);if(!el)return;
   requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth'}));
