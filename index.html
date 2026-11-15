@@ -196,12 +196,8 @@ footer{background:var(--plum);color:#cdbcd2;padding:48px 24px calc(36px + env(sa
 .photo::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--img) center/cover no-repeat;opacity:.16;mix-blend-mode:multiply;filter:grayscale(.3) contrast(.85) blur(1px);
  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 82%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 82%,transparent 100%)}
 .ph-kitchen{background:linear-gradient(180deg,#efe3f2 0%,#fbf7fc 22%,var(--lilac) 70%,#efe2f2 100%)}
+.ph-kitchen{--img:url('img/realisations/salon-clair-mini.jpg')}.ph-living{--img:url('img/realisations/chambre-claire-mini.jpg')}.ph-spray{--img:url('img/realisations/sdb-bain-mer-mini.jpg')}.ph-caddy{--img:url('img/realisations/chambre-chalet-mini.jpg')}
 .photo.alt{background:linear-gradient(195deg,#f3e6f5 0%,var(--lilac) 45%,#ffffff 100%)}
-.ph-kitchen{--img:url('https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=1800&q=60')}
-.ph-living{--img:url('https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1800&q=60')}
-.ph-spray{--img:url('https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?auto=format&fit=crop&w=1800&q=60')}
-.ph-caddy{--img:url('https://images.unsplash.com/photo-1646980241033-cd7abda2ee88?auto=format&fit=crop&w=1800&q=60')}
-@media (max-width:700px){.ph-kitchen{--img:url('https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=900&q=60')}.ph-living{--img:url('https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=900&q=60')}.ph-spray{--img:url('https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?auto=format&fit=crop&w=900&q=60')}.ph-caddy{--img:url('https://images.unsplash.com/photo-1646980241033-cd7abda2ee88?auto=format&fit=crop&w=900&q=60')}}
 .app fieldset{border:0;border-top:1px solid var(--bd);padding:14px 0 0;margin:18px 0 0;min-width:0}
 .app legend{font-weight:600;font-size:1.05rem;color:var(--ac);padding:0 10px 0 0}
 .daypick{display:flex;flex-wrap:wrap;gap:6px}
@@ -495,6 +491,41 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
  .card{padding:16px}
  .app{padding:18px 12px 8px}
 }
+.real{background:#fff}
+.balist{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px}
+.ba{background:var(--lilac);border:1px solid var(--bd);border-radius:26px;padding:20px}
+.ba .bahead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 16px;margin-bottom:14px}
+.ba h3{margin:0;font-size:1.5rem;font-weight:500;color:var(--plum)}
+.ba .bahead p{margin:0;color:#5c4f62;font-size:1rem;flex-basis:100%;order:3}
+.bapics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bapics figure{margin:0;position:relative;border-radius:18px;overflow:hidden;background:#ddd;aspect-ratio:3/4}
+.bapics button,.gi button{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:zoom-in}
+.bapics img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.bapics figure:hover img,.gi:hover img{transform:scale(1.04)}
+.tag{position:absolute;left:12px;top:12px;background:rgba(30,20,34,.78);color:#fff;font-size:.9rem;font-weight:600;padding:4px 12px;border-radius:999px;pointer-events:none}
+.tag.ok{background:var(--metal)}
+.batog{display:none;background:#fff;border:1px solid var(--bd);border-radius:999px;padding:4px}
+.batog button{border:0;background:none;font:inherit;font-size:1rem;color:var(--plum);padding:8px 18px;border-radius:999px;cursor:pointer}
+.batog button[aria-pressed=true]{background:var(--metal);color:#fff}
+.galhead{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin:56px 0 18px}
+.galhead h3{margin:0;font-size:1.6rem;font-weight:500;color:var(--plum)}
+.galf{display:flex;flex-wrap:wrap;gap:8px}
+.galf button{border:1.5px solid var(--bd);background:#fff;color:var(--plum);border-radius:999px;padding:9px 16px;font:inherit;font-size:1rem;cursor:pointer}
+.galf button[aria-pressed=true]{border-color:var(--orchid);background:var(--ac2);font-weight:600}
+.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.gi{margin:0;border-radius:20px;overflow:hidden;position:relative;background:#eee;aspect-ratio:4/3}
+.gi img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.gi figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;color:#fff;font-size:.98rem;font-weight:500;background:linear-gradient(transparent,rgba(30,20,34,.7));pointer-events:none}
+.gi.hide{display:none}
+@media (max-width:900px){.balist{grid-template-columns:1fr}.gal{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){
+ .batog{display:inline-flex}
+ .bapics{grid-template-columns:1fr}
+ .bapics[data-show=apres] .b-av,.bapics[data-show=avant] .b-ap{display:none}
+ .gal{gap:10px}.gi figcaption{font-size:.88rem;padding:22px 10px 8px}
+}
+#viewer .vnav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;padding:0;font-size:1.6rem;line-height:1;display:grid;place-items:center;background:rgba(255,255,255,.92)}
+#viewer .vprev{left:12px}#viewer .vnext{right:12px}
 .hide{display:none!important}
 </style>
 </head>
@@ -535,6 +566,19 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
    <div class="svc-row" data-svcrow="Déménagement"><span class="svc-ic svc-dem"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 10l12-5 12 5v13l-12 5-12-5z"/><path d="M4 10l12 5 12-5M16 15v13"/><path d="M10 7.5l12 5"/></svg></span><h3>Déménagement</h3><p>Avant de partir ou avant d’emménager, un logement prêt à être habité.</p><button class="svcbtn" data-svc="Déménagement">Préparer mon déménagement</button></div>
    <div class="svc-row" data-svcrow="Commercial"><span class="svc-ic svc-com"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 28V6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v22M20 13h5a1 1 0 0 1 1 1v14M3 28h26"/><path d="M10 10h2M14 10h2M10 15h2M14 15h2M10 20h2M14 20h2M14 28v-4h-4v4"/></svg></span><h3>Commercial</h3><p>Bureaux, commerces et espaces de travail, en dehors de vos heures d’ouverture.</p><button class="svcbtn" data-svc="Commercial">Soumission pour mon commerce</button></div>
   </div>
+ </div></section>
+
+ <section class="sec real" id="realisations" aria-labelledby="realTitle"><div class="wrap">
+  <h2 id="realTitle">Nos réalisations</h2>
+  <p class="lead">De vraies photos prises chez nos clients. Le calcaire, les dépôts et les recoins oubliés : on s’en occupe.</p>
+  <div class="balist">
+   <article class="ba"><div class="bahead"><h3>Douche</h3><p>Parois de verre, joints et bac de douche.</p><div class="batog" role="group" aria-label="Afficher"><button type="button" data-ba="avant">Avant</button><button type="button" data-ba="apres" aria-pressed="true">Après</button></div></div>
+     <div class="bapics" data-show="apres"><figure class="b-av"><button type="button" data-full="img/realisations/douche-avant.jpg" data-cap="Douche – avant"><img src="img/realisations/douche-avant-mini.jpg" alt="Douche avant le ménage" loading="lazy" decoding="async"></button><span class="tag">Avant</span></figure><figure class="b-ap"><button type="button" data-full="img/realisations/douche-apres.jpg" data-cap="Douche – après"><img src="img/realisations/douche-apres-mini.jpg" alt="Douche après le ménage" loading="lazy" decoding="async"></button><span class="tag ok">Après</span></figure></div></article>
+   <article class="ba"><div class="bahead"><h3>Drain de douche</h3><p>Le canal du drain, là où la saleté s’accumule.</p><div class="batog" role="group" aria-label="Afficher"><button type="button" data-ba="avant">Avant</button><button type="button" data-ba="apres" aria-pressed="true">Après</button></div></div>
+     <div class="bapics" data-show="apres"><figure class="b-av"><button type="button" data-full="img/realisations/drain-avant.jpg" data-cap="Drain de douche – avant"><img src="img/realisations/drain-avant-mini.jpg" alt="Drain de douche avant le ménage" loading="lazy" decoding="async"></button><span class="tag">Avant</span></figure><figure class="b-ap"><button type="button" data-full="img/realisations/drain-apres.jpg" data-cap="Drain de douche – après"><img src="img/realisations/drain-apres-mini.jpg" alt="Drain de douche après le ménage" loading="lazy" decoding="async"></button><span class="tag ok">Après</span></figure></div></article>
+  </div>
+  <div class="galhead"><h3>Galerie</h3><div class="galf" role="group" aria-label="Filtrer la galerie"><button type="button" data-f="all" aria-pressed="true">Tout</button><button type="button" data-f="chambres" aria-pressed="false">Chambres</button><button type="button" data-f="sdb" aria-pressed="false">Salles de bain</button><button type="button" data-f="vie" aria-pressed="false">Pièces de vie</button></div></div>
+  <div class="gal"><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-claire.jpg" data-cap="Chambre lumineuse"><img src="img/realisations/chambre-claire-mini.jpg" alt="Chambre lumineuse après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre lumineuse</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-bain-mer.jpg" data-cap="Salle de bain avec bain podium"><img src="img/realisations/sdb-bain-mer-mini.jpg" alt="Salle de bain avec bain podium après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain avec bain podium</figcaption></figure><figure class="gi" data-cat="vie"><button type="button" data-full="img/realisations/salon-clair.jpg" data-cap="Salon"><img src="img/realisations/salon-clair-mini.jpg" alt="Salon après le ménage" loading="lazy" decoding="async"></button><figcaption>Salon</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-chalet.jpg" data-cap="Chambre de chalet"><img src="img/realisations/chambre-chalet-mini.jpg" alt="Chambre de chalet après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre de chalet</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-bain-pierre.jpg" data-cap="Salle de bain avec mur de pierre"><img src="img/realisations/sdb-bain-pierre-mini.jpg" alt="Salle de bain avec mur de pierre après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain avec mur de pierre</figcaption></figure><figure class="gi" data-cat="vie"><button type="button" data-full="img/realisations/salle-a-manger.jpg" data-cap="Salle à manger"><img src="img/realisations/salle-a-manger-mini.jpg" alt="Salle à manger après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle à manger</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-rouge.jpg" data-cap="Chambre principale"><img src="img/realisations/chambre-rouge-mini.jpg" alt="Chambre principale après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre principale</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-douche.jpg" data-cap="Salle de bain avec douche en coin"><img src="img/realisations/sdb-douche-mini.jpg" alt="Salle de bain avec douche en coin après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain avec douche en coin</figcaption></figure><figure class="gi" data-cat="vie"><button type="button" data-full="img/realisations/salon-chalet.jpg" data-cap="Salon de chalet"><img src="img/realisations/salon-chalet-mini.jpg" alt="Salon de chalet après le ménage" loading="lazy" decoding="async"></button><figcaption>Salon de chalet</figcaption></figure><figure class="gi" data-cat="chambres"><button type="button" data-full="img/realisations/chambre-bois.jpg" data-cap="Chambre"><img src="img/realisations/chambre-bois-mini.jpg" alt="Chambre après le ménage" loading="lazy" decoding="async"></button><figcaption>Chambre</figcaption></figure><figure class="gi" data-cat="sdb"><button type="button" data-full="img/realisations/sdb-moderne.jpg" data-cap="Salle de bain moderne"><img src="img/realisations/sdb-moderne-mini.jpg" alt="Salle de bain moderne après le ménage" loading="lazy" decoding="async"></button><figcaption>Salle de bain moderne</figcaption></figure></div>
  </div></section>
 
  <section class="sec steps photo alt ph-living" aria-labelledby="stepsTitle"><div class="wrap">
@@ -814,12 +858,12 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
   <div id="admList"><p class="mut">Chargement…</p></div></div>
 </section>
 </main>
-<div id="viewer" class="hide" role="dialog" aria-modal="true" aria-label="Pièce jointe"><img id="vImg" alt=""><div class="vbar"><span id="vName"></span><a id="vDl" download>Télécharger</a><button id="vClose">Fermer</button></div></div>
+<div id="viewer" class="hide" role="dialog" aria-modal="true" aria-label="Photo"><button class="vnav vprev hide" id="vPrev" aria-label="Photo précédente">‹</button><button class="vnav vnext hide" id="vNext" aria-label="Photo suivante">›</button><img id="vImg" alt=""><div class="vbar"><span id="vName"></span><a id="vDl" download>Télécharger</a><button id="vClose">Fermer</button></div></div>
 <footer>
  <div class="fgrid">
   <div class="fbrand"><strong>Jessiclean</strong><p>Entretien ménager résidentiel et commercial en Outaouais. Ouvert 24 h sur 24, 7 jours sur 7.</p>
    <a class="fphone" href="tel:+18195980121">819 598-0121</a><a class="fmail" href="mailto:admin@jessiclean.ca">admin@jessiclean.ca</a></div>
-  <div><h4>Services</h4><ul><li><button data-go="accueil" data-scroll="services">Ménage régulier</button></li><li><button data-go="accueil" data-scroll="services">Grand ménage</button></li><li><button data-go="accueil" data-scroll="services">Déménagement</button></li><li><button data-go="accueil" data-scroll="services">Commercial</button></li></ul></div>
+  <div><h4>Services</h4><ul><li><button data-go="accueil" data-scroll="services">Ménage régulier</button></li><li><button data-go="accueil" data-scroll="services">Grand ménage</button></li><li><button data-go="accueil" data-scroll="services">Déménagement</button></li><li><button data-go="accueil" data-scroll="services">Commercial</button></li><li><button data-go="accueil" data-scroll="realisations">Nos réalisations</button></li></ul></div>
   <div><h4>Zone desservie</h4><ul class="plain"><li>Gatineau</li><li>Hull · Aylmer · Buckingham</li><li>Chelsea</li><li>Cantley</li></ul></div>
   <div><h4>Liens</h4><ul><li><button data-go="accueil" data-scroll="soumission">Soumission gratuite</button></li><li><button data-go="client">Espace client</button></li><li><button data-go="connexion">Espace équipe</button></li><li><a href="politique-confidentialite.html">Politique de confidentialité</a></li></ul></div>
  </div>
@@ -1288,8 +1332,31 @@ function openFile(f){
   const url=URL.createObjectURL(dataToBlob(f.data)),a=document.createElement('a');
   a.href=url;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
-function closeViewer(){$('viewer').classList.add('hide');$('vImg').removeAttribute('src');}
+function closeViewer(){$('viewer').classList.add('hide');$('vImg').removeAttribute('src');galList=[];$('vPrev').classList.add('hide');$('vNext').classList.add('hide');}
 $('vClose').onclick=closeViewer;
+/* Galerie et avant/après */
+let galList=[],galIdx=0;
+function openPhoto(list,i){
+  galList=list;galIdx=(i+list.length)%list.length;const b=list[galIdx];
+  $('vImg').src=b.dataset.full;$('vImg').alt=b.dataset.cap;$('vName').textContent=b.dataset.cap;$('vDl').href=b.dataset.full;$('vDl').download=b.dataset.full.split('/').pop();
+  $('vPrev').classList.toggle('hide',list.length<2);$('vNext').classList.toggle('hide',list.length<2);
+  $('viewer').classList.remove('hide');$('vClose').focus();
+}
+$('vPrev').onclick=e=>{e.stopPropagation();openPhoto(galList,galIdx-1);};
+$('vNext').onclick=e=>{e.stopPropagation();openPhoto(galList,galIdx+1);};
+document.addEventListener('keydown',e=>{if($('viewer').classList.contains('hide')||galList.length<2)return;if(e.key==='ArrowLeft')openPhoto(galList,galIdx-1);if(e.key==='ArrowRight')openPhoto(galList,galIdx+1);});
+document.querySelectorAll('#realisations [data-full]').forEach(b=>b.onclick=()=>{
+  const scope=b.closest('.bapics')?[...b.closest('.bapics').querySelectorAll('[data-full]')]:[...document.querySelectorAll('.gi:not(.hide) [data-full]')];
+  openPhoto(scope,scope.indexOf(b));
+});
+document.querySelectorAll('.galf [data-f]').forEach(b=>b.onclick=()=>{
+  const f=b.dataset.f;document.querySelectorAll('.galf [data-f]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  document.querySelectorAll('.gi').forEach(g=>g.classList.toggle('hide',f!=='all'&&g.dataset.cat!==f));
+});
+document.querySelectorAll('.batog [data-ba]').forEach(b=>b.onclick=()=>{
+  const ba=b.closest('.ba');ba.querySelector('.bapics').dataset.show=b.dataset.ba;
+  ba.querySelectorAll('.batog [data-ba]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+});
 $('viewer').onclick=e=>{if(e.target.id==='viewer')closeViewer();};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('viewer').classList.contains('hide'))closeViewer();});
 document.addEventListener('click',async e=>{
