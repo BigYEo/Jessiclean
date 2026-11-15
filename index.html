@@ -564,6 +564,14 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 @media (max-width:560px){body:not(.logged) header nav [data-v=connexion]{display:none}.navmenu{padding:8px 12px}}
 @media (max-width:640px){body.logged #tabLogin{display:none}body.logged .navmenu{padding:8px 10px;font-size:0;gap:0}body.logged .navmenu .bars{margin:0 2px}}
 header nav .navsec.on{background:var(--ac2);color:var(--ac)}
+.gcta{display:flex;align-items:center;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin-top:28px;background:#fff;border:1px solid var(--bd);border-radius:22px;padding:20px 24px;box-shadow:0 18px 40px -28px rgba(59,26,66,.4)}
+.gcta b{display:block;color:var(--plum);font-size:1.2rem;font-weight:600;margin-bottom:2px}
+.gcta span{color:#5c4f62}
+.gbtn{display:inline-flex;align-items:center;gap:10px;background:#fff;color:#1f1f1f;border:1.5px solid #dadce0;border-radius:999px;padding:13px 22px;font-weight:600;font-size:1.05rem;text-decoration:none;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.08);transition:box-shadow .2s,border-color .2s}
+.gbtn:hover{border-color:#bdc1c6;box-shadow:0 6px 16px rgba(0,0,0,.14)}
+.gbtn svg{width:22px;height:22px}
+.gcta-c{margin:26px 0 0}
+@media (max-width:560px){.gcta{padding:18px}.gbtn{width:100%;justify-content:center}}
 .hide{display:none!important}
 </style>
 </head>
@@ -690,8 +698,9 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
 
  <section class="sec reviews photo alt ph-caddy" id="avis" aria-labelledby="revTitle"><div class="wrap">
   <div class="rev-head"><div><h2 id="revTitle" style="margin:0">Ce que disent nos clients</h2></div><div class="score" id="avg"></div></div>
+  <div class="gcta"><div><b>Vous êtes client&nbsp;?</b><span>Votre avis sur Google aide d’autres familles de l’Outaouais à nous trouver. Merci&nbsp;!</span></div><a class="gbtn" href="https://g.page/r/CU_e0nV6l4pZEAI/review" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2.1-1.9 3.3-4.7 3.3-8.1z"/><path fill="#34A853" d="M12 23c3 0 5.4-1 7.2-2.6l-3.5-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.2v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.3a6.6 6.6 0 0 1 0-4.2V7.3H2.2a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.2 7.3l3.6 2.8C6.7 7.4 9.1 5.4 12 5.4z"/></svg>Laisser un avis Google</a></div>
   <div id="revList"><p class="mut">Chargement…</p></div>
-  <details class="give" id="revCard"><summary>Laisser un avis</summary>
+  <details class="give" id="revCard"><summary>Ou laisser un avis directement sur le site</summary>
    <div id="revNote" class="note hide" role="status"></div>
    <div class="stars" id="stars" role="radiogroup" aria-label="Note"></div>
    <label for="rName">Votre nom</label><input id="rName" maxlength="40">
@@ -735,6 +744,7 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
    <div class="cpanel" id="cp-visites" role="tabpanel">
     <div id="cNext"></div>
     <div id="cMoreWrap"><h2 class="ch2">Visites à venir</h2><div id="cUpcoming"></div></div>
+    <div class="gcta gcta-c"><div><b>Satisfait de nos services&nbsp;?</b><span>Un avis Google prend une minute et nous aide énormément.</span></div><a class="gbtn" href="https://g.page/r/CU_e0nV6l4pZEAI/review" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2.1-1.9 3.3-4.7 3.3-8.1z"/><path fill="#34A853" d="M12 23c3 0 5.4-1 7.2-2.6l-3.5-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.2v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.3a6.6 6.6 0 0 1 0-4.2V7.3H2.2a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.2 7.3l3.6 2.8C6.7 7.4 9.1 5.4 12 5.4z"/></svg>Laisser un avis</a></div>
     <div id="cPastWrap" class="hide"><details class="past"><summary>Visites passées <span id="cPastCount"></span></summary><div id="cPast"></div></details></div>
     <div id="moveBox" class="cbox hide">
      <h2 class="ch2" style="margin-top:0">Demander à déplacer une visite</h2>
@@ -902,7 +912,7 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
    <a class="fphone" href="tel:+18195980121">819 598-0121</a><a class="fmail" href="mailto:admin@jessiclean.ca">admin@jessiclean.ca</a></div>
   <div><h4>Services</h4><ul><li><button data-go="accueil" data-scroll="services">Ménage régulier</button></li><li><button data-go="accueil" data-scroll="services">Grand ménage</button></li><li><button data-go="accueil" data-scroll="services">Déménagement</button></li><li><button data-go="accueil" data-scroll="services">Commercial</button></li><li><button data-go="accueil" data-scroll="realisations">Nos réalisations</button></li></ul></div>
   <div><h4>Zone desservie</h4><ul class="plain"><li>Gatineau</li><li>Hull · Aylmer · Buckingham</li><li>Masson-Angers</li><li>Chelsea</li><li>Cantley</li><li>Val-des-Monts</li></ul></div>
-  <div><h4>Liens</h4><ul><li><button data-go="accueil" data-scroll="soumission">Soumission gratuite</button></li><li><button data-go="accueil" data-scroll="faq">Questions fréquentes</button></li><li><button data-go="client">Espace client</button></li><li><button data-go="connexion">Espace équipe</button></li><li><a href="politique-confidentialite.html">Politique de confidentialité</a></li></ul></div>
+  <div><h4>Liens</h4><ul><li><button data-go="accueil" data-scroll="soumission">Soumission gratuite</button></li><li><button data-go="accueil" data-scroll="faq">Questions fréquentes</button></li><li><a href="https://g.page/r/CU_e0nV6l4pZEAI/review" target="_blank" rel="noopener">Laisser un avis Google</a></li><li><button data-go="client">Espace client</button></li><li><button data-go="connexion">Espace équipe</button></li><li><a href="politique-confidentialite.html">Politique de confidentialité</a></li></ul></div>
  </div>
  <div class="fbottom">© <span id="yr"></span> Jessiclean · Gatineau (Québec)</div>
 </footer>

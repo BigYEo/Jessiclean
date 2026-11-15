@@ -8,6 +8,7 @@
 
 export const SITE = 'https://jessiclean.ca';
 const PHONE = '819 598-0121';
+const REVIEW_URL = 'https://g.page/r/CU_e0nV6l4pZEAI/review';
 const REMIND_HOURS = 24;       // envoyer le rappel quand la visite commence dans 24 h ou moins…
 const REMIND_MIN_HOURS = 2;    // …mais pas si elle commence dans moins de 2 h
 const MAX_TRIES = 3;
@@ -34,6 +35,7 @@ function layout(title, bodyHtml, button) {
 <div style="font-size:17px;line-height:1.6;color:#3f3445">${bodyHtml}</div></td></tr>
 ${button ? `<tr><td style="padding:22px 28px 6px"><a href="${esc(button.href)}" style="display:inline-block;background:#8a4a91;color:#ffffff;text-decoration:none;font-weight:600;font-size:17px;padding:14px 26px;border-radius:999px">${esc(button.label)}</a></td></tr>` : ''}
 <tr><td style="padding:22px 28px 26px;font-size:15px;line-height:1.5;color:#6c5f72;border-top:1px solid #efe6f1">
+Satisfait de nos services ? <a href="${REVIEW_URL}" style="color:#8a4a91;font-weight:600">Laissez-nous un avis Google</a>, ça nous aide énormément.<br>
 Une question ? Répondez simplement à ce courriel ou appelez-nous au <a href="tel:+18195980121" style="color:#8a4a91">${PHONE}</a> (24 h sur 24, 7 jours sur 7).<br>
 Jessiclean · Entretien ménager en Outaouais · <a href="${SITE}" style="color:#8a4a91">jessiclean.ca</a></td></tr>
 </table></td></tr></table></body></html>`;
