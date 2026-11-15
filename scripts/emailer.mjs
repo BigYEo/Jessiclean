@@ -101,13 +101,16 @@ export async function run({ db, send, ping, now = new Date(), log = console.log 
   let sent = 0, errors = 0, lastError = '';
 
   // 1) Courriels en attente (confirmations de soumission)
-  for (const m of mails.filter(x => x.status === 'pending' && x.type === 'confirm')) {
+  const TPL = { confirm: confirmEmail, thanks: thanksEmail, reminder: reminderEmail };
+  for (const m of mails.filter(x => x.status === 'pending' && (x.type === 'confirm' || x.test))) {
     try {
       if (!m.to) throw new Error('Aucune adresse courriel');
-      const { subject, html } = confirmEmail(m);
+      const tpl = TPL[m.type]; if (!tpl) throw new Error('Type inconnu : ' + m.type);
+      let { subject, html } = tpl(m);
+      if (m.test) subject = '[TEST] ' + subject;
       await send({ to: m.to, name: m.name, subject, html });
       await db.collection('mail').doc(m.id).update({ status: 'sent', sentAt: now.getTime(), error: '' });
-      sent++; log(`Confirmation envoyée à ${m.to}`);
+      sent++; log(`${m.test ? 'Test' : 'Confirmation'} (${m.type}) envoyé à ${m.to}`);
     } catch (e) {
       const tries = (m.tries || 0) + 1; errors++; lastError = String(e.message || e);
       await db.collection('mail').doc(m.id).update({ tries, status: tries >= MAX_TRIES ? 'error' : 'pending', error: lastError });

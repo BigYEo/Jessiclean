@@ -572,6 +572,8 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
 .gbtn svg{width:22px;height:22px}
 .gcta-c{margin:26px 0 0}
 @media (max-width:560px){.gcta{padding:18px}.gbtn{width:100%;justify-content:center}}
+.mtest{margin-top:12px}
+.mtest summary{cursor:pointer;color:var(--ac);font-weight:600}
 .hide{display:none!important}
 </style>
 </head>
@@ -841,6 +843,10 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
    <div class="row st"><input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_…"><button class="btn sm" id="ghSave" style="margin:0">Enregistrer la clé</button></div></div>
    <div id="ghActions" class="hide" style="margin-top:8px"><button class="btn sm" id="ghRun" style="margin:0">Envoyer maintenant</button> <button class="btn sec sm" id="ghEdit" style="margin:0">Changer la clé</button> <span class="mut" id="ghMsg"></span></div>
   </div>
+  <details class="mtest"><summary>Envoyer un courriel de test</summary>
+   <div class="row st"><div><label for="mtType">Type</label><select id="mtType"><option value="thanks">Remerciement après visite</option><option value="reminder">Rappel 24 h avant</option><option value="confirm">Confirmation de soumission</option></select></div><div><label for="mtTo">Adresse</label><input id="mtTo" type="email" placeholder="courriel@exemple.com"></div></div>
+   <button class="btn sm" id="mtSend" style="margin-top:10px">Envoyer le test</button> <span class="mut" id="mtMsg"></span>
+  </details>
   <div id="mailLog"></div></div>
  <div class="card"><h2>Soumissions et messages <span class="mut" id="qCount"></span></h2>
   <div id="qConfirmBox" class="note hide" style="background:var(--ac2)">
@@ -1221,6 +1227,16 @@ $('ghSave').onclick=async()=>{const t=$('ghToken').value.trim();if(!/^(github_pa
   try{await api.set('system','github',{token:t,ts:Date.now()});$('ghToken').value='';ghToken=t;renderGh();await triggerMailer();}catch(e){alert('Action impossible : '+msg(e));}};
 $('ghEdit').onclick=()=>{$('ghSetup').classList.remove('hide');$('ghActions').classList.add('hide');};
 $('ghRun').onclick=()=>triggerMailer();
+$('mtSend').onclick=async()=>{
+  const to=$('mtTo').value.trim(),type=$('mtType').value;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)){alert('Entrez une adresse courriel valide.');return;}
+  const t=new Date(Date.now()+864e5),d=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+  const m={type,test:true,to,name:'Client test',date:type==='thanks'?today():d,start:'09:00',end:'12:00',emp:'Marie',addr:'12, rue Exemple, Gatineau',code:'',service:'Ménage régulier',message:type==='confirm'?'Ceci est un courriel de test.':'',ts:Date.now(),status:'pending'};
+  $('mtSend').disabled=true;
+  try{await api.set('mail','test_'+uid(),m);const ok=await triggerMailer(true);$('mtMsg').textContent=ok?'Test lancé : vérifiez la boîte dans environ 1 minute (et les indésirables).':'Test enregistré : il partira au prochain passage du programme (15 min max).';}
+  catch(e){alert('Action impossible : '+msg(e));}
+  finally{$('mtSend').disabled=false;}
+};
 function mailState(id){const m=mails.find(x=>x.id===id);if(!m)return '';
   return m.status==='sent'?'<span class="chip-paid">Courriel envoyé</span>':m.status==='error'?'<span class="chip-due" title="'+esc(m.error||'')+'">Échec du courriel</span>':'<span class="chip-due" style="background:#fff4d6;color:#7a5a00">Courriel en attente</span>';}
 function renderMailer(){
@@ -1230,7 +1246,7 @@ function renderMailer(){
   else{const ago=Math.round((Date.now()-mailer.lastRun)/6e4);
     st.innerHTML=(ago>180?'⚠️ ':'✅ ')+'Dernière vérification il y a '+(ago<60?ago+' min':Math.round(ago/60)+' h')+'. '+(ghToken?'Les confirmations partent en moins d’une minute':'Les confirmations partent dans les 15 minutes environ')+' ; les rappels, 24 h avant chaque visite ; les remerciements, quelques heures après.'+(ago>180?' <b>Le programme semble arrêté : vérifiez GitHub → Actions.</b>':'')+(mailer.lastError?'<br>Dernière erreur : '+esc(mailer.lastError):'');}
   const l=[...mails].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,8);
-  $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.type==='reminder'?'Rappel':m.type==='thanks'?'Remerciement':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
+  $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.test?'Test – ':'')+(m.type==='reminder'?'Rappel':m.type==='thanks'?'Remerciement':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
 }
 
 /* Confirmations, demandes des clients, factures (admin) */
