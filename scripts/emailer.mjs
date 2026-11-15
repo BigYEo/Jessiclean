@@ -12,6 +12,10 @@ const REVIEW_URL = 'https://g.page/r/CU_e0nV6l4pZEAI/review';
 const REMIND_HOURS = 24;       // envoyer le rappel quand la visite commence dans 24 h ou moins…
 const REMIND_MIN_HOURS = 2;    // …mais pas si elle commence dans moins de 2 h
 const MAX_TRIES = 3;
+const THANKS_AFTER_H = 3;      // remerciement : au moins 3 h après la fin de la visite…
+const THANKS_MAX_H = 48;       // …et au plus 48 h après
+const THANKS_EVERY_DAYS = 90;  // au plus un remerciement par client tous les 90 jours
+const SEND_FROM_H = 9, SEND_TO_H = 20; // seulement en journée
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const nk = s => String(s || '').trim().toLowerCase();
@@ -48,6 +52,17 @@ export function confirmEmail(m) {
 ${m.message ? `<p style="margin:0 0 12px;white-space:pre-wrap">${esc(m.message)}</p>` : ''}
 ${link ? `<p style="margin:0">Dans votre espace client, vous pouvez voir vos prochaines visites, les confirmer et nous écrire.${m.code ? ` Votre code personnel : <b>${esc(m.code)}</b>.` : ''}</p>` : ''}`;
   return { subject: 'Votre demande est confirmée – Jessiclean', html: layout('Votre demande est confirmée', body, link ? { href: link, label: 'Ouvrir mon espace client' } : null) };
+}
+
+export function thanksEmail(m) {
+  const link = m.code ? `${SITE}/?code=${encodeURIComponent(m.code)}#client` : '';
+  const body = `<p style="margin:0 0 12px">Bonjour ${esc(m.name)},</p>
+<p style="margin:0 0 12px">Merci de nous avoir fait confiance pour le ménage du ${esc(longDate(m.date))}${m.emp ? `, avec ${esc(m.emp)}` : ''}. Nous espérons que vous êtes ravi du résultat&nbsp;!</p>
+<p style="margin:0 0 12px">Votre avis compte énormément pour une petite entreprise comme la nôtre. <b>Pourriez-vous prendre une minute pour nous laisser un avis sur Google&nbsp;?</b> Cela aide d’autres familles de l’Outaouais à nous trouver.</p>
+<p style="margin:0">Quelque chose n’était pas à votre goût&nbsp;? Répondez simplement à ce courriel${link ? ` ou écrivez-nous depuis <a href="${esc(link)}" style="color:#8a4a91">votre espace client</a>` : ''} : on s’en occupe.</p>`;
+  const html = layout('Merci pour votre confiance', body, { href: REVIEW_URL, label: '★ Laisser un avis Google' })
+    .replace(/Satisfait de nos services \? <a [^>]*>Laissez-nous un avis Google<\/a>, ça nous aide énormément\.<br>\n/, '');
+  return { subject: 'Merci pour votre confiance – Jessiclean', html };
 }
 
 export function reminderEmail(m) {
@@ -123,6 +138,39 @@ export async function run({ db, send, ping, now = new Date(), log = console.log 
       const tries = (prev && prev.tries || 0) + 1;
       await db.collection('mail').doc(id).set(Object.assign(data, { status: tries >= MAX_TRIES ? 'error' : 'pending', tries, error: lastError }));
       log(`Échec rappel ${c.email} : ${lastError}`);
+    }
+  }
+
+  // 2b) Remerciement après la visite (avec demande d'avis Google)
+  const hourNow = now.getHours();
+  if (hourNow >= SEND_FROM_H && hourNow < SEND_TO_H) {
+    const recentThanks = email => mails.some(m => m.type === 'thanks' && nk(m.to) === nk(email) && (m.status === 'sent') && now.getTime() - (m.sentAt || m.ts || 0) < THANKS_EVERY_DAYS * 864e5);
+    const thanked = new Set();
+    for (const s of [...shifts].sort((a, b) => (b.date + b.end).localeCompare(a.date + a.end))) {
+      if (!s.client || !s.date || !s.end) continue;
+      const c = clients.find(x => nk(x.name) === nk(s.client));
+      if (!c || !c.email || c.remind === false || thanked.has(nk(c.email))) continue;
+      const after = (now - visitStart(s.date, s.end)) / 36e5;
+      if (after < THANKS_AFTER_H || after > THANKS_MAX_H) continue;
+      const id = ('thx_' + s.id + '_' + s.date).replace(/[^A-Za-z0-9_-]/g, '');
+      const prev = mails.find(m => m.id === id);
+      if (prev && (prev.status === 'sent' || (prev.tries || 0) >= MAX_TRIES)) continue;
+      if (recentThanks(c.email)) continue;
+      thanked.add(nk(c.email));
+      const emp = (emps.find(e => e.id === s.emp) || {}).name || '';
+      const data = { type: 'thanks', to: c.email, name: c.name, date: s.date, start: s.start, end: s.end, emp: emp.split(' ')[0], code: c.code || '', ts: now.getTime() };
+      try {
+        const { subject, html } = thanksEmail(data);
+        await send({ to: c.email, name: c.name, subject, html });
+        await db.collection('mail').doc(id).set(Object.assign(data, { status: 'sent', sentAt: now.getTime(), tries: (prev && prev.tries || 0) + 1, error: '' }));
+        mails.push(Object.assign({ id }, data, { status: 'sent', sentAt: now.getTime() }));
+        sent++; log(`Remerciement envoyé à ${c.email} pour le ${s.date}`);
+      } catch (e) {
+        errors++; lastError = String(e.message || e);
+        const tries = (prev && prev.tries || 0) + 1;
+        await db.collection('mail').doc(id).set(Object.assign(data, { status: tries >= MAX_TRIES ? 'error' : 'pending', tries, error: lastError }));
+        log(`Échec remerciement ${c.email} : ${lastError}`);
+      }
     }
   }
 

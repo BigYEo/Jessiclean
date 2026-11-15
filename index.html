@@ -887,7 +887,7 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
    <div class="daypick" id="cDays"><label><input type="checkbox" value="Lundi">Lundi</label><label><input type="checkbox" value="Mardi">Mardi</label><label><input type="checkbox" value="Mercredi">Mercredi</label><label><input type="checkbox" value="Jeudi">Jeudi</label><label><input type="checkbox" value="Vendredi">Vendredi</label><label><input type="checkbox" value="Samedi">Samedi</label><label><input type="checkbox" value="Dimanche">Dimanche</label></div>
    <label for="cHours">Heures</label><input id="cHours" placeholder="Ex. : entre 9 h et 15 h">
    <label for="cAvail">Note sur les disponibilités</label><textarea id="cAvail" rows="2"></textarea>
-   <label style="display:flex;align-items:center;gap:8px;margin-top:14px"><input type="checkbox" id="cRemind" checked style="width:auto;margin:0;accent-color:var(--ac)"> Envoyer un rappel par courriel 24 h avant chaque visite</label>
+   <label style="display:flex;align-items:center;gap:8px;margin-top:14px"><input type="checkbox" id="cRemind" checked style="width:auto;margin:0;accent-color:var(--ac)"> Courriels automatiques : rappel 24 h avant chaque visite et remerciement après</label>
   </fieldset>
   <fieldset><legend>Notes internes et pièces jointes</legend>
    <label for="cNotes">Notes (visibles par l’admin seulement)</label><textarea id="cNotes" rows="3"></textarea>
@@ -1228,9 +1228,9 @@ function renderMailer(){
   const st=$('mailStatus');
   if(!mailer||!mailer.lastRun){st.innerHTML='⚠️ Le programme d’envoi n’a pas encore fonctionné. Les confirmations et rappels resteront en attente tant qu’il n’est pas configuré (voir le guide).';}
   else{const ago=Math.round((Date.now()-mailer.lastRun)/6e4);
-    st.innerHTML=(ago>180?'⚠️ ':'✅ ')+'Dernière vérification il y a '+(ago<60?ago+' min':Math.round(ago/60)+' h')+'. '+(ghToken?'Les confirmations partent en moins d’une minute':'Les confirmations partent dans les 15 minutes environ')+' ; les rappels, 24 h avant chaque visite.'+(ago>180?' <b>Le programme semble arrêté : vérifiez GitHub → Actions.</b>':'')+(mailer.lastError?'<br>Dernière erreur : '+esc(mailer.lastError):'');}
+    st.innerHTML=(ago>180?'⚠️ ':'✅ ')+'Dernière vérification il y a '+(ago<60?ago+' min':Math.round(ago/60)+' h')+'. '+(ghToken?'Les confirmations partent en moins d’une minute':'Les confirmations partent dans les 15 minutes environ')+' ; les rappels, 24 h avant chaque visite ; les remerciements, quelques heures après.'+(ago>180?' <b>Le programme semble arrêté : vérifiez GitHub → Actions.</b>':'')+(mailer.lastError?'<br>Dernière erreur : '+esc(mailer.lastError):'');}
   const l=[...mails].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,8);
-  $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.type==='reminder'?'Rappel':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
+  $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.type==='reminder'?'Rappel':m.type==='thanks'?'Remerciement':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
 }
 
 /* Confirmations, demandes des clients, factures (admin) */
