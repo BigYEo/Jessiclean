@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://jessiclean.ca/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://jessiclean.ca/politique-confidentialite.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url><loc>https://jessiclean.ca/</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>1.0</priority>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/reno-avant.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/reno-apres.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/douche-avant.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/douche-apres.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/drain-avant.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/drain-apres.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/chambre-claire.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/sdb-bain-mer.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/salon-clair.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/chambre-chalet.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/sdb-bain-pierre.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/salle-a-manger.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/chambre-rouge.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/sdb-douche.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/salon-chalet.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/chambre-bois.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/sdb-moderne.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/chambre-bois-grange.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/cuisine-salle-a-manger.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/sdb-palmier.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/chambre-tropicale.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/sdb-sous-sol.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/chambre-douce.jpg</image:loc></image:image>
+    <image:image><image:loc>https://jessiclean.ca/img/realisations/sdb-poudre.jpg</image:loc></image:image>
+  </url>
+  <url><loc>https://jessiclean.ca/politique-confidentialite.html</loc><lastmod>2026-11-15</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>
