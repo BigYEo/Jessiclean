@@ -546,7 +546,7 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .bas input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;height:100vh}
 .bas:has(input:focus-visible) .bah span{outline:3px solid var(--glass);outline-offset:3px}
 .bahint{margin:14px 0 0;color:#6c5f72;font-size:.95rem;text-align:center}
-body.logged header nav .navsec{display:none}
+@media (max-width:1399px){body.logged header nav .navsec{display:none}body.logged .navmenu{display:inline-flex}}
 @media (max-width:380px){header nav button{padding:8px 7px!important;font-size:.9rem!important}.logo img{height:32px!important}}
 .navmenu{display:none;align-items:center;gap:8px;border:1.5px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;padding:9px 14px;font:inherit;font-size:.98rem;font-weight:600;cursor:pointer;flex-shrink:0}
 .navmenu .bars{width:16px;height:2px;background:currentColor;position:relative;border-radius:2px}
@@ -562,14 +562,14 @@ body.logged header nav .navsec{display:none}
 .npin .npcall{margin-top:6px;background:var(--metal);color:#fff;text-align:center;font-weight:600}
 @media (max-width:1199px){header nav .navsec{display:none}.navmenu{display:inline-flex}}
 @media (max-width:560px){body:not(.logged) header nav [data-v=connexion]{display:none}.navmenu{padding:8px 12px}}
-body.logged .navmenu{display:none}
+@media (max-width:640px){body.logged #tabLogin{display:none}body.logged .navmenu{padding:8px 10px;font-size:0;gap:0}body.logged .navmenu .bars{margin:0 2px}}
 header nav .navsec.on{background:var(--ac2);color:var(--ac)}
 .hide{display:none!important}
 </style>
 </head>
 <body>
 <header><div class="bar"><div class="logo" data-go="accueil" role="link" aria-label="Jessiclean – accueil"><img src="img/logo-sm.jpg" alt="Jessiclean" width="123" height="50"></div>
-<nav><button data-v="accueil">Accueil</button><button class="navsec" data-go="accueil" data-scroll="services" data-sec="services">Services</button><button class="navsec" data-go="accueil" data-scroll="realisations" data-sec="realisations">Réalisations</button><button class="navsec" data-go="accueil" data-scroll="avis" data-sec="avis">Avis</button><button class="navsec" data-go="accueil" data-scroll="faq" data-sec="faq">FAQ</button><button data-v="client">Espace client</button><button data-v="employes" id="tabEmp" class="hide">Mon horaire</button><button data-v="admin" id="tabAdmin" class="hide">Admin</button><button data-v="connexion" id="tabLogin" class="acct">Connexion</button></nav><button class="navmenu" id="navMenu" type="button" aria-expanded="false" aria-controls="navPanel"><span class="bars" aria-hidden="true"></span>Menu</button><button class="hdr-cta" data-go="accueil" data-scroll="soumission">Soumission gratuite</button></div><div class="navpanel hide" id="navPanel"><div class="npin"><p class="nph">Sur cette page</p><button data-go="accueil" data-scroll="services" data-sec="services">Services</button><button data-go="accueil" data-scroll="realisations" data-sec="realisations">Réalisations</button><button data-go="accueil" data-scroll="fonctionnement" data-sec="fonctionnement">Comment ça fonctionne</button><button data-go="accueil" data-scroll="pourquoi" data-sec="pourquoi">Pourquoi Jessiclean</button><button data-go="accueil" data-scroll="soumission" data-sec="soumission">Soumission gratuite</button><button data-go="accueil" data-scroll="avis" data-sec="avis">Avis</button><button data-go="accueil" data-scroll="faq" data-sec="faq">FAQ</button><p class="nph">Espaces</p><button data-go="client">Espace client</button><button data-go="connexion">Espace équipe</button><a class="npcall" href="tel:+18195980121">Appeler 819 598-0121</a></div></div></header>
+<nav><button data-v="accueil">Accueil</button><button class="navsec" data-go="accueil" data-scroll="services" data-sec="services">Services</button><button class="navsec" data-go="accueil" data-scroll="realisations" data-sec="realisations">Réalisations</button><button class="navsec" data-go="accueil" data-scroll="avis" data-sec="avis">Avis</button><button class="navsec" data-go="accueil" data-scroll="faq" data-sec="faq">FAQ</button><button data-v="client">Espace client</button><button data-v="employes" id="tabEmp" class="hide">Mon horaire</button><button data-v="admin" id="tabAdmin" class="hide">Admin</button><button data-v="connexion" id="tabLogin" class="acct">Connexion</button></nav><button class="navmenu" id="navMenu" type="button" aria-expanded="false" aria-controls="navPanel"><span class="bars" aria-hidden="true"></span>Menu</button><button class="hdr-cta" data-go="accueil" data-scroll="soumission">Soumission gratuite</button></div><div class="navpanel hide" id="navPanel"><div class="npin"><p class="nph">Sur cette page</p><button data-go="accueil" data-scroll="services" data-sec="services">Services</button><button data-go="accueil" data-scroll="realisations" data-sec="realisations">Réalisations</button><button data-go="accueil" data-scroll="fonctionnement" data-sec="fonctionnement">Comment ça fonctionne</button><button data-go="accueil" data-scroll="pourquoi" data-sec="pourquoi">Pourquoi Jessiclean</button><button data-go="accueil" data-scroll="soumission" data-sec="soumission">Soumission gratuite</button><button data-go="accueil" data-scroll="avis" data-sec="avis">Avis</button><button data-go="accueil" data-scroll="faq" data-sec="faq">FAQ</button><p class="nph">Espaces</p><button data-go="client">Espace client</button><button data-go="connexion" id="npAcct">Espace équipe</button><a class="npcall" href="tel:+18195980121">Appeler 819 598-0121</a></div></div></header>
 <main>
 <div id="setupNote" class="note err hide"></div>
 
@@ -1055,6 +1055,7 @@ $('showPast').onchange=renderAdmin;
 function renderAccount(){
   const on=!!user;
   document.body.classList.toggle('logged',on);
+  $('npAcct').textContent=on?'Mon compte':'Espace équipe';
   $('tabLogin').textContent=on?'Mon compte':'Connexion';
   $('tabEmp').classList.toggle('hide',!on);
   $('tabAdmin').classList.toggle('hide',!isAdmin);
