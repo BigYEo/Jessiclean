@@ -1153,6 +1153,14 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
  <div class="card"><h2>Clients <span class="mut" id="cCount"></span></h2>
   <input id="cSearch" placeholder="Rechercher un client…" aria-label="Rechercher un client">
   <div id="cList"></div>
+  <div id="cmBox" class="note hide" style="background:var(--ac2);margin-top:12px">
+   <b id="cmTitle"></b>
+   <label for="cmSubject">Objet</label><input id="cmSubject" maxlength="140">
+   <label for="cmMsg">Message</label><textarea id="cmMsg" rows="9" maxlength="4000"></textarea>
+   <p class="mut" style="margin:6px 0 0">Le courriel part depuis admin@jessiclean.ca avec la mise en page Jessiclean et votre signature. Les réponses du client arrivent dans votre boîte Outlook.</p>
+   <div id="cmNote" class="note hide" style="margin-top:10px"></div>
+   <button class="btn" id="cmSend">Envoyer le courriel</button> <button class="btn sec" id="cmCancel">Annuler</button>
+  </div>
   <h2 id="cFormTitle" style="margin-top:22px">Nouvelle fiche client</h2>
   <fieldset><legend>Information client</legend>
    <label for="cName">Nom du client</label><input id="cName" autocomplete="off">
@@ -1562,6 +1570,22 @@ $('ghSave').onclick=async()=>{const t=$('ghToken').value.trim();if(!/^(github_pa
   try{await api.set('system','github',{token:t,ts:Date.now()});$('ghToken').value='';ghToken=t;renderGh();await triggerMailer();}catch(e){alert('Action impossible : '+msg(e));}};
 $('ghEdit').onclick=()=>{$('ghSetup').classList.remove('hide');$('ghActions').classList.add('hide');};
 $('ghRun').onclick=()=>triggerMailer();
+let cmId=null;
+$('cmCancel').onclick=()=>{cmId=null;$('cmBox').classList.add('hide');};
+$('cmSend').onclick=async()=>{
+  const c=clients.find(x=>x.id===cmId);if(!c)return;
+  const subject=$('cmSubject').value.trim(),message=$('cmMsg').value.trim(),note=$('cmNote');
+  if(!subject||message.length<10){alert('Écrivez un objet et un message.');return;}
+  if(!confirm('Envoyer ce courriel à '+c.name+' ('+c.email+') ?'))return;
+  $('cmSend').disabled=true;
+  try{
+    await api.set('mail','msg_'+uid(),{type:'custom',to:c.email,name:c.name,subject,message,signature:'Jessica Matte Hamelin',ts:Date.now(),status:'pending'});
+    const ok=await triggerMailer(true);
+    note.textContent=ok?'Courriel en route : il arrivera dans environ 1 minute.':'Courriel enregistré : il partira au prochain passage du programme (15 min max).';note.classList.remove('hide');
+    $('cmSubject').value='';$('cmMsg').value='';
+  }catch(err){alert('Action impossible : '+msg(err));}
+  finally{$('cmSend').disabled=false;}
+};
 $('mtSend').onclick=async()=>{
   const to=$('mtTo').value.trim(),type=$('mtType').value;
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)){alert('Entrez une adresse courriel valide.');return;}
@@ -1581,7 +1605,7 @@ function renderMailer(){
   else{const ago=Math.round((Date.now()-mailer.lastRun)/6e4);
     st.innerHTML=(ago>180?'⚠️ ':'✅ ')+'Dernière vérification il y a '+(ago<60?ago+' min':Math.round(ago/60)+' h')+'. '+(ghToken?'Les confirmations partent en moins d’une minute':'Les confirmations partent dans les 15 minutes environ')+' ; les rappels, 24 h avant chaque visite ; les remerciements, quelques heures après.'+(ago>180?' <b>Le programme semble arrêté : vérifiez GitHub → Actions.</b>':'')+(mailer.lastError?'<br>Dernière erreur : '+esc(mailer.lastError):'');}
   const l=[...mails].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,8);
-  $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.test?'Test – ':'')+(m.type==='reminder'?'Rappel':m.type==='thanks'?'Remerciement':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
+  $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.test?'Test – ':'')+(m.type==='reminder'?'Rappel':m.type==='thanks'?'Remerciement':m.type==='custom'?'Message « '+esc(m.subject||'')+' »':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
 }
 
 /* Confirmations, demandes des clients, factures (admin) */
@@ -1831,7 +1855,7 @@ function renderClients(){
   const l=clients.filter(c=>(CFIELDS.map(f=>[].concat(c[f[1]]||'').join(' ')).join(' ')+' '+(c.notes||'')).toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||'','fr'));
   $('cCount').textContent=clients.length?'· '+clients.length:'';
   $('clList').innerHTML=clients.map(c=>'<option value="'+esc(c.name)+'">').join('');
-  $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.email?'<div class="mut"><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a></div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+ficheHTML(c,false,'Fiche complète')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+filesHTML(c.files,'c')+'</div><div class="acts">'+(c.code?'<button class="btn sec sm" data-clink="'+esc(c.code)+'">Copier le lien client</button>':'')+'<button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
+  $('cList').innerHTML=l.length?l.map(c=>'<div class="shift"><div><b>'+esc(c.name)+'</b>'+(c.phone?' · <a href="tel:'+esc(c.phone)+'" style="color:var(--ac)">'+esc(c.phone)+'</a>':'')+(c.addr?'<div class="mut">'+esc(c.addr)+'</div>':'')+(c.email?'<div class="mut"><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a></div>':'')+(c.code?'<div class="mut">Code d’accès : <b>'+esc(c.code)+'</b></div>':'')+ficheHTML(c,false,'Fiche complète')+(c.notes?'<div class="mut">📝 '+esc(c.notes)+'</div>':'')+filesHTML(c.files,'c')+'</div><div class="acts">'+(c.email?'<button class="btn sm" data-cmail="'+esc(c.id)+'">Écrire un courriel</button>':'')+(c.code?'<button class="btn sec sm" data-clink="'+esc(c.code)+'">Copier le lien client</button>':'')+'<button class="btn sec sm" data-cedit="'+esc(c.id)+'">Modifier</button><button class="btn del sm" data-cdel="'+esc(c.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">'+(clients.length?'Aucun résultat.':'Aucun client pour le moment.')+'</p>';
 }
 function resetClient(){$('cRemind').checked=true;cEditId=null;$('cFormTitle').textContent='Nouvelle fiche client';$('cCancel').classList.add('hide');CFIELDS.forEach(f=>{if(f[0])$(f[0]).value='';});$('cNotes').value='';$('cDays').querySelectorAll('input').forEach(i=>i.checked=false);loadFormFiles('c',[]);}
 $('cSearch').oninput=renderClients;
@@ -1848,6 +1872,11 @@ $('cSave').onclick=async()=>{
   finally{$('cSave').disabled=false;}
 };
 $('cList').onclick=e=>{
+  const cm=e.target.dataset.cmail;
+  if(cm){const c=clients.find(x=>x.id===cm);if(!c)return;cmId=cm;
+    $('cmTitle').textContent='Courriel à '+c.name+' ('+c.email+')';$('cmNote').classList.add('hide');
+    if(!$('cmMsg').value.trim())$('cmMsg').value='Bonjour '+c.name+',\n\n';
+    $('cmBox').classList.remove('hide');$('cmBox').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>$('cmSubject').focus({preventScroll:true}),400);return;}
   const lk=e.target.dataset.clink;
   if(lk){const u=clientLink(lk),b=e.target;const done=()=>{const o=b.textContent;b.textContent='Lien copié ✓';setTimeout(()=>b.textContent=o,1800);};
     if(navigator.clipboard)navigator.clipboard.writeText(u).then(done,()=>prompt('Copiez ce lien :',u));else prompt('Copiez ce lien :',u);return;}

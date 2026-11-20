@@ -54,6 +54,14 @@ ${link ? `<p style="margin:0">Dans votre espace client, vous pouvez voir vos pro
   return { subject: 'Votre demande est confirmée – Jessiclean', html: layout('Votre demande est confirmée', body, link ? { href: link, label: 'Ouvrir mon espace client' } : null) };
 }
 
+export function customEmail(m) {
+  const paras = String(m.message || '').trim().split(/\n\s*\n/).map(p => `<p style="margin:0 0 14px">${esc(p).replace(/\n/g, '<br>')}</p>`).join('');
+  const sign = `<p style="margin:18px 0 0">${esc(m.signature || 'Jessica Matte Hamelin')}<br><span style="color:#6c5f72">Jessiclean · Entretien ménager</span></p>`;
+  const html = layout(m.subject || 'Un message de Jessiclean', paras + sign, null)
+    .replace(/Satisfait de nos services \? <a [^>]*>Laissez-nous un avis Google<\/a>, ça nous aide énormément\.<br>\n/, '');
+  return { subject: m.subject || 'Un message de Jessiclean', html };
+}
+
 export function thanksEmail(m) {
   const link = m.code ? `${SITE}/?code=${encodeURIComponent(m.code)}#client` : '';
   const body = `<p style="margin:0 0 12px">Bonjour ${esc(m.name)},</p>
@@ -101,8 +109,8 @@ export async function run({ db, send, ping, now = new Date(), log = console.log 
   let sent = 0, errors = 0, lastError = '';
 
   // 1) Courriels en attente (confirmations de soumission)
-  const TPL = { confirm: confirmEmail, thanks: thanksEmail, reminder: reminderEmail };
-  for (const m of mails.filter(x => x.status === 'pending' && (x.type === 'confirm' || x.test))) {
+  const TPL = { confirm: confirmEmail, thanks: thanksEmail, reminder: reminderEmail, custom: customEmail };
+  for (const m of mails.filter(x => x.status === 'pending' && (x.type === 'confirm' || x.type === 'custom' || x.test))) {
     try {
       if (!m.to) throw new Error('Aucune adresse courriel');
       const tpl = TPL[m.type]; if (!tpl) throw new Error('Type inconnu : ' + m.type);
