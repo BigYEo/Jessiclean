@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Questionnaire – Votre futur site web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--tx:#141a26;--mut:#5b6476;--bd:#dde2ec;--ac:#1b2a4a;--hl:#f5b400;--hl2:#fff5d6;--ok:#1f7a4d;--err:#b3261e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.55 "Inter",system-ui,sans-serif}
+.top{background:var(--ac);color:#fff;padding:36px 20px 64px}
+.top .w{max-width:780px;margin:auto}
+.top h1{margin:0 0 8px;font-size:clamp(1.7rem,4.5vw,2.4rem);line-height:1.15}
+.top p{margin:0;color:#c9d2e6;max-width:56ch}
+.bolt{display:inline-block;background:var(--hl);color:var(--ac);border-radius:10px;padding:4px 10px;font-weight:700;font-size:.85rem;margin-bottom:14px}
+main{max-width:780px;margin:-40px auto 60px;padding:0 16px}
+.prog{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0}
+.bar{height:8px;background:#e2e6ef;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--hl);transition:width .3s}
+.prog small{display:block;color:var(--mut);margin-top:4px;font-size:.85rem}
+fieldset{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;margin:0 0 18px}
+legend{float:left;width:100%;padding:0;margin:0 0 6px;font-size:1.25rem;font-weight:700;color:var(--ac)}
+legend span{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--hl2);color:var(--ac);font-size:.95rem;margin-right:8px}
+.hint{color:var(--mut);font-size:.92rem;margin:0 0 6px;clear:both}
+label{display:block;font-weight:600;margin:16px 0 6px;font-size:.97rem}
+label .opt{font-weight:400;color:var(--mut);font-size:.88rem}
+input[type=text],input[type=email],input[type=tel],input[type=url],input[type=date],select,textarea{width:100%;padding:12px 13px;border:1px solid var(--bd);border-radius:11px;font:inherit;font-size:1rem;background:#fff;color:var(--tx)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(27,42,74,.15)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.row>div{min-width:0}.row,fieldset>label{clear:both}
+@media(max-width:600px){.row{grid-template-columns:minmax(0,1fr)}}
+fieldset{min-width:0}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choices label{display:inline-flex;align-items:center;gap:8px;margin:0;font-weight:500;padding:9px 14px;border:1.5px solid var(--bd);border-radius:999px;background:#fff;cursor:pointer;font-size:.95rem}
+.choices label:has(input:checked){border-color:var(--ac);background:var(--hl2)}
+.choices input{accent-color:var(--ac);width:17px;height:17px;margin:0}
+.reveal{display:none;margin-top:4px;padding:4px 0 0}
+.reveal.on{display:block}
+.files{background:#f8f9fc;border:1px dashed #c6cddd;border-radius:12px;padding:12px 14px;margin-top:10px;font-size:.92rem;color:var(--mut)}
+.files b{color:var(--tx)}
+.btns{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:8px}
+button{font:inherit;cursor:pointer}
+.send{background:var(--hl);color:var(--ac);border:0;border-radius:999px;padding:16px 30px;font-weight:700;font-size:1.08rem}
+.send:disabled{opacity:.6}
+.ghost{background:#fff;border:1.5px solid var(--bd);border-radius:999px;padding:14px 22px;color:var(--ac);font-weight:600}
+.msg{border-radius:12px;padding:14px 16px;margin:14px 0 0;display:none}
+.msg.ok{display:block;background:#e7f5ee;color:var(--ok)}.msg.err{display:block;background:#fdecea;color:var(--err)}
+.req{color:var(--err)}
+footer{text-align:center;color:var(--mut);font-size:.85rem;padding:0 16px 30px}
+</style>
+</head>
+<body>
+<header class="top"><div class="w">
+ <span class="bolt">⚡ Questionnaire</span>
+ <h1>Votre futur site web</h1>
+ <p>Quelques minutes suffisent. Répondez à ce que vous savez déjà : on complétera ensemble le reste. Vos réponses sont enregistrées sur cet appareil au fur et à mesure.</p>
+</div></header>
+<main>
+<div class="prog"><div class="bar"><i id="pbar"></i></div><small id="ptxt">0 % complété</small></div>
+<form id="f" novalidate>
+<input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+
+<fieldset><legend><span>1</span>Votre entreprise</legend>
+ <div class="row"><div><label>Nom de l’entreprise <span class="req">*</span></label><input type="text" name="Entreprise" required></div>
+ <div><label>Votre nom <span class="req">*</span></label><input type="text" name="Responsable" required></div></div>
+ <div class="row"><div><label>Téléphone <span class="req">*</span></label><input type="tel" name="Téléphone" required></div>
+ <div><label>Courriel <span class="req">*</span></label><input type="email" name="Courriel" required></div></div>
+ <div class="row"><div><label>Ville / adresse d’affaires</label><input type="text" name="Ville"></div>
+ <div><label>Zone desservie</label><input type="text" name="Zone desservie" placeholder="Ex. : Gatineau, Outaouais, Ottawa"></div></div>
+ <div class="row"><div><label>Numéro de licence RBQ <span class="opt">(si vous voulez l’afficher)</span></label><input type="text" name="Licence RBQ"></div>
+ <div><label>Années d’expérience</label><input type="text" name="Expérience" placeholder="Ex. : 12 ans"></div></div>
+ <label>Membre de la CMEQ&nbsp;?</label>
+ <div class="choices"><label><input type="radio" name="Membre CMEQ" value="Oui">Oui</label><label><input type="radio" name="Membre CMEQ" value="Non">Non</label><label><input type="radio" name="Membre CMEQ" value="En cours">En cours</label></div>
+ <label>En une phrase, qu’est-ce qui vous distingue&nbsp;?</label><textarea name="Différence" rows="2" placeholder="Ex. : service rapide, travail propre, 20 ans d’expérience…"></textarea>
+</fieldset>
+
+<fieldset><legend><span>2</span>Site et nom de domaine</legend>
+ <label>Avez-vous déjà un site web&nbsp;?</label>
+ <div class="choices" data-rev="r-site"><label><input type="radio" name="Site actuel" value="Oui">Oui</label><label><input type="radio" name="Site actuel" value="Non">Non</label></div>
+ <div class="reveal" id="r-site"><label>Adresse du site actuel</label><input type="url" name="Adresse site actuel" placeholder="https://"></div>
+ <label>Avez-vous un nom de domaine (ex. : monentreprise.ca)&nbsp;?</label>
+ <div class="choices" data-rev="r-dom"><label><input type="radio" name="Domaine" value="Oui, déjà acheté">Oui, déjà acheté</label><label><input type="radio" name="Domaine" value="Non, à acheter">Non, à acheter</label><label><input type="radio" name="Domaine" value="Je ne sais pas">Je ne sais pas</label></div>
+ <div class="reveal on" id="r-dom"><label>Domaine actuel ou souhaité</label><input type="text" name="Nom de domaine" placeholder="Ex. : electriciengatineau.ca"></div>
+ <label>Voulez-vous un courriel professionnel (ex. : info@votreentreprise.ca)&nbsp;?</label>
+ <div class="choices"><label><input type="radio" name="Courriel pro" value="Oui">Oui</label><label><input type="radio" name="Courriel pro" value="Déjà en place">J’en ai déjà un</label><label><input type="radio" name="Courriel pro" value="Non">Non</label></div>
+</fieldset>
+
+<fieldset><legend><span>3</span>Logo, couleurs et photos</legend>
+ <label>Avez-vous un logo&nbsp;?</label>
+ <div class="choices" data-rev="r-logo" data-revval="Oui"><label><input type="radio" name="Logo" value="Oui">Oui</label><label><input type="radio" name="Logo" value="Non, à créer">Non, il faut en créer un</label><label><input type="radio" name="Logo" value="À refaire">Oui, mais à moderniser</label></div>
+ <div class="reveal" id="r-logo"><label>Lien vers le fichier du logo <span class="opt">(Google Drive, Dropbox, WeTransfer…)</span></label><input type="url" name="Lien logo" placeholder="https://">
+  <div class="files">Pas de lien&nbsp;? <b>Envoyez le fichier par courriel</b> après avoir rempli le questionnaire. Le meilleur format : PNG à fond transparent, SVG ou PDF.</div></div>
+ <label>Couleurs de votre entreprise <span class="opt">(ou couleurs aimées)</span></label><input type="text" name="Couleurs" placeholder="Ex. : bleu marine et jaune, comme mon camion">
+ <label>Style recherché</label>
+ <div class="choices"><label><input type="checkbox" name="Style" value="Moderne et épuré">Moderne et épuré</label><label><input type="checkbox" name="Style" value="Robuste / industriel">Robuste, industriel</label><label><input type="checkbox" name="Style" value="Chaleureux / familial">Chaleureux, familial</label><label><input type="checkbox" name="Style" value="Haut de gamme">Haut de gamme</label><label><input type="checkbox" name="Style" value="Simple et efficace">Simple et efficace</label></div>
+ <label>Avez-vous des photos (chantiers, équipe, camion, avant/après)&nbsp;?</label>
+ <div class="choices" data-rev="r-photos" data-revval="Oui"><label><input type="radio" name="Photos" value="Oui">Oui</label><label><input type="radio" name="Photos" value="Quelques-unes">Quelques-unes</label><label><input type="radio" name="Photos" value="Non">Non</label></div>
+ <div class="reveal" id="r-photos"><label>Lien vers vos photos</label><input type="url" name="Lien photos" placeholder="https://"></div>
+</fieldset>
+
+<fieldset><legend><span>4</span>Vos services</legend>
+ <p class="hint">Cochez tout ce que vous offrez.</p>
+ <div class="choices">
+  <label><input type="checkbox" name="Services" value="Résidentiel">Résidentiel</label><label><input type="checkbox" name="Services" value="Commercial">Commercial</label><label><input type="checkbox" name="Services" value="Industriel">Industriel</label>
+  <label><input type="checkbox" name="Services" value="Construction neuve">Construction neuve</label><label><input type="checkbox" name="Services" value="Rénovation">Rénovation</label>
+  <label><input type="checkbox" name="Services" value="Remplacement de panneau / entrée électrique">Panneau, entrée électrique</label><label><input type="checkbox" name="Services" value="Bornes de recharge VÉ">Bornes de recharge VÉ</label>
+  <label><input type="checkbox" name="Services" value="Éclairage intérieur / extérieur">Éclairage</label><label><input type="checkbox" name="Services" value="Génératrice">Génératrice</label><label><input type="checkbox" name="Services" value="Domotique / maison intelligente">Domotique</label>
+  <label><input type="checkbox" name="Services" value="Spa / piscine">Spa, piscine</label><label><input type="checkbox" name="Services" value="Inspection / mise aux normes">Inspection, mise aux normes</label><label><input type="checkbox" name="Services" value="Dépannage / urgence 24/7">Urgence 24/7</label>
+ </div>
+ <label>Autres services ou spécialités</label><input type="text" name="Autres services">
+ <label>Le service le plus important à mettre de l’avant</label><input type="text" name="Service vedette" placeholder="Ex. : bornes de recharge">
+</fieldset>
+
+<fieldset><legend><span>5</span>Ce que le site doit faire</legend>
+ <label>Le but principal</label>
+ <div class="choices"><label><input type="checkbox" name="Objectifs" value="Recevoir des appels">Recevoir des appels</label><label><input type="checkbox" name="Objectifs" value="Recevoir des demandes de soumission">Demandes de soumission</label><label><input type="checkbox" name="Objectifs" value="Paraître professionnel / crédible">Paraître professionnel</label><label><input type="checkbox" name="Objectifs" value="Être trouvé sur Google">Être trouvé sur Google</label><label><input type="checkbox" name="Objectifs" value="Recruter">Recruter</label></div>
+ <label>Fonctionnalités souhaitées</label>
+ <div class="choices">
+  <label><input type="checkbox" name="Fonctionnalités" value="Formulaire de soumission">Formulaire de soumission</label><label><input type="checkbox" name="Fonctionnalités" value="Bouton d’appel rapide">Bouton d’appel rapide</label><label><input type="checkbox" name="Fonctionnalités" value="Galerie de réalisations">Galerie de réalisations</label>
+  <label><input type="checkbox" name="Fonctionnalités" value="Avis Google">Avis Google</label><label><input type="checkbox" name="Fonctionnalités" value="FAQ">FAQ</label><label><input type="checkbox" name="Fonctionnalités" value="Prise de rendez-vous">Prise de rendez-vous</label>
+  <label><input type="checkbox" name="Fonctionnalités" value="Bilingue français / anglais">Bilingue FR/EN</label><label><input type="checkbox" name="Fonctionnalités" value="Page Carrières">Page Carrières</label><label><input type="checkbox" name="Fonctionnalités" value="Espace client / factures">Espace client, factures</label>
+  <label><input type="checkbox" name="Fonctionnalités" value="Espace employés / horaire">Espace employés, horaire</label><label><input type="checkbox" name="Fonctionnalités" value="Blogue / conseils">Blogue, conseils</label>
+ </div>
+ <label>Votre clientèle principale</label><input type="text" name="Clientèle" placeholder="Ex. : propriétaires de maisons, entrepreneurs, commerces">
+</fieldset>
+
+<fieldset><legend><span>6</span>Inspiration</legend>
+ <p class="hint">Des sites que vous aimez, même s’ils ne sont pas d’électriciens : ça nous aide énormément.</p>
+ <label>Site que vous aimez nº 1</label><input type="url" name="Inspiration 1" placeholder="https://">
+ <label>Ce que vous aimez de ce site</label><input type="text" name="Inspiration 1 – pourquoi">
+ <label>Site que vous aimez nº 2 <span class="opt">(facultatif)</span></label><input type="url" name="Inspiration 2" placeholder="https://">
+ <label>Concurrents à surveiller <span class="opt">(facultatif)</span></label><input type="text" name="Concurrents">
+ <label>Ce que vous ne voulez surtout pas</label><input type="text" name="À éviter" placeholder="Ex. : trop chargé, couleurs criardes">
+</fieldset>
+
+<fieldset><legend><span>7</span>Contenu et coordonnées à afficher</legend>
+ <label>Les textes du site</label>
+ <div class="choices"><label><input type="radio" name="Textes" value="À rédiger pour moi">Rédigez-les pour moi</label><label><input type="radio" name="Textes" value="Je les fournis">Je les fournis</label><label><input type="radio" name="Textes" value="Un mélange">Un mélange</label></div>
+ <div class="row"><div><label>Heures d’ouverture</label><input type="text" name="Heures" placeholder="Ex. : lun-ven 7 h-17 h, urgences 24/7"></div>
+ <div><label>Téléphone à afficher</label><input type="tel" name="Téléphone public"></div></div>
+ <label>Réseaux sociaux <span class="opt">(liens)</span></label><input type="text" name="Réseaux sociaux" placeholder="Facebook, Instagram…">
+ <label>Fiche Google Business</label>
+ <div class="choices"><label><input type="radio" name="Fiche Google" value="Oui">J’en ai une</label><label><input type="radio" name="Fiche Google" value="Non, à créer">À créer</label><label><input type="radio" name="Fiche Google" value="Je ne sais pas">Je ne sais pas</label></div>
+</fieldset>
+
+<fieldset><legend><span>8</span>Budget et échéancier</legend>
+ <label>Budget approximatif</label>
+ <select name="Budget"><option value="">— Choisir —</option><option>Moins de 500 $</option><option>500 $ à 1 000 $</option><option>1 000 $ à 2 500 $</option><option>2 500 $ et plus</option><option>À discuter</option></select>
+ <div class="row"><div><label>Mise en ligne souhaitée</label><input type="date" name="Date souhaitée"></div>
+ <div><label>Entretien et mises à jour après la mise en ligne</label><select name="Entretien"><option value="">— Choisir —</option><option>Oui, je veux qu’on s’en occupe</option><option>Non, je m’en occuperai</option><option>À discuter</option></select></div></div>
+ <label>Autre chose à nous dire&nbsp;?</label><textarea name="Commentaires" rows="3"></textarea>
+</fieldset>
+
+<div class="btns"><button class="send" id="send" type="submit">Envoyer mes réponses</button><button class="ghost" type="button" id="dl">Télécharger une copie</button></div>
+<div class="msg" id="msg" role="status"></div>
+</form>
+</main>
+<footer>Questionnaire confidentiel : vos réponses servent uniquement à préparer votre site web.</footer>
+<script>
+const KEY='2f1e7219-c1ed-4312-b482-a3537c9f70e7',STORE='questionnaire-site-electricien';
+const f=document.getElementById('f'),msg=document.getElementById('msg');
+const say=(t,ok)=>{msg.textContent=t;msg.className='msg '+(ok?'ok':'err');msg.scrollIntoView({behavior:'smooth',block:'center'});};
+function data(){const o={};new FormData(f).forEach((v,k)=>{if(k==='botcheck'||!String(v).trim())return;o[k]=o[k]?o[k]+', '+v:String(v).trim();});return o;}
+function progress(){const all=[...f.querySelectorAll('fieldset')];let done=0;all.forEach(fs=>{if([...fs.querySelectorAll('input,select,textarea')].some(i=>(i.type==='radio'||i.type==='checkbox')?i.checked:i.value.trim()))done++;});
+ const p=Math.round(done/all.length*100);document.getElementById('pbar').style.width=p+'%';document.getElementById('ptxt').textContent=p+' % complété';}
+function reveal(){document.querySelectorAll('[data-rev]').forEach(g=>{const want=g.dataset.revval||'Oui';const c=g.querySelector('input:checked');const r=document.getElementById(g.dataset.rev);
+ if(g.dataset.rev==='r-dom')r.classList.toggle('on',!c||c.value!=='Je ne sais pas');else r.classList.toggle('on',!!c&&(c.value===want||(g.dataset.rev==='r-photos'&&c.value==='Quelques-unes')||(g.dataset.rev==='r-logo'&&c.value==='À refaire')));});}
+function save(){try{const o={};[...f.elements].forEach(e=>{if(!e.name||e.name==='botcheck')return;if(e.type==='radio'||e.type==='checkbox'){if(e.checked)(o[e.name]=o[e.name]||[]).push(e.value);}else o[e.name]=e.value;});localStorage.setItem(STORE,JSON.stringify(o));}catch(_){}}
+function load(){try{const o=JSON.parse(localStorage.getItem(STORE)||'{}');[...f.elements].forEach(e=>{if(!(e.name in o))return;if(e.type==='radio'||e.type==='checkbox')e.checked=o[e.name].includes(e.value);else e.value=o[e.name];});}catch(_){}}
+f.addEventListener('input',()=>{reveal();progress();save();});f.addEventListener('change',()=>{reveal();progress();save();});
+load();reveal();progress();
+document.getElementById('dl').onclick=()=>{const o=data();const txt='QUESTIONNAIRE – SITE WEB\n\n'+Object.entries(o).map(([k,v])=>k+' : '+v).join('\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));a.download='questionnaire-site-web.txt';a.click();};
+f.onsubmit=async e=>{
+ e.preventDefault();
+ for(const n of ['Entreprise','Responsable','Téléphone','Courriel']){const el=f.elements[n];if(!el.value.trim()){say('Remplissez le champ « '+n+' ».');el.focus();return;}}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.elements['Courriel'].value.trim())){say('Vérifiez l’adresse courriel.');f.elements['Courriel'].focus();return;}
+ if(f.elements.botcheck.checked)return;
+ const o=data(),btn=document.getElementById('send');btn.disabled=true;btn.textContent='Envoi…';
+ try{
+  const r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(Object.assign({access_key:KEY,subject:'Questionnaire site web – '+o['Entreprise'],from_name:o['Responsable']+' ('+o['Entreprise']+')',replyto:o['Courriel']},o))});
+  const j=await r.json().catch(()=>({}));
+  if(r.ok&&j.success!==false){say('Merci ! Vos réponses ont bien été envoyées. On vous recontacte très bientôt avec une première proposition.',true);try{localStorage.removeItem(STORE);}catch(_){}btn.textContent='Envoyé ✓';return;}
+  throw new Error(j.message||r.status);
+ }catch(err){say('L’envoi n’a pas fonctionné. Cliquez sur « Télécharger une copie » et envoyez le fichier par courriel, ou réessayez dans un instant.');btn.disabled=false;btn.textContent='Envoyer mes réponses';}
+};
+</script>
+</body>
+</html>
