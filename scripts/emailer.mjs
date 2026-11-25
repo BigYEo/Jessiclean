@@ -86,11 +86,11 @@ ${m.addr ? `<div style="font-size:15px;color:#6c5f72;margin-top:6px">${esc(m.add
   return { subject: `Rappel : votre ménage ${longDate(m.date)} à ${fmtH(m.start)} – Jessiclean`, html: layout('Rappel de votre visite', body, link ? { href: link, label: 'Confirmer ou déplacer ma visite' } : null) };
 }
 
-export async function brevoSend({ apiKey, sender, to, name, subject, html, fetchImpl = fetch }) {
+export async function brevoSend({ apiKey, sender, to, name, subject, html, attachment, senderName = 'Jessiclean', fetchImpl = fetch }) {
   const res = await fetchImpl('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
     headers: { 'api-key': apiKey, 'Content-Type': 'application/json', accept: 'application/json' },
-    body: JSON.stringify({ sender: { email: sender, name: 'Jessiclean' }, replyTo: { email: sender, name: 'Jessiclean' }, to: [{ email: to, name: name || to }], subject, htmlContent: html })
+    body: JSON.stringify(Object.assign({ sender: { email: sender, name: senderName }, replyTo: { email: sender, name: 'Jessiclean' }, to: [{ email: to, name: name || to }], subject, htmlContent: html }, attachment ? { attachment } : {}))
   });
   if (!res.ok) { const t = await res.text().catch(() => ''); throw new Error(`Brevo ${res.status} ${t.slice(0, 200)}`); }
 }
@@ -100,10 +100,89 @@ export async function brevoPing({ apiKey, fetchImpl = fetch }) {
   if (!res.ok) { const t = await res.text().catch(() => ''); throw new Error(`Brevo ${res.status} ${t.slice(0, 200)}`); }
 }
 
+// ---------- Synchronisation de l'horaire vers Outlook (invitations de calendrier) ----------
+const CAL_WINDOW_DAYS = 60;   // on envoie les ménages des 60 prochains jours (puis au fur et à mesure)
+const CAL_MAX_PER_RUN = 25;   // au plus 25 invitations par passage (le programme tourne toutes les 15 min)
+const icsTxt = s => String(s ?? '').replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/([,;])/g, '\\$1');
+const icsUtc = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+const icsFold = l => { const out = []; while (l.length > 73) { out.push(l.slice(0, 73)); l = ' ' + l.slice(73); } out.push(l); return out.join('\r\n'); };
+export function shiftKey(s, clients, emps) {
+  const emp = (emps.find(e => e.id === s.emp) || {}).name || '';
+  const c = clients.find(x => nk(x.name) === nk(s.client)) || {};
+  return [s.date, s.start, s.end, s.client, s.addr || c.addr || '', emp, s.notes || ''].join('|');
+}
+export function shiftIcs({ s, clients, emps, method, seq, to, now = new Date() }) {
+  const emp = (emps.find(e => e.id === s.emp) || {}).name || '';
+  const c = clients.find(x => nk(x.name) === nk(s.client)) || {};
+  const addr = s.addr || c.addr || '';
+  const desc = ['Ménage Jessiclean' + (emp ? ' avec ' + emp : ''), c.phone ? 'Client : ' + c.phone : '', s.notes ? 'Notes : ' + s.notes : '', 'Géré depuis jessiclean.ca (Admin) : les changements faits ici seront remplacés.'].filter(Boolean).join('\n');
+  const L = ['BEGIN:VCALENDAR', 'PRODID:-//Jessiclean//Horaire//FR', 'VERSION:2.0', 'CALSCALE:GREGORIAN', 'METHOD:' + method, 'BEGIN:VEVENT',
+    'UID:menage-' + s.id + '@jessiclean.ca', 'SEQUENCE:' + seq, 'DTSTAMP:' + icsUtc(now),
+    'DTSTART:' + icsUtc(visitStart(s.date, s.start)), 'DTEND:' + icsUtc(visitStart(s.date, s.end || s.start)),
+    'SUMMARY:' + icsTxt((method === 'CANCEL' ? 'Annulé : ' : '') + 'Ménage – ' + (s.client || 'client')),
+    addr ? 'LOCATION:' + icsTxt(addr) : '', 'DESCRIPTION:' + icsTxt(desc),
+    'ORGANIZER;CN=Horaire Jessiclean:mailto:horaire@jessiclean.ca',
+    'ATTENDEE;CN=' + icsTxt(to) + ';ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=FALSE:mailto:' + to,
+    'STATUS:' + (method === 'CANCEL' ? 'CANCELLED' : 'CONFIRMED'), 'TRANSP:OPAQUE',
+    method === 'CANCEL' ? '' : 'BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:Ménage\r\nTRIGGER:-PT60M\r\nEND:VALARM',
+    'END:VEVENT', 'END:VCALENDAR'].filter(Boolean);
+  return L.map(l => l.includes('\r\n') ? l : icsFold(l)).join('\r\n') + '\r\n';
+}
+function calHtml(s, method) {
+  const body = `<p style="margin:0 0 12px">${method === 'CANCEL' ? 'Ce ménage a été <b>retiré</b> de l’horaire du site.' : 'Ménage ajouté ou modifié dans l’horaire du site.'}</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 8px;background:#f7f0f8;border-radius:14px;width:100%"><tr><td style="padding:14px 18px">
+<div style="font-size:19px;font-weight:600;color:#3b1a42">${esc(s.client || 'Client')}</div>
+<div style="font-size:16px;color:#3f3445;margin-top:4px">${esc(cap(longDate(s.date)))}, de ${esc(fmtH(s.start))} à ${esc(fmtH(s.end))}</div></td></tr></table>`;
+  return layout(method === 'CANCEL' ? 'Ménage annulé' : 'Horaire mis à jour', body, null);
+}
+const calDocId = (shiftId, to) => (shiftId + '__' + to).replace(/[^A-Za-z0-9_-]/g, '_').slice(0, 300);
+// to : liste d'adresses. skipSrc : { 'adresse': 'outlook' } → ne pas renvoyer à cette adresse les ménages importés de son propre Outlook
+export async function calSync({ db, shifts, clients, emps, now, sendCal, recipients, skipSrc = {}, log = console.log }) {
+  if (!sendCal || !recipients.length) return { sent: 0, errors: 0 };
+  const state = await db.collection('calsync').get().then(docs);
+  const today = visitStart(new Date(now).toLocaleDateString('en-CA', { timeZone: 'America/Toronto' }), '00:00');
+  const limit = new Date(today.getTime() + CAL_WINDOW_DAYS * 864e5);
+  let sent = 0, errors = 0, lastError = '';
+  const byId = new Map(shifts.map(s => [s.id, s]));
+  const jobs = [];
+  for (const to of recipients) {
+    for (const s of shifts) {
+      if (!s.date || !s.start) continue;
+      if (skipSrc[nk(to)] && s.src === skipSrc[nk(to)]) continue;
+      const st = visitStart(s.date, s.start), id = calDocId(s.id, to), prev = state.find(x => x.id === id);
+      if (st < today) continue;
+      if (st > limit && !prev) continue;
+      const key = shiftKey(s, clients, emps);
+      if (prev && prev.key === key) continue;
+      jobs.push({ kind: 'REQUEST', s, to, id, seq: prev ? (prev.seq || 0) + 1 : 0, key, date: s.date });
+    }
+  }
+  for (const p of state) {
+    const s = byId.get(p.shiftId);
+    const skipped = s && skipSrc[nk(p.to)] && s.src === skipSrc[nk(p.to)];
+    if (s && !skipped && recipients.includes(p.to)) continue;
+    if (visitStart(p.date, p.start || '00:00') < today || !recipients.includes(p.to)) { await db.collection('calsync').doc(p.id).delete(); continue; }
+    jobs.push({ kind: 'CANCEL', s: { id: p.shiftId, date: p.date, start: p.start, end: p.end, client: p.client, addr: p.addr }, to: p.to, id: p.id, seq: (p.seq || 0) + 1 });
+  }
+  jobs.sort((a, b) => (a.kind === 'CANCEL' ? 0 : 1) - (b.kind === 'CANCEL' ? 0 : 1) || String(a.s.date).localeCompare(String(b.s.date)));
+  for (const j of jobs.slice(0, CAL_MAX_PER_RUN)) {
+    try {
+      const ics = shiftIcs({ s: j.s, clients, emps, method: j.kind, seq: j.seq, to: j.to, now });
+      const subject = (j.kind === 'CANCEL' ? 'Annulé : ' : '') + 'Ménage – ' + (j.s.client || 'client') + ' – ' + longDate(j.s.date) + ' ' + fmtH(j.s.start);
+      await sendCal({ to: j.to, subject, html: calHtml(j.s, j.kind), ics, method: j.kind });
+      if (j.kind === 'CANCEL') await db.collection('calsync').doc(j.id).delete();
+      else await db.collection('calsync').doc(j.id).set({ shiftId: j.s.id, to: j.to, key: j.key, seq: j.seq, date: j.s.date, start: j.s.start, end: j.s.end || '', client: j.s.client || '', addr: j.s.addr || '', sentAt: now.getTime() });
+      sent++; log(`Calendrier (${j.kind === 'CANCEL' ? 'annulation' : 'invitation'}) ${j.s.client} ${j.s.date} → ${j.to}`);
+    } catch (e) { errors++; lastError = String(e.message || e); log(`Échec calendrier ${j.to} : ${lastError}`); }
+  }
+  if (jobs.length > CAL_MAX_PER_RUN) log(`Calendrier : ${jobs.length - CAL_MAX_PER_RUN} invitation(s) au prochain passage.`);
+  return { sent, errors, lastError, pending: Math.max(0, jobs.length - CAL_MAX_PER_RUN) };
+}
+
 const docs = snap => snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
 
 // Logique principale, testable avec une fausse base de données.
-export async function run({ db, send, ping, now = new Date(), log = console.log }) {
+export async function run({ db, send, ping, sendCal, calTo = [], calSkip = {}, now = new Date(), log = console.log }) {
   const [clients, shifts, emps, mails, system] = await Promise.all(['clients', 'shifts', 'employees', 'mail', 'system'].map(c => db.collection(c).get().then(docs)));
   const prevState = system.find(x => x.id === 'mailer') || {};
   let sent = 0, errors = 0, lastError = '';
@@ -185,6 +264,13 @@ export async function run({ db, send, ping, now = new Date(), log = console.log 
     }
   }
 
+  // 2c) Horaire envoyé dans Outlook (invitations de calendrier)
+  let calRes = { sent: 0, errors: 0, pending: 0 };
+  try { calRes = await calSync({ db, shifts, clients, emps, now, sendCal, recipients: calTo, skipSrc: calSkip, log }); }
+  catch (e) { calRes.errors = 1; calRes.lastError = String(e.message || e); log('Synchronisation calendrier : ' + calRes.lastError); }
+  if (calRes.errors) { errors += calRes.errors; lastError = 'Calendrier : ' + calRes.lastError; }
+  if (calRes.sent) sent += calRes.sent;
+
   // 3) Garder la clé Brevo active (elle expire après 90 jours sans utilisation) : un appel par jour
   let lastPing = prevState.lastPing || 0;
   if (ping && sent === 0 && now.getTime() - lastPing > 24 * 36e5) {
@@ -192,7 +278,7 @@ export async function run({ db, send, ping, now = new Date(), log = console.log 
     catch (e) { errors++; lastError = 'Clé Brevo : ' + String(e.message || e); log(lastError); }
   }
   if (sent > 0) lastPing = now.getTime();
-  await db.collection('system').doc('mailer').set({ lastRun: now.getTime(), lastSent: sent, lastErrors: errors, lastError, lastPing });
+  await db.collection('system').doc('mailer').set({ lastRun: now.getTime(), lastSent: sent, lastErrors: errors, lastError, lastPing, calTo, calSent: (prevState.calSent || 0) + calRes.sent, calPending: calRes.pending || 0, calSmtp: !!(sendCal && sendCal.smtp) });
   log(`Terminé : ${sent} courriel(s) envoyé(s), ${errors} erreur(s).`);
   return { sent, errors };
 }
@@ -205,7 +291,20 @@ async function main() {
   admin.initializeApp({ credential: admin.credential.cert(JSON.parse(sa)) });
   const db = admin.firestore();
   const sender = process.env.SENDER_EMAIL || 'admin@jessiclean.ca';
-  await run({ db, send: m => brevoSend(Object.assign({ apiKey: key, sender }, m)), ping: () => brevoPing({ apiKey: key }) });
+  const calTo = (process.env.CAL_TO || '').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+  const calSkip = {}; (process.env.CAL_SKIP_OUTLOOK || '').split(',').map(x => x.trim().toLowerCase()).filter(Boolean).forEach(a => { calSkip[a] = 'outlook'; });
+  let sendCal = null;
+  if (calTo.length && process.env.BREVO_SMTP_LOGIN && process.env.BREVO_SMTP_KEY) {
+    // Vraie invitation (ajoutée automatiquement au calendrier Outlook)
+    const { default: nodemailer } = await import('nodemailer');
+    const tr = nodemailer.createTransport({ host: 'smtp-relay.brevo.com', port: 587, secure: false, auth: { user: process.env.BREVO_SMTP_LOGIN, pass: process.env.BREVO_SMTP_KEY } });
+    sendCal = ({ to, subject, html, ics, method }) => tr.sendMail({ from: { name: 'Horaire Jessiclean', address: sender }, to, subject, html, icalEvent: { method, filename: 'menage.ics', content: ics } });
+    sendCal.smtp = true;
+  } else if (calTo.length) {
+    // Repli : invitation jointe (.ics) — Outlook propose « Ajouter au calendrier »
+    sendCal = ({ to, subject, html, ics }) => brevoSend({ apiKey: key, sender, senderName: 'Horaire Jessiclean', to, subject, html, attachment: [{ name: 'menage.ics', content: Buffer.from(ics).toString('base64') }] });
+  }
+  await run({ db, send: m => brevoSend(Object.assign({ apiKey: key, sender }, m)), ping: () => brevoPing({ apiKey: key }), sendCal, calTo, calSkip });
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

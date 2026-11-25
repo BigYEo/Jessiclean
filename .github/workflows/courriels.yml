@@ -35,3 +35,10 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           SENDER_EMAIL: admin@jessiclean.ca
+          # Horaire du site envoyé dans Outlook (invitations de calendrier)
+          CAL_TO: admin@jessiclean.ca,jessiclean@outlook.com
+          # Ne pas renvoyer à cette adresse les ménages importés de son propre Outlook (évite les doublons)
+          CAL_SKIP_OUTLOOK: jessiclean@outlook.com
+          # Facultatif : clé SMTP Brevo pour que les invitations s'ajoutent toutes seules au calendrier
+          BREVO_SMTP_LOGIN: ${{ secrets.BREVO_SMTP_LOGIN }}
+          BREVO_SMTP_KEY: ${{ secrets.BREVO_SMTP_KEY }}

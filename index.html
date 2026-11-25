@@ -1898,6 +1898,7 @@ function renderMailer(){
   else{const ago=Math.round((Date.now()-mailer.lastRun)/6e4);
     st.innerHTML=(ago>180?'⚠️ ':'✅ ')+'Dernière vérification il y a '+(ago<60?ago+' min':Math.round(ago/60)+' h')+'. '+(ghToken?'Les confirmations partent en moins d’une minute':'Les confirmations partent dans les 15 minutes environ')+' ; les rappels, 24 h avant chaque visite ; les remerciements, quelques heures après.'+(ago>180?' <b>Le programme semble arrêté : vérifiez GitHub → Actions.</b>':'')+(mailer.lastError?'<br>Dernière erreur : '+esc(mailer.lastError):'');}
   const l=[...mails].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,8);
+  if(mailer&&mailer.calTo&&mailer.calTo.length)st.innerHTML+='<div style="margin-top:6px">📅 Horaire envoyé dans Outlook ('+esc(mailer.calTo.join(', '))+') : '+(mailer.calSent||0)+' invitation(s) envoyée(s)'+(mailer.calPending?', '+mailer.calPending+' en attente':'')+(mailer.calSmtp?'.':'. <span class="mut">Les invitations arrivent en pièce jointe : ajoutez la clé SMTP Brevo pour qu’elles s’ajoutent toutes seules au calendrier.</span>')+'</div>';
   $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.test?'Test – ':'')+(m.type==='reminder'?'Rappel':m.type==='thanks'?'Remerciement':m.type==='custom'?'Message « '+esc(m.subject||'')+' »':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
 }
 
@@ -2118,6 +2119,7 @@ $('sSave').onclick=async()=>{
     for(let x=addDays(d.date,every);x<=until&&dates.length<60;x=addDays(x,every))dates.push(x);
     if(!confirm(dates.length+' ménages seront créés ('+repLabel(every).toLowerCase()+'), du '+fmtDate(d.date)+' au '+fmtDate(dates[dates.length-1])+'. Continuer ?')){$('sSave').disabled=false;return;}
   }
+  {const o0=editId&&shifts.find(x=>x.id===editId);if(o0&&o0.src)d.src=o0.src;}
   try{d.files=await saveFiles('s');
     if(every){const sid='r'+uid();await Promise.all(dates.map(x=>api.set('shifts',uid(),Object.assign({},d,{date:x,series:sid,every}))));calGo(d.date);}
     else await api.set('shifts',editId||uid(),d);
@@ -2237,6 +2239,7 @@ function icsParse(txt){
     else if(key==='RECURRENCE-ID')cur.recur=icsLocal(val);
     else if(key==='UID')cur.uid=val;
     else if(key==='STATUS')cur.status=val;
+    else if(key==='X-SOURCE')cur.xsrc=val.trim().toLowerCase();
   }
   return evs;
 }
@@ -2246,7 +2249,7 @@ function icsExpand(evs,horizon){
   evs.filter(e=>e.recur&&e.uid).forEach(e=>{(moved[e.uid]=moved[e.uid]||new Set()).add(e.recur.date);});
   for(const e of evs){
     if(!e.start||e.start.allDay||!e.summary||e.status==='CANCELLED')continue;
-    const st=e.start.time,en=(e.end&&e.end.time)||st,base={summary:e.summary,start:st,end:en>st?en:st,location:e.location||'',uid:e.uid||''};
+    const st=e.start.time,en=(e.end&&e.end.time)||st,base={src:e.xsrc==='site'?'':'outlook',summary:e.summary,start:st,end:en>st?en:st,location:e.location||'',uid:e.uid||''};
     const skip=new Set(e.ex.concat(e.recur?[]:[...(moved[e.uid]||[])]));
     const r=e.rrule;
     if(!r||e.recur){if(e.start.date>=t&&e.start.date<=horizon)out.push(Object.assign({date:e.start.date,every:0},base));continue;}
@@ -2312,7 +2315,7 @@ $('icsPrev').addEventListener('click',async e=>{
         days:[...new Set(x.list.map(o=>WD[new Date(o.date+'T12:00:00').getDay()]))],notes:'Importé de l’agenda Outlook le '+new Date().toLocaleDateString('fr-CA'),remind:true,code:newCode(),files:[]};
         await api.set('clients',id,c);c=Object.assign({id},c);clients.push(c);nc++;}
       const sid=x.every?'r'+uid():null,todo=x.list.filter(o=>!icsDup(x,o));
-      await Promise.all(todo.map(o=>{const id=uid(),d=Object.assign({date:o.date,start:o.start,end:o.end,emp:'',client:c.name,addr:o.location||c.addr||'',notes:'',files:[]},sid&&o.every?{series:sid,every:o.every}:{});shifts.push(Object.assign({id},d));return api.set('shifts',id,d);}));
+      await Promise.all(todo.map(o=>{const id=uid(),d=Object.assign({date:o.date,start:o.start,end:o.end,emp:'',client:c.name,addr:o.location||c.addr||'',notes:'',files:[],src:o.src||''},sid&&o.every?{series:sid,every:o.every}:{});shifts.push(Object.assign({id},d));return api.set('shifts',id,d);}));
       ns+=todo.length;
     }
     icsGroups=[];$('icsPrev').innerHTML='<div class="note">✓ Import terminé : '+ns+' ménage(s) ajouté(s)'+(nc?', '+nc+' nouvelle(s) fiche(s) client':'')+'. Ajoutez le courriel des nouveaux clients dans leur fiche pour activer les rappels.</div>';
