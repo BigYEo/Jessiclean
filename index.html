@@ -141,6 +141,20 @@ dialog.wzd::backdrop,dialog#wiz::backdrop{background:rgba(30,20,34,.55)}
 .mday:disabled{opacity:.3;cursor:default}
 .mday.out{opacity:.45}
 .mday.today{box-shadow:inset 0 0 0 1.5px var(--ac)}
+.mday.pref{background:#e2f3e7;color:#1d6a3b;font-weight:600;box-shadow:inset 0 0 0 1.5px #86cf9f}
+.mday.pref:hover:not(:disabled){background:#cdebd6}
+.mwd.pref{color:#1d6a3b}
+.mlegend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.78rem;color:var(--mut);margin-top:8px}
+.mlegend span{display:inline-flex;align-items:center;gap:5px}
+.mlegend i{display:block;width:12px;height:12px;border-radius:4px}
+.lg-pref{background:#e2f3e7;box-shadow:inset 0 0 0 1.5px #86cf9f}.lg-sel{background:var(--ac)}.lg-dot{width:6px!important;height:6px!important;border-radius:50%!important;background:var(--mut)}
+.prefbox{background:#eef8f1;border:1px solid #bfe5cb;color:#1d4d2f;border-radius:12px;padding:10px 12px;margin-top:10px;font-size:.92rem}
+.sugg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}.sugg>span{width:100%;font-size:.84rem}
+.sg{border:1.5px solid #86cf9f;background:#fff;color:#1d6a3b;border-radius:12px;padding:6px 12px;font:inherit;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
+.sg small{font-weight:400;font-size:.75rem;color:#4b7a5c;text-transform:none}
+.sg:hover{background:#e2f3e7}.sg.on{background:var(--ac);border-color:var(--ac);color:var(--on)}.sg.on small{color:var(--on)}
+.freq .btn.star{box-shadow:inset 0 0 0 1.5px #86cf9f;background:#e2f3e7;color:#1d6a3b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mday.pref,:root:not([data-theme="light"]) .lg-pref{background:#1f3a29;color:#9fe0b5;box-shadow:inset 0 0 0 1.5px #3f8a5a}:root:not([data-theme="light"]) .prefbox{background:#16281d;border-color:#2f5c3f;color:#cdeed8}:root:not([data-theme="light"]) .sg{background:#1f3a29;color:#9fe0b5;border-color:#3f8a5a}:root:not([data-theme="light"]) .sg small{color:#8cc7a0}}
 .mday.sel{background:var(--ac);color:var(--on);font-weight:700}
 .mday.rep{background:var(--ac2);color:var(--ac);font-weight:600}
 .mdots{display:flex;gap:2px}.mdots i{width:5px;height:5px;border-radius:50%;display:block}
@@ -1676,24 +1690,32 @@ function plHTML(opts){
   '<label for="plNotes">Notes pour l’employée (facultatif)</label><input id="plNotes">'+
   '<div class="wz-prev" id="plPrev"></div>';
 }
+const plPref=()=>((pl.client&&pl.client.days)||[]).map(d=>WD.indexOf(d)).filter(i=>i>=0);
+function plHourPref(){const h=((pl.client&&pl.client.hours)||'').toLowerCase();return {am:/matin|avant-midi|\bam\b/.test(h),pm:/apr[eè]s-?midi|\bpm\b/.test(h)};}
 function plMini(){
   const box=$('plMini');if(!box)return;
   const [y,m]=pl.month.split('-').map(Number),first=new Date(y,m-1,1),start=addDays(pl.month+'-01',-first.getDay()),t=today();
   const series=new Set(plDates()),by={};shifts.forEach(s=>{(by[s.date]=by[s.date]||[]).push(s);});
   const weeks=Math.ceil((first.getDay()+new Date(y,m,0).getDate())/7);
   let h='<div class="mhead"><button type="button" class="btn sec sm" data-plm="-1" aria-label="Mois précédent">‹</button><b>'+first.toLocaleDateString('fr-CA',{month:'long',year:'numeric'})+'</b><button type="button" class="btn sec sm" data-plm="1" aria-label="Mois suivant">›</button></div><div class="mgrid">'+
-    ['D','L','M','M','J','V','S'].map(w=>'<span class="mwd">'+w+'</span>').join('');
+    ['D','L','M','M','J','V','S'].map((w,k)=>'<span class="mwd'+(plPref().includes(k)?' pref':'')+'">'+w+'</span>').join('');
   for(let i=0;i<weeks*7;i++){const d=addDays(start,i),l=by[d]||[];
-    h+='<button type="button" class="mday'+(d.slice(0,7)!==pl.month?' out':'')+(d===t?' today':'')+(d===pl.date?' sel':series.has(d)?' rep':'')+'"'+(d<t?' disabled':'')+' data-pld="'+d+'" aria-label="'+esc(fmtDate(d))+(l.length?', '+l.length+' ménage(s) déjà prévu(s)':'')+'">'+(+d.slice(8))+
+    const pf=plPref().includes(new Date(d+'T12:00:00').getDay())&&d>=t;
+    h+='<button type="button" class="mday'+(pf?' pref':'')+(d.slice(0,7)!==pl.month?' out':'')+(d===t?' today':'')+(d===pl.date?' sel':series.has(d)?' rep':'')+'"'+(d<t?' disabled':'')+' data-pld="'+d+'" aria-label="'+esc(fmtDate(d))+(l.length?', '+l.length+' ménage(s) déjà prévu(s)':'')+'">'+(+d.slice(8))+
       (l.length?'<span class="mdots">'+l.slice(0,3).map(s=>'<i style="background:'+clientColor(s.client)+'"></i>').join('')+'</span>':'')+'</button>';}
-  box.innerHTML=h+'</div><div class="mut" style="font-size:.8rem;margin-top:4px">Les points de couleur = ménages déjà prévus.</div>';
+  box.innerHTML=h+'</div><div class="mlegend">'+(plPref().length?'<span><i class="lg-pref"></i>Journées préférées du client</span>':'')+'<span><i class="lg-sel"></i>Date choisie</span><span><i class="lg-dot"></i>Ménage déjà prévu</span></div>';
 }
 function plRefresh(){
   if(!$('plPrev'))return;
   plMini();
   $('plUntilRow').classList.toggle('hide',!plFreq());
   const c=pl.client;
-  $('plAvail').innerHTML=c&&((c.days||[]).length||c.hours)?'<div class="mut" style="font-size:.9rem;margin-top:8px">ℹ️ Disponibilités indiquées par le client : '+esc([(c.days||[]).join(', '),c.hours].filter(Boolean).join(' · '))+'</div>':'';
+  const pr=plPref();let sug=[];
+  if(pr.length){for(let d=addDays(today(),1),k=0;k<60&&sug.length<4;k++,d=addDays(d,1))if(pr.includes(new Date(d+'T12:00:00').getDay()))sug.push(d);}
+  $('plAvail').innerHTML=c&&((c.days||[]).length||c.hours)?'<div class="prefbox"><div><b>⭐ Préférences de '+esc(c.name.split(' ')[0])+'</b> : '+esc([(c.days||[]).join(', '),c.hours].filter(Boolean).join(' · '))+'</div>'+
+    (sug.length?'<div class="sugg"><span class="mut">Prochaines dates qui lui conviennent :</span>'+sug.map(d=>{const n=shifts.filter(s=>s.date===d).length;return '<button type="button" class="sg'+(d===pl.date?' on':'')+'" data-pld="'+d+'">'+shortD(d)+'<small>'+(n?n+' ménage'+(n>1?'s':'')+' prévu'+(n>1?'s':''):'journée libre')+'</small></button>';}).join('')+'</div>':'')+'</div>':
+    (c?'<div class="mut" style="font-size:.9rem;margin-top:8px">ℹ️ Aucune préférence de journée dans la fiche de '+esc(c.name)+'.</div>':'');
+  const hp=plHourPref();document.querySelectorAll('[data-plt]').forEach(b=>{const k=b.dataset.plt;const star=(k==='09:00-12:00'&&hp.am)||(k==='13:00-16:00'&&hp.pm);b.classList.toggle('star',star);b.textContent=b.textContent.replace(/^⭐ /,'');if(star)b.textContent='⭐ '+b.textContent;});
   const l=plDates(),emp=$('plEmp').value,st=$('plStart').value,en=$('plEnd').value;
   if(!l.length){$('plPrev').innerHTML='👆 Cliquez sur la journée du '+(plFreq()?'premier ':'')+'ménage dans le calendrier.';return;}
   const clash=emp?l.filter(d=>shifts.some(s=>s.date===d&&s.emp===emp&&!(s.end<=st||s.start>=en))):[];
