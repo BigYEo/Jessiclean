@@ -159,6 +159,7 @@ dialog.wzd::backdrop,dialog#wiz::backdrop{background:rgba(30,20,34,.55)}
 .mday.rep{background:var(--ac2);color:var(--ac);font-weight:600}
 .mdots{display:flex;gap:2px}.mdots i{width:5px;height:5px;border-radius:50%;display:block}
 .freq .btn{margin:0}
+.calimp{margin-top:18px;border-top:1px solid var(--bd);padding-top:12px}.calimp summary{cursor:pointer;font-weight:600;color:var(--ac)}
 .calwarn{background:#fff6dc;color:#6b4e00;border-radius:12px;padding:10px 14px;margin:12px 0 0;font-size:.92rem}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .calwarn{background:#3a3112;color:#ffe08a}}
 :root[data-theme="dark"] .calwarn{background:#3a3112;color:#ffe08a}
@@ -1185,6 +1186,11 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
   <div class="callegend" id="calLegend"></div>
   <div id="calWarn"></div>
   <div class="calpanel" id="calPanel"></div>
+  <details class="calimp"><summary>📥 Importer un calendrier Outlook (anciens clients)</summary>
+   <p class="mut">Choisissez le fichier de calendrier (.ics) exporté d’Outlook. Vous verrez un aperçu par client avant d’importer quoi que ce soit. Seuls les rendez-vous des 6 prochains mois sont importés.</p>
+   <input type="file" id="icsFile" accept=".ics,text/calendar">
+   <div id="icsPrev"></div>
+  </details>
  </div>
  <div class="card"><h2>Soumissions et messages <span class="mut" id="qCount"></span></h2>
   <p class="mut" style="margin-top:0">Soumission acceptée ? Cliquez <b>« Accepter et planifier »</b> : 4 étapes guidées (fiche client, courriel de confirmation, ménages, rappels).</p>
@@ -2199,6 +2205,120 @@ $('calCard').onclick=e=>{
   else if(b.dataset.cdel2)delShift(b.dataset.cdel2);
   else if(b.dataset.cadd)openQuickAdd(b.dataset.cadd);
 };
+
+/* Import d'un calendrier Outlook (.ics) → fiches clients + ménages */
+const ICS_DAYS={SU:0,MO:1,TU:2,WE:3,TH:4,FR:5,SA:6};
+function icsLocal(v,params){
+  // renvoie {date:'YYYY-MM-DD',time:'HH:MM'} à l'heure de Gatineau
+  const m=/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})?(Z)?)?/.exec(v||'');if(!m)return null;
+  if(!m[4])return {date:m[1]+'-'+m[2]+'-'+m[3],time:'',allDay:true};
+  if(m[7]){const d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]));
+    const f=new Intl.DateTimeFormat('fr-CA',{timeZone:'America/Toronto',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
+    return {date:f.year+'-'+f.month+'-'+f.day,time:f.hour+':'+f.minute};}
+  return {date:m[1]+'-'+m[2]+'-'+m[3],time:m[4]+':'+m[5]};
+}
+function icsParse(txt){
+  const lines=txt.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'').split(/\r?\n/);
+  const evs=[];let cur=null;
+  const un=v=>v.replace(/\\n/gi,'\n').replace(/\\([,;\\])/g,'$1');
+  for(const ln of lines){
+    if(ln==='BEGIN:VEVENT'){cur={ex:[]};continue;}
+    if(ln==='END:VEVENT'){if(cur)evs.push(cur);cur=null;continue;}
+    if(!cur)continue;
+    const i=ln.indexOf(':');if(i<0)continue;
+    const key=ln.slice(0,i).split(';')[0].toUpperCase(),val=ln.slice(i+1);
+    if(key==='SUMMARY')cur.summary=un(val).trim();
+    else if(key==='LOCATION')cur.location=un(val).trim();
+    else if(key==='DESCRIPTION')cur.desc=un(val).trim();
+    else if(key==='DTSTART')cur.start=icsLocal(val);
+    else if(key==='DTEND')cur.end=icsLocal(val);
+    else if(key==='RRULE')cur.rrule=Object.fromEntries(val.split(';').map(x=>x.split('=')));
+    else if(key==='EXDATE')val.split(',').forEach(x=>{const l=icsLocal(x);if(l)cur.ex.push(l.date);});
+    else if(key==='RECURRENCE-ID')cur.recur=icsLocal(val);
+    else if(key==='UID')cur.uid=val;
+    else if(key==='STATUS')cur.status=val;
+  }
+  return evs;
+}
+function icsExpand(evs,horizon){
+  // occurrences futures : {summary,date,start,end,location,every,uid}
+  const t=today(),out=[],moved={};
+  evs.filter(e=>e.recur&&e.uid).forEach(e=>{(moved[e.uid]=moved[e.uid]||new Set()).add(e.recur.date);});
+  for(const e of evs){
+    if(!e.start||e.start.allDay||!e.summary||e.status==='CANCELLED')continue;
+    const st=e.start.time,en=(e.end&&e.end.time)||st,base={summary:e.summary,start:st,end:en>st?en:st,location:e.location||'',uid:e.uid||''};
+    const skip=new Set(e.ex.concat(e.recur?[]:[...(moved[e.uid]||[])]));
+    const r=e.rrule;
+    if(!r||e.recur){if(e.start.date>=t&&e.start.date<=horizon)out.push(Object.assign({date:e.start.date,every:0},base));continue;}
+    const iv=+(r.INTERVAL||1),until=r.UNTIL?icsLocal(r.UNTIL).date:horizon,lim=until<horizon?until:horizon;let count=r.COUNT?+r.COUNT:1e9;
+    let step=0,days=null;
+    if(r.FREQ==='WEEKLY'){step=7*iv;days=(r.BYDAY||'').split(',').filter(Boolean).map(d=>ICS_DAYS[d.slice(-2)]);}
+    if(!step){ // mensuel ou autre : on garde seulement la première occurrence future
+      if(e.start.date>=t)out.push(Object.assign({date:e.start.date,every:0},base));continue;}
+    const d0=e.start.date,dow0=new Date(d0+'T12:00:00').getDay();
+    if(!days||!days.length)days=[dow0];
+    const weekStart=addDays(d0,-dow0);
+    for(let w=0;;w++){
+      const ws=addDays(weekStart,w*step);if(ws>lim)break;
+      for(const dw of days.sort()){
+        const d=addDays(ws,dw);
+        if(d<d0)continue;if(d>lim||count<=0)break;
+        count--;
+        if(d>=t&&!skip.has(d))out.push(Object.assign({date:d,every:days.length===1?step:0},base));
+      }
+      if(count<=0)break;
+    }
+  }
+  return out;
+}
+let icsGroups=[];
+function icsClean(n){return n.replace(/^(ménage|menage|nettoyage|entretien)\s*[-–:]\s*/i,'').trim();}
+function icsLoad(txt){
+  const horizon=addDays(today(),182),occ=icsExpand(icsParse(txt),horizon);
+  const g={};
+  occ.forEach(o=>{const k=nk(o.summary);(g[k]=g[k]||{summary:o.summary,name:icsClean(o.summary),location:o.location,list:[]}).list.push(o);if(!g[k].location&&o.location)g[k].location=o.location;});
+  icsGroups=Object.values(g).map(x=>{x.list.sort(byTime);const ev=x.list.map(o=>o.every).filter(Boolean);x.every=ev.length?ev[0]:0;x.on=true;return x;}).sort((a,b)=>a.list[0].date.localeCompare(b.list[0].date));
+  icsDraw();
+}
+function icsDraw(){
+  const box=$('icsPrev');
+  if(!icsGroups.length){box.innerHTML='<div class="calwarn">Aucun rendez-vous futur trouvé dans ce fichier.</div>';return;}
+  const tot=icsGroups.filter(x=>x.on).reduce((n,x)=>n+x.list.filter(o=>!icsDup(x,o)).length,0);
+  box.innerHTML='<p style="margin:10px 0 4px"><b>'+icsGroups.length+' client(s)</b> trouvé(s) pour les 6 prochains mois. Vérifiez les noms (ils doivent correspondre à la fiche client), décochez ce qui n’est pas un ménage, puis importez.</p>'+
+   icsGroups.map((x,i)=>{const c=clients.find(k=>nk(k.name)===nk(x.name)),dups=x.list.filter(o=>icsDup(x,o)).length,o0=x.list[0];
+    return '<div class="calcard" style="border-left-color:'+clientColor(x.name)+';opacity:'+(x.on?1:.5)+'"><div style="flex:1;min-width:220px">'+
+     '<label style="display:flex;gap:8px;align-items:center;margin:0;color:var(--tx)"><input type="checkbox" data-icson="'+i+'"'+(x.on?' checked':'')+' style="width:auto;margin:0;accent-color:var(--ac)"><input data-icsname="'+i+'" value="'+esc(x.name)+'" aria-label="Nom du client" style="flex:1"></label>'+
+     '<div class="mut" style="margin-top:4px">'+x.list.length+' ménage(s) · '+(x.every?repLabel(x.every)+', ':'')+WD[new Date(o0.date+'T12:00:00').getDay()].toLowerCase()+' '+esc(o0.start)+'–'+esc(o0.end)+' · premier le '+esc(shortD(o0.date))+'</div>'+
+     (x.location?'<div class="mut">📍 '+esc(x.location)+'</div>':'')+
+     '<div class="'+(c?'rem-ok':'mut')+'" style="font-size:.9rem">'+(c?'✓ Fiche existante : '+esc(c.name)+(c.email?'':' (sans courriel : pas de rappel)'):'＋ Une nouvelle fiche sera créée (ajoutez son courriel ensuite pour les rappels)')+'</div>'+
+     (dups?'<div class="mut" style="font-size:.85rem">'+dups+' déjà dans le calendrier : ignoré(s)</div>':'')+
+     '</div></div>';}).join('')+
+   '<div class="wz-foot"><button class="btn sec" id="icsCancel">Annuler</button><button class="btn" id="icsGo"'+(tot?'':' disabled')+'>Importer '+tot+' ménage(s)</button></div>';
+}
+function icsDup(x,o){return shifts.some(s=>s.date===o.date&&s.start===o.start&&nk(s.client)===nk(x.name));}
+$('icsFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{icsLoad(await f.text());}catch(err){$('icsPrev').innerHTML='<div class="calwarn">Ce fichier n’a pas pu être lu. Vérifiez qu’il s’agit bien d’un calendrier .ics.</div>';}e.target.value='';};
+$('icsPrev').addEventListener('change',e=>{const on=e.target.dataset.icson;if(on!==undefined){icsGroups[+on].on=e.target.checked;icsDraw();}});
+$('icsPrev').addEventListener('input',e=>{const n=e.target.dataset.icsname;if(n!==undefined)icsGroups[+n].name=e.target.value;});
+$('icsPrev').addEventListener('focusout',e=>{if(e.target.dataset.icsname!==undefined)icsDraw();});
+$('icsPrev').addEventListener('click',async e=>{
+  if(e.target.id==='icsCancel'){icsGroups=[];$('icsPrev').innerHTML='';return;}
+  if(e.target.id!=='icsGo')return;
+  const b=e.target;b.disabled=true;b.textContent='Import en cours…';
+  try{
+    let nc=0,ns=0;
+    for(const x of icsGroups.filter(g=>g.on&&g.name.trim())){
+      const name=x.name.trim();let c=clients.find(k=>nk(k.name)===nk(name));
+      if(!c){const id=uid();c={name,addr:x.location||'',phone:'',email:'',urgent:'',habitat:'',rooms:'',basement:'',pets:'',entry:'',vacuum:'',products:'',trash:'',hours:'',availNote:'',
+        days:[...new Set(x.list.map(o=>WD[new Date(o.date+'T12:00:00').getDay()]))],notes:'Importé de l’agenda Outlook le '+new Date().toLocaleDateString('fr-CA'),remind:true,code:newCode(),files:[]};
+        await api.set('clients',id,c);c=Object.assign({id},c);clients.push(c);nc++;}
+      const sid=x.every?'r'+uid():null,todo=x.list.filter(o=>!icsDup(x,o));
+      await Promise.all(todo.map(o=>{const id=uid(),d=Object.assign({date:o.date,start:o.start,end:o.end,emp:'',client:c.name,addr:o.location||c.addr||'',notes:'',files:[]},sid&&o.every?{series:sid,every:o.every}:{});shifts.push(Object.assign({id},d));return api.set('shifts',id,d);}));
+      ns+=todo.length;
+    }
+    icsGroups=[];$('icsPrev').innerHTML='<div class="note">✓ Import terminé : '+ns+' ménage(s) ajouté(s)'+(nc?', '+nc+' nouvelle(s) fiche(s) client':'')+'. Ajoutez le courriel des nouveaux clients dans leur fiche pour activer les rappels.</div>';
+    renderAdmin();
+  }catch(err){alert('Import interrompu : '+msg(err));b.disabled=false;b.textContent='Réessayer';}
+});
 
 /* Clients */
 /* Fiche client : champs (staff:1 = visible par les employées dans leur horaire) */
