@@ -52,7 +52,7 @@ Retirer l'employée dans Admin lui enlève immédiatement l'accès à l'horaire.
 
 **Clients** : chaque fiche reçoit un **code d'accès** à 8 caractères. Donnez ce code au client, ou mieux, cliquez « Copier le lien client » et envoyez-lui le lien par texto ou courriel. Dans « Espace client », il voit ses prochaines dates et heures, et le prénom de l'employée, mais jamais les notes ni les adresses.
 
-**Calendrier** (haut de l'Admin) : vue du mois, une couleur par client. 🔔 = rappel automatique prévu ; ⚠️ = aucun rappel (pas de fiche au même nom, pas de courriel ou courriels désactivés). Cliquez une journée pour voir, modifier ou ajouter des ménages.
+**Calendrier** (haut de l'Admin) : vue du mois, une couleur par client. 🔔 = rappel automatique prévu ; ⚠️ = aucun rappel (pas de fiche au même nom, pas de courriel ou courriels désactivés). Cliquez une journée vide (ou « + Ajouter un ménage ») pour ajouter un ménage : client, journée choisie sur un mini-calendrier, heure, fréquence.
 
 **Soumission acceptée** : bouton « Accepter et planifier » sur la demande, 4 étapes guidées (fiche client, courriel de confirmation, ménages récurrents, vérification des rappels).
 

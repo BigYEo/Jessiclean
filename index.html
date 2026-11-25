@@ -115,8 +115,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac);box-
 .qsteps2 li.ok{color:#2f7d4f}.qsteps2 li.ok::before{content:"✓";background:#2f7d4f;border-color:#2f7d4f;color:#fff}.qsteps2 li.ok::after{background:#2f7d4f}
 .qsteps2 li.cur{color:var(--ac);font-weight:600}.qsteps2 li.cur::before{border-color:var(--ac);color:var(--ac);box-shadow:0 0 0 4px var(--ac2)}
 .btn.go{font-size:1rem;padding:10px 18px;margin:0}
-dialog#wiz{border:0;border-radius:22px;padding:0;width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 24px);background:var(--card);color:var(--tx);box-shadow:0 30px 80px -20px rgba(30,20,34,.5)}
-dialog#wiz::backdrop{background:rgba(30,20,34,.55)}
+dialog.wzd,dialog#wiz{border:0;border-radius:22px;padding:0;width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 24px);background:var(--card);color:var(--tx);box-shadow:0 30px 80px -20px rgba(30,20,34,.5)}
+dialog.wzd::backdrop,dialog#wiz::backdrop{background:rgba(30,20,34,.55)}
 .wz-head{position:sticky;top:0;background:var(--card);padding:18px 20px 10px;border-bottom:1px solid var(--bd);z-index:2}
 .wz-head h2{margin:0 0 2px;font-size:1.25rem;padding-right:44px}
 .wz-head .x{position:absolute;right:12px;top:12px;border:0;background:var(--ac2);color:var(--ac);width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer}
@@ -132,6 +132,19 @@ dialog#wiz::backdrop{background:rgba(30,20,34,.55)}
 .wz-prev .dates{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
 .wz-prev .dates span{background:var(--ac2);color:var(--ac);border-radius:8px;padding:2px 8px;font-size:.84rem}
 .wz-sum{padding:0}.wz-sum li{margin:8px 0;list-style:none}
+.mini{border:1px solid var(--bd);border-radius:14px;padding:10px;background:var(--bg);max-width:380px}
+.mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;text-transform:capitalize}.mhead .btn{margin:0}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.mwd{text-align:center;font-size:.75rem;color:var(--mut);font-weight:600}
+.mday{position:relative;aspect-ratio:1;border:0;border-radius:10px;background:var(--card);color:var(--tx);font:inherit;font-size:.9rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0}
+.mday:hover:not(:disabled){background:var(--ac2)}
+.mday:disabled{opacity:.3;cursor:default}
+.mday.out{opacity:.45}
+.mday.today{box-shadow:inset 0 0 0 1.5px var(--ac)}
+.mday.sel{background:var(--ac);color:var(--on);font-weight:700}
+.mday.rep{background:var(--ac2);color:var(--ac);font-weight:600}
+.mdots{display:flex;gap:2px}.mdots i{width:5px;height:5px;border-radius:50%;display:block}
+.freq .btn{margin:0}
 .calwarn{background:#fff6dc;color:#6b4e00;border-radius:12px;padding:10px 14px;margin:12px 0 0;font-size:.92rem}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .calwarn{background:#3a3112;color:#ffe08a}}
 :root[data-theme="dark"] .calwarn{background:#3a3112;color:#ffe08a}
@@ -1153,7 +1166,7 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
 <section id="v-admin" class="app hide">
  <div class="card" id="calCard">
   <div class="calhead"><h2 id="calTitle">Calendrier</h2>
-   <div class="calnav"><button class="btn sec sm" id="calPrev" aria-label="Mois précédent">‹</button><button class="btn sec sm" id="calToday">Aujourd’hui</button><button class="btn sec sm" id="calNext" aria-label="Mois suivant">›</button></div></div>
+   <div class="calnav"><button class="btn sm" id="calAdd">+ Ajouter un ménage</button><button class="btn sec sm" id="calPrev" aria-label="Mois précédent">‹</button><button class="btn sec sm" id="calToday">Aujourd’hui</button><button class="btn sec sm" id="calNext" aria-label="Mois suivant">›</button></div></div>
   <div class="calgrid" id="calGrid"></div>
   <div class="callegend" id="calLegend"></div>
   <div id="calWarn"></div>
@@ -1289,6 +1302,10 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
  <div class="wz-head"><h2 id="wzTitle">Nouveau client</h2><div class="mut" id="wzSub"></div><button class="x" id="wzClose" aria-label="Fermer">✕</button>
   <ol class="qsteps2" id="wzSteps"></ol></div>
  <div class="wz-body" id="wzBody"></div>
+</dialog>
+<dialog id="qadd" class="wzd" aria-labelledby="qaTitle">
+ <div class="wz-head"><h2 id="qaTitle">Ajouter un ménage</h2><button class="x" id="qaClose" aria-label="Fermer">✕</button></div>
+ <div class="wz-body" id="qaBody"></div>
 </dialog>
 <div id="viewer" class="hide" role="dialog" aria-modal="true" aria-label="Photo"><button class="vnav vprev hide" id="vPrev" aria-label="Photo précédente">‹</button>
 <button class="vnav vnext hide" id="vNext" aria-label="Photo suivante">›</button>
@@ -1641,21 +1658,93 @@ let wzId=null,wzStep=0;
 function openWiz(id){const r=requests.find(x=>x.id===id);if(!r)return;wzId=id;wzStep=Math.min(qProgress(r).next,3);if(qProgress(r).next>=3&&qProgress(r).ok.slice(0,3).every(Boolean))wzStep=3;drawWiz();const d=$('wiz');if(!d.open)d.showModal();}
 $('wzClose').onclick=()=>$('wiz').close();
 $('wiz').addEventListener('click',e=>{if(e.target===$('wiz'))$('wiz').close();});
-function nextWeekday(days){const want=(days||[]).map(d=>WD.indexOf(d)).filter(i=>i>=0);let d=addDays(today(),1);for(let i=0;i<14;i++){if(!want.length||want.includes(new Date(d+'T12:00:00').getDay()))return d;d=addDays(d,1);}return addDays(today(),1);}
-function wzDates(){const d=$('wzDate').value,ev=wzFreq();if(!d)return [];if(!ev)return [d];const until=$('wzUntil').value||addDays(d,182);const out=[d];for(let x=addDays(d,ev);x<=until&&out.length<60;x=addDays(x,ev))out.push(x);return out;}
 const shortD=d=>new Date(d+'T12:00:00').toLocaleDateString('fr-CA',{weekday:'short',day:'numeric',month:'short'});
-function wzPreview(){
-  if(!$('wzPrev'))return;
-  const l=wzDates(),r=requests.find(x=>x.id===wzId),c=r&&qClient(r);
-  $('wzUntilRow').classList.toggle('hide',!wzFreq());
-  if(!l.length){$('wzPrev').innerHTML='Choisissez la date du premier ménage.';return;}
-  const wd=WD[new Date(l[0]+'T12:00:00').getDay()],pref=(c&&c.days)||[],emp=$('wzEmp').value,st=$('wzStart').value,en=$('wzEnd').value;
-  const clash=emp?l.filter(d=>shifts.some(s=>s.date===d&&s.emp===emp&&!(s.end<=st||s.start>=en))):[];
-  $('wzPrev').innerHTML='<b>'+l.length+' ménage'+(l.length>1?'s':'')+'</b> le '+wd.toLowerCase()+', de '+esc(st)+' à '+esc(en)+(wzFreq()?' ('+repLabel(wzFreq()).toLowerCase()+')':'')+
-    (pref.length?(pref.includes(wd)?'<div class="rem-ok" style="margin-top:4px">✓ Journée préférée du client</div>':'<div class="rem-no" style="margin-top:4px">⚠️ Le client préfère : '+esc(pref.join(', '))+'</div>'):'')+
-    (clash.length?'<div class="rem-no" style="margin-top:4px">⚠️ Cette employée a déjà un ménage à cette heure : '+clash.slice(0,3).map(shortD).join(', ')+(clash.length>3?'…':'')+'</div>':'')+
-    '<div class="dates">'+l.map(d=>'<span>'+shortD(d)+'</span>').join('')+'</div>';
+/* Planificateur partagé (parcours guidé + ajout rapide) : Jessiclean choisit la date en cliquant sur un mini-calendrier */
+const pl={date:'',month:today().slice(0,7),client:null};
+const plFreq=()=>+((document.querySelector('input[name=plFreq]:checked')||{}).value||0);
+function plDates(){const d=pl.date,ev=plFreq();if(!d)return [];if(!ev)return [d];const until=($('plUntil')&&$('plUntil').value)||addDays(d,182);const out=[d];for(let x=addDays(d,ev);x<=until&&out.length<60;x=addDays(x,ev))out.push(x);return out;}
+function plHTML(opts){
+  opts=opts||{};
+  return (opts.pickClient?'<label for="plClient">Client</label><select id="plClient"><option value="">— Choisir un client —</option>'+[...clients].sort((a,b)=>(a.name||'').localeCompare(b.name||'','fr')).map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join('')+'</select>':'')+
+  '<div id="plAvail"></div>'+
+  '<label>Date'+(opts.pickClient?'':' du premier ménage')+' : cliquez sur une journée</label><div class="mini" id="plMini"></div>'+
+  '<label>Heure</label><div class="row"><div><input type="time" id="plStart" value="09:00" aria-label="Début"></div><div><input type="time" id="plEnd" value="12:00" aria-label="Fin"></div></div>'+
+  '<div class="freq" style="margin-top:8px">'+[['09:00','12:00','Matin'],['13:00','16:00','Après-midi'],['09:00','16:00','Journée']].map(([a,b,t])=>'<button type="button" class="btn sec sm" data-plt="'+a+'-'+b+'">'+t+'</button>').join('')+'</div>'+
+  '<label for="plEmp">Employée</label><select id="plEmp"><option value="">Non assignée</option>'+emps.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>').join('')+'</select>'+
+  '<label>Fréquence</label><div class="freq">'+[[0,'Une seule fois'],[7,'Chaque semaine'],[14,'Aux 2 semaines'],[21,'Aux 3 semaines'],[28,'Aux 4 semaines']].map(([v,t])=>'<label><input type="radio" name="plFreq" value="'+v+'"'+(v===(opts.freq||0)?' checked':'')+'>'+t+'</label>').join('')+'</div>'+
+  '<div id="plUntilRow"><label for="plUntil">Jusqu’au</label><input type="date" id="plUntil" value="'+addDays(today(),182)+'"></div>'+
+  '<label for="plNotes">Notes pour l’employée (facultatif)</label><input id="plNotes">'+
+  '<div class="wz-prev" id="plPrev"></div>';
 }
+function plMini(){
+  const box=$('plMini');if(!box)return;
+  const [y,m]=pl.month.split('-').map(Number),first=new Date(y,m-1,1),start=addDays(pl.month+'-01',-first.getDay()),t=today();
+  const series=new Set(plDates()),by={};shifts.forEach(s=>{(by[s.date]=by[s.date]||[]).push(s);});
+  const weeks=Math.ceil((first.getDay()+new Date(y,m,0).getDate())/7);
+  let h='<div class="mhead"><button type="button" class="btn sec sm" data-plm="-1" aria-label="Mois précédent">‹</button><b>'+first.toLocaleDateString('fr-CA',{month:'long',year:'numeric'})+'</b><button type="button" class="btn sec sm" data-plm="1" aria-label="Mois suivant">›</button></div><div class="mgrid">'+
+    ['D','L','M','M','J','V','S'].map(w=>'<span class="mwd">'+w+'</span>').join('');
+  for(let i=0;i<weeks*7;i++){const d=addDays(start,i),l=by[d]||[];
+    h+='<button type="button" class="mday'+(d.slice(0,7)!==pl.month?' out':'')+(d===t?' today':'')+(d===pl.date?' sel':series.has(d)?' rep':'')+'"'+(d<t?' disabled':'')+' data-pld="'+d+'" aria-label="'+esc(fmtDate(d))+(l.length?', '+l.length+' ménage(s) déjà prévu(s)':'')+'">'+(+d.slice(8))+
+      (l.length?'<span class="mdots">'+l.slice(0,3).map(s=>'<i style="background:'+clientColor(s.client)+'"></i>').join('')+'</span>':'')+'</button>';}
+  box.innerHTML=h+'</div><div class="mut" style="font-size:.8rem;margin-top:4px">Les points de couleur = ménages déjà prévus.</div>';
+}
+function plRefresh(){
+  if(!$('plPrev'))return;
+  plMini();
+  $('plUntilRow').classList.toggle('hide',!plFreq());
+  const c=pl.client;
+  $('plAvail').innerHTML=c&&((c.days||[]).length||c.hours)?'<div class="mut" style="font-size:.9rem;margin-top:8px">ℹ️ Disponibilités indiquées par le client : '+esc([(c.days||[]).join(', '),c.hours].filter(Boolean).join(' · '))+'</div>':'';
+  const l=plDates(),emp=$('plEmp').value,st=$('plStart').value,en=$('plEnd').value;
+  if(!l.length){$('plPrev').innerHTML='👆 Cliquez sur la journée du '+(plFreq()?'premier ':'')+'ménage dans le calendrier.';return;}
+  const clash=emp?l.filter(d=>shifts.some(s=>s.date===d&&s.emp===emp&&!(s.end<=st||s.start>=en))):[];
+  $('plPrev').innerHTML='<b>'+l.length+' ménage'+(l.length>1?'s':'')+'</b>'+(l.length>1?' le '+WD[new Date(l[0]+'T12:00:00').getDay()].toLowerCase()+' ('+repLabel(plFreq()).toLowerCase()+')':' le '+esc(fmtDate(l[0])))+', de '+esc(st)+' à '+esc(en)+
+    (clash.length?'<div class="rem-no" style="margin-top:4px">⚠️ Cette employée a déjà un ménage à cette heure : '+clash.slice(0,3).map(shortD).join(', ')+(clash.length>3?'…':'')+'</div>':'')+
+    (l.length>1?'<div class="dates">'+l.map(d=>'<span>'+shortD(d)+'</span>').join('')+'</div>':'');
+}
+function plBind(root){
+  root.querySelectorAll('#plStart,#plEnd,#plUntil,#plEmp').forEach(i=>i.addEventListener('input',plRefresh));
+  root.querySelectorAll('input[name=plFreq]').forEach(i=>i.addEventListener('change',plRefresh));
+  const cs=root.querySelector('#plClient');if(cs)cs.addEventListener('change',()=>{pl.client=clients.find(x=>x.id===cs.value)||null;plRefresh();});
+  if(root.__pl){plRefresh();return;}root.__pl=true;
+  root.addEventListener('click',e=>{
+    const d=e.target.closest('[data-pld]'),m=e.target.closest('[data-plm]'),t=e.target.closest('[data-plt]');
+    if(d&&!d.disabled){pl.date=d.dataset.pld;if(pl.date.slice(0,7)!==pl.month)pl.month=pl.date.slice(0,7);plRefresh();}
+    if(m){const [y,mo]=pl.month.split('-').map(Number);const x=new Date(y,mo-1+(+m.dataset.plm),1);pl.month=x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0');plMini();}
+    if(t){const [a,b]=t.dataset.plt.split('-');$('plStart').value=a;$('plEnd').value=b;plRefresh();}
+  });
+  plRefresh();
+}
+async function plSave(c){
+  const dates=plDates(),st=$('plStart').value,en=$('plEnd').value,ev=plFreq();
+  if(!c){alert('Choisissez le client.');return null;}
+  if(!dates.length){alert('Cliquez sur la journée du ménage dans le calendrier.');return null;}
+  if(!st||!en||en<=st){alert('L’heure de fin doit être après l’heure de début.');return null;}
+  const base={start:st,end:en,emp:$('plEmp').value,client:c.name,addr:c.addr||'',notes:$('plNotes').value.trim(),files:[]},sid=ev?'r'+uid():null;
+  const made=dates.map(d=>Object.assign({id:uid()},base,{date:d},sid?{series:sid,every:ev}:{}));
+  await Promise.all(made.map(x=>{const {id,...d}=x;return api.set('shifts',id,d);}));
+  made.forEach(x=>{if(!shifts.some(s=>s.id===x.id))shifts.push(x);});
+  calGo(dates[0]);
+  return dates;
+}
+/* Ajout rapide depuis le calendrier */
+function openQuickAdd(date,clientId){
+  if(!clients.length){alert('Créez d’abord une fiche client (section « Clients »).');return;}
+  pl.date=date&&date>=today()?date:'';pl.month=(date||today()).slice(0,7);pl.client=clients.find(x=>x.id===clientId)||null;
+  $('qaBody').innerHTML=plHTML({pickClient:true,freq:0})+'<div class="wz-foot"><button class="btn sec" data-qa="close">Annuler</button><button class="btn" data-qa="save">Ajouter au calendrier</button></div>';
+  if(pl.client)$('plClient').value=pl.client.id;
+  plBind($('qaBody'));
+  if(!$('qadd').open)$('qadd').showModal();
+}
+$('qaClose').onclick=()=>$('qadd').close();
+$('qadd').addEventListener('click',e=>{if(e.target===$('qadd'))$('qadd').close();});
+$('qaBody').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-qa]');if(!b)return;
+  if(b.dataset.qa==='close'){$('qadd').close();return;}
+  b.disabled=true;
+  try{const d=await plSave(pl.client);if(d){$('qadd').close();}}
+  catch(err){alert('Action impossible : '+msg(err));}
+  finally{b.disabled=false;}
+});
 function drawWiz(){
   const r=requests.find(x=>x.id===wzId);if(!r){$('wiz').close();return;}
   const p=qProgress(r),c=p.c;
@@ -1684,13 +1773,8 @@ function drawWiz(){
   } else if(wzStep===2){
     const mine=c?shifts.filter(s=>nk(s.client)===nk(c.name)&&s.date>=today()).sort(byTime):[];
     h='<h3>3. Planifier les ménages</h3>'+(mine.length?'<div class="note">✓ '+mine.length+' ménage(s) déjà planifié(s), le premier le '+esc(fmtDate(mine[0].date))+'. Vous pouvez en ajouter ou continuer.</div>':'')+
-    '<div class="row st"><div><label for="wzDate">Date du premier ménage</label><input type="date" id="wzDate" value="'+nextWeekday(c&&c.days)+'"></div><div><label for="wzEmp">Employée</label><select id="wzEmp"><option value="">Non assignée</option>'+emps.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>').join('')+'</select></div></div>'+
-    '<div class="row"><div><label for="wzStart">Début</label><input type="time" id="wzStart" value="09:00"></div><div><label for="wzEnd">Fin</label><input type="time" id="wzEnd" value="12:00"></div></div>'+
-    '<label>Fréquence</label><div class="freq">'+[[0,'Une seule fois'],[7,'Chaque semaine'],[14,'Aux 2 semaines'],[21,'Aux 3 semaines'],[28,'Aux 4 semaines']].map(([v,t])=>'<label><input type="radio" name="wzFreq" value="'+v+'"'+(v===14?' checked':'')+'>'+t+'</label>').join('')+'</div>'+
-    '<div id="wzUntilRow"><label for="wzUntil">Jusqu’au</label><input type="date" id="wzUntil" value="'+addDays(today(),182)+'"></div>'+
-    '<label for="wzNotes">Notes pour l’employée (facultatif)</label><input id="wzNotes">'+
-    '<div class="wz-prev" id="wzPrev"></div>'+
-    '<div class="wz-foot">'+back+'<span style="display:flex;gap:8px;flex-wrap:wrap">'+(mine.length?'<button class="btn sec" data-wz="next">Continuer sans ajouter</button>':'')+'<button class="btn" data-wz="plan">Planifier les ménages →</button></span></div>';
+    plHTML({freq:7})+
+    '<div class="wz-foot">'+back+'<span style="display:flex;gap:8px;flex-wrap:wrap">'+(mine.length?'<button class="btn sec" data-wz="next">Continuer sans ajouter</button>':'')+'<button class="btn" data-wz="plan">Ajouter au calendrier →</button></span></div>';
   } else {
     const rs=c?remindStatus({client:c.name}):{ok:false,why:'Aucune fiche client'};
     const mine=c?shifts.filter(s=>nk(s.client)===nk(c.name)&&s.date>=today()).sort(byTime):[];
@@ -1702,7 +1786,7 @@ function drawWiz(){
      '<div class="wz-foot"><span style="display:flex;gap:8px;flex-wrap:wrap">'+back+(c&&c.code?'<button class="btn sec" data-wz="link">Copier le lien de l’espace client</button>':'')+(mine.length?'<button class="btn sec" data-wz="cal">Voir dans le calendrier</button>':'')+'</span><button class="btn" data-wz="close">Terminer</button></div>';
   }
   $('wzBody').innerHTML=h;
-  if(wzStep===2){['wzDate','wzStart','wzEnd','wzUntil','wzEmp'].forEach(i=>$(i).addEventListener('input',wzPreview));document.querySelectorAll('input[name=wzFreq]').forEach(i=>i.addEventListener('change',wzPreview));wzPreview();}
+  if(wzStep===2){pl.client=c||null;pl.date='';pl.month=today().slice(0,7);plBind($('wzBody'));}
 }
 $('wzBody').onclick=async e=>{
   const b=e.target.closest('[data-wz]');if(!b)return;const a=b.dataset.wz,r=requests.find(x=>x.id===wzId);if(!r)return;
@@ -1724,15 +1808,9 @@ $('wzBody').onclick=async e=>{
   else if(a==='skipMail')await busy(async()=>{await api.update('requests',r.id,{confirmSkipped:true});r.confirmSkipped=true;wzStep=2;drawWiz();})
   else if(a==='plan')await busy(async()=>{
     const c=qClient(r);if(!c){alert('Créez d’abord la fiche client (étape 1).');wzStep=0;drawWiz();return;}
-    const dates=wzDates(),st=$('wzStart').value,en=$('wzEnd').value,ev=wzFreq();
-    if(!dates.length){alert('Choisissez la date du premier ménage.');return;}
-    if(!st||!en||en<=st){alert('L’heure de fin doit être après l’heure de début.');return;}
-    const base={start:st,end:en,emp:$('wzEmp').value,client:c.name,addr:c.addr||'',notes:$('wzNotes').value.trim(),files:[]},sid=ev?'r'+uid():null;
-    const made=dates.map(d=>Object.assign({id:uid()},base,{date:d},sid?{series:sid,every:ev}:{}));
-    await Promise.all(made.map(x=>{const {id,...d}=x;return api.set('shifts',id,d);}));
+    const dates=await plSave(c);if(!dates)return;
     await api.update('requests',r.id,{done:true,plannedAt:Date.now()});r.done=true;
-    made.forEach(x=>{if(!shifts.some(s=>s.id===x.id))shifts.push(x);});
-    calGo(dates[0]);wzStep=3;drawWiz();})
+    wzStep=3;drawWiz();})
   else if(a==='link'){const c=qClient(r);if(!c)return;const u=clientLink(c.code);const done=()=>{b.textContent='Lien copié ✓';};if(navigator.clipboard)navigator.clipboard.writeText(u).then(done,()=>prompt('Copiez ce lien :',u));else prompt('Copiez ce lien :',u);}
   else if(a==='cal'){$('wiz').close();$('calCard').scrollIntoView({behavior:'smooth',block:'start'});}
 };
@@ -2085,17 +2163,19 @@ function renderCal(){
     (s.addr?'<div class="mut">📍 '+esc(s.addr)+'</div>':'')+
     '<div class="'+(r.ok?'rem-ok':'rem-no')+'">'+(r.ok?'🔔 ':'⚠️ ')+esc(r.why)+'</div>'+(isConfirmed(s)?'<div class="rem-ok">✓ Confirmée par le client</div>':'')+
     '</div><div class="acts"><button class="btn sec sm" data-cedit2="'+esc(s.id)+'">Modifier</button><button class="btn del sm" data-cdel2="'+esc(s.id)+'" aria-label="Supprimer">✕</button></div></div>';}).join(''):'<p class="mut">Aucun ménage cette journée.</p>')+
-    '<button class="btn sm" data-cadd="'+calSel+'" style="margin-top:6px">+ Ajouter un ménage ce jour-là</button>';
+    (calSel>=today()?'<button class="btn sm" data-cadd="'+calSel+'" style="margin-top:6px">+ Ajouter un ménage ce jour-là</button>':'');
 }
 $('calPrev').onclick=()=>{const [y,m]=calMonth.split('-').map(Number);const d=new Date(y,m-2,1);calMonth=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderCal();};
 $('calNext').onclick=()=>{const [y,m]=calMonth.split('-').map(Number);const d=new Date(y,m,1);calMonth=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderCal();};
 $('calToday').onclick=()=>calGo(today());
+$('calAdd').onclick=()=>openQuickAdd(calSel>=today()?calSel:'');
 $('calCard').onclick=e=>{
   const b=e.target.closest('[data-cday],[data-cedit2],[data-cdel2],[data-cadd]');if(!b)return;
-  if(b.dataset.cday){calSel=b.dataset.cday;if(calSel.slice(0,7)!==calMonth)calMonth=calSel.slice(0,7);renderCal();$('calPanel').scrollIntoView({behavior:'smooth',block:'nearest'});}
+  if(b.dataset.cday){calSel=b.dataset.cday;if(calSel.slice(0,7)!==calMonth)calMonth=calSel.slice(0,7);renderCal();
+    if(calSel>=today()&&!shifts.some(s=>s.date===calSel))openQuickAdd(calSel);else $('calPanel').scrollIntoView({behavior:'smooth',block:'nearest'});}
   else if(b.dataset.cedit2)editShift(b.dataset.cedit2);
   else if(b.dataset.cdel2)delShift(b.dataset.cdel2);
-  else if(b.dataset.cadd){resetForm();$('sDate').value=b.dataset.cadd;$('formTitle').scrollIntoView({behavior:'smooth',block:'center'});}
+  else if(b.dataset.cadd)openQuickAdd(b.dataset.cadd);
 };
 
 /* Clients */
