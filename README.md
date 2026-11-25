@@ -94,13 +94,15 @@ Configuration (une seule fois) :
 
 L'Admin affiche l'état du programme (« Dernière vérification il y a … »). GitHub peut suspendre les tâches planifiées d'un dépôt sans activité pendant 60 jours : si l'Admin indique que le programme semble arrêté, réactivez-le dans l'onglet Actions.
 
-## Horaire dans Outlook
+## Horaire dans Outlook (calendrier privé « abonnement »)
 
-Chaque ménage ajouté, modifié ou supprimé dans le site est envoyé comme invitation de calendrier à `admin@jessiclean.ca` et `jessiclean@outlook.com` (variable `CAL_TO` dans `.github/workflows/courriels.yml`), pour les 60 prochains jours, au plus 25 par passage. Les ménages importés d'Outlook ne sont pas renvoyés à `jessiclean@outlook.com` (ils y sont déjà).
+Le programme publie l'horaire du site dans un **Gist secret** (jamais visible des clients), mis à jour toutes les 15 minutes. Deux versions : horaire complet, et horaire sans les ménages importés d'Outlook (pour jessiclean@outlook.com, évite les doublons).
 
-- Sans configuration : l'invitation arrive en pièce jointe (.ics) ; Outlook propose « Ajouter au calendrier ».
-- Pour qu'elles s'ajoutent **toutes seules** : Brevo → SMTP et API → onglet SMTP → « Générer une nouvelle clé SMTP ». Dans GitHub → Settings → Secrets → Actions, ajoutez `BREVO_SMTP_LOGIN` (l'identifiant affiché, du genre `xxxx@smtp-brevo.com`) et `BREVO_SMTP_KEY` (la clé).
-- Le site reste la référence : un changement fait directement dans Outlook est remplacé à la prochaine modification du ménage dans le site.
+1. GitHub → Settings → Developer settings → Fine-grained tokens → **Generate new token** ; Account permissions → **Gists : Read and write**.
+2. Dépôt Jessiclean → Settings → Secrets and variables → Actions → **New repository secret** : `GIST_TOKEN` = la clé.
+3. Admin → Courriels aux clients : copiez l'adresse, puis dans Outlook : **Ajouter un calendrier → S'abonner à partir du web**.
+
+Outlook rafraîchit les calendriers d'abonnement toutes les quelques heures. (L'envoi par invitations, `CAL_TO`, est désactivé : Outlook les classait en indésirable.)
 
 ## Notifications par courriel
 

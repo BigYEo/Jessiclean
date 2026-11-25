@@ -42,3 +42,5 @@ jobs:
           # Facultatif : clé SMTP Brevo pour que les invitations s'ajoutent toutes seules au calendrier
           BREVO_SMTP_LOGIN: ${{ secrets.BREVO_SMTP_LOGIN }}
           BREVO_SMTP_KEY: ${{ secrets.BREVO_SMTP_KEY }}
+          # Calendrier « abonnement » privé (Gist secret) : clé GitHub avec permission « Gists : lecture et écriture »
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}

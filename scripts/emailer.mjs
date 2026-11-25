@@ -179,10 +179,57 @@ export async function calSync({ db, shifts, clients, emps, now, sendCal, recipie
   return { sent, errors, lastError, pending: Math.max(0, jobs.length - CAL_MAX_PER_RUN) };
 }
 
+// ---------- Calendrier « abonnement » privé (pour Jessiclean seulement, jamais pour les clients) ----------
+// Publié dans un Gist secret ; Outlook s'y abonne avec « Ajouter un calendrier → S'abonner à partir du web ».
+export function feedIcs({ shifts, clients, emps, now = new Date(), excludeSrc = null, name = 'Horaire Jessiclean (site)' }) {
+  const from = new Date(now.getTime() - 31 * 864e5);
+  const L = ['BEGIN:VCALENDAR', 'PRODID:-//Jessiclean//Horaire//FR', 'VERSION:2.0', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'X-WR-CALNAME:' + icsTxt(name), 'X-WR-TIMEZONE:America/Toronto', 'REFRESH-INTERVAL;VALUE=DURATION:PT1H', 'X-PUBLISHED-TTL:PT1H'];
+  for (const s of [...shifts].sort((a, b) => (a.date + a.start).localeCompare(b.date + b.start))) {
+    if (!s.date || !s.start) continue;
+    if (excludeSrc && s.src === excludeSrc) continue;
+    if (visitStart(s.date, s.start) < from) continue;
+    const emp = (emps.find(e => e.id === s.emp) || {}).name || '';
+    const c = clients.find(x => nk(x.name) === nk(s.client)) || {};
+    const addr = s.addr || c.addr || '';
+    const desc = [emp ? 'Employée : ' + emp : 'Employée : non assignée', c.phone ? 'Client : ' + c.phone : '', s.notes ? 'Notes : ' + s.notes : '', 'Modifier dans jessiclean.ca → Admin'].filter(Boolean).join('\n');
+    L.push('BEGIN:VEVENT', 'UID:menage-' + s.id + '@jessiclean.ca', 'DTSTAMP:' + icsUtc(now),
+      'DTSTART:' + icsUtc(visitStart(s.date, s.start)), 'DTEND:' + icsUtc(visitStart(s.date, s.end || s.start)),
+      'SUMMARY:' + icsTxt('Ménage – ' + (s.client || 'client') + (emp ? ' (' + emp.split(' ')[0] + ')' : '')));
+    if (addr) L.push('LOCATION:' + icsTxt(addr));
+    L.push('DESCRIPTION:' + icsTxt(desc), 'STATUS:CONFIRMED', 'TRANSP:OPAQUE', 'END:VEVENT');
+  }
+  L.push('END:VCALENDAR');
+  return L.map(icsFold).join('\r\n') + '\r\n';
+}
+const FEED_FILES = { full: 'horaire-jessiclean.ics', noOutlook: 'horaire-jessiclean-sans-outlook.ics' };
+export async function publishFeed({ db, shifts, clients, emps, now, token, fetchImpl = fetch, log = console.log }) {
+  if (!token) return null;
+  const sys = await db.collection('system').doc('calfeed').get();
+  const prev = (sys.exists ? sys.data() : null) || {};
+  const files = {
+    [FEED_FILES.full]: feedIcs({ shifts, clients, emps, now }),
+    [FEED_FILES.noOutlook]: feedIcs({ shifts, clients, emps, now, excludeSrc: 'outlook', name: 'Horaire Jessiclean (site, sans Outlook)' })
+  };
+  const sig = Object.values(files).map(t => t.replace(/DTSTAMP:\d+T\d+Z/g, '')).join('').length + ':' + [...Object.values(files).join('').replace(/DTSTAMP:\d+T\d+Z/g, '')].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7);
+  if (prev.gistId && prev.sig === sig) return prev;
+  const H = { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json', 'User-Agent': 'jessiclean-horaire' };
+  const body = { description: 'Horaire Jessiclean (privé)', files: Object.fromEntries(Object.entries(files).map(([k, v]) => [k, { content: v }])) };
+  let res = prev.gistId ? await fetchImpl('https://api.github.com/gists/' + prev.gistId, { method: 'PATCH', headers: H, body: JSON.stringify(body) }) : null;
+  if (!res || res.status === 404) res = await fetchImpl('https://api.github.com/gists', { method: 'POST', headers: H, body: JSON.stringify(Object.assign({ public: false }, body)) });
+  if (!res.ok) { const t = await res.text().catch(() => ''); throw new Error(`GitHub ${res.status} ${t.slice(0, 160)}`); }
+  const g = await res.json(), login = (g.owner && g.owner.login) || prev.login || '';
+  const base = `https://gist.githubusercontent.com/${login}/${g.id}/raw/`;
+  const out = { gistId: g.id, login, sig, updatedAt: now.getTime(), urlFull: base + FEED_FILES.full, urlNoOutlook: base + FEED_FILES.noOutlook, count: shifts.length };
+  await db.collection('system').doc('calfeed').set(out);
+  log('Calendrier abonnement mis à jour (' + shifts.length + ' ménages).');
+  return out;
+}
+
 const docs = snap => snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
 
 // Logique principale, testable avec une fausse base de données.
-export async function run({ db, send, ping, sendCal, calTo = [], calSkip = {}, now = new Date(), log = console.log }) {
+export async function run({ db, send, ping, sendCal, calTo = [], calSkip = {}, feedToken = '', now = new Date(), log = console.log }) {
   const [clients, shifts, emps, mails, system] = await Promise.all(['clients', 'shifts', 'employees', 'mail', 'system'].map(c => db.collection(c).get().then(docs)));
   const prevState = system.find(x => x.id === 'mailer') || {};
   let sent = 0, errors = 0, lastError = '';
@@ -271,6 +318,12 @@ export async function run({ db, send, ping, sendCal, calTo = [], calSkip = {}, n
   if (calRes.errors) { errors += calRes.errors; lastError = 'Calendrier : ' + calRes.lastError; }
   if (calRes.sent) sent += calRes.sent;
 
+  // 2d) Calendrier « abonnement » privé (Gist secret)
+  if (feedToken) {
+    try { await publishFeed({ db, shifts, clients, emps, now, token: feedToken, log }); }
+    catch (e) { errors++; lastError = 'Calendrier abonnement : ' + String(e.message || e); log(lastError); }
+  }
+
   // 3) Garder la clé Brevo active (elle expire après 90 jours sans utilisation) : un appel par jour
   let lastPing = prevState.lastPing || 0;
   if (ping && sent === 0 && now.getTime() - lastPing > 24 * 36e5) {
@@ -304,7 +357,7 @@ async function main() {
     // Repli : invitation jointe (.ics) — Outlook propose « Ajouter au calendrier »
     sendCal = ({ to, subject, html, ics }) => brevoSend({ apiKey: key, sender, senderName: 'Horaire Jessiclean', to, subject, html, attachment: [{ name: 'menage.ics', content: Buffer.from(ics).toString('base64') }] });
   }
-  await run({ db, send: m => brevoSend(Object.assign({ apiKey: key, sender }, m)), ping: () => brevoPing({ apiKey: key }), sendCal, calTo, calSkip });
+  await run({ db, send: m => brevoSend(Object.assign({ apiKey: key, sender }, m)), ping: () => brevoPing({ apiKey: key }), sendCal, calTo, calSkip, feedToken: process.env.GIST_TOKEN || '' });
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

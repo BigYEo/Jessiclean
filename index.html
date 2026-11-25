@@ -1844,7 +1844,8 @@ $('wzBody').onclick=async e=>{
 };
 
 /* Courriels aux clients (envoyés par le programme automatique) */
-let mails=[],mailer=null,ghToken='';
+let mails=[],mailer=null,ghToken='',calfeed=null;
+$('mailStatus').addEventListener('click',e=>{const b=e.target.closest('[data-feed]');if(!b)return;const u=b.dataset.feed,o=b.textContent;const done=()=>{b.textContent='Adresse copiée ✓';setTimeout(()=>b.textContent=o,1800);};if(navigator.clipboard)navigator.clipboard.writeText(u).then(done,()=>prompt('Copiez cette adresse :',u));else prompt('Copiez cette adresse :',u);});
 const GH_DISPATCH='https://api.github.com/repos/BigYEo/Jessiclean/actions/workflows/courriels.yml/dispatches';
 async function triggerMailer(quiet){
   if(!ghToken){if(!quiet)$('ghMsg').textContent='Aucune clé enregistrée.';return false;}
@@ -1898,6 +1899,9 @@ function renderMailer(){
   else{const ago=Math.round((Date.now()-mailer.lastRun)/6e4);
     st.innerHTML=(ago>180?'⚠️ ':'✅ ')+'Dernière vérification il y a '+(ago<60?ago+' min':Math.round(ago/60)+' h')+'. '+(ghToken?'Les confirmations partent en moins d’une minute':'Les confirmations partent dans les 15 minutes environ')+' ; les rappels, 24 h avant chaque visite ; les remerciements, quelques heures après.'+(ago>180?' <b>Le programme semble arrêté : vérifiez GitHub → Actions.</b>':'')+(mailer.lastError?'<br>Dernière erreur : '+esc(mailer.lastError):'');}
   const l=[...mails].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,8);
+  if(calfeed&&calfeed.urlFull)st.innerHTML+='<div class="note" style="margin-top:10px;background:var(--ac2)"><b>📅 Votre calendrier privé (abonnement Outlook)</b><div class="mut" style="margin:4px 0 8px">Seulement pour vous : ne partagez pas ces adresses. Dans Outlook : Ajouter un calendrier → S’abonner à partir du web → collez l’adresse. Mis à jour il y a '+Math.max(1,Math.round((Date.now()-calfeed.updatedAt)/6e4))+' min.</div>'+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm" data-feed="'+esc(calfeed.urlFull)+'">Copier l’adresse (horaire complet)</button><button class="btn sec sm" data-feed="'+esc(calfeed.urlNoOutlook)+'">Copier l’adresse sans les ménages déjà dans Outlook</button></div>'+
+    '<div class="mut" style="font-size:.85rem;margin-top:6px">Pour jessiclean@outlook.com, prenez « sans les ménages déjà dans Outlook » pour éviter les doublons.</div></div>';
   if(mailer&&mailer.calTo&&mailer.calTo.length)st.innerHTML+='<div style="margin-top:6px">📅 Horaire envoyé dans Outlook ('+esc(mailer.calTo.join(', '))+') : '+(mailer.calSent||0)+' invitation(s) envoyée(s)'+(mailer.calPending?', '+mailer.calPending+' en attente':'')+(mailer.calSmtp?'.':'. <span class="mut">Les invitations arrivent en pièce jointe : ajoutez la clé SMTP Brevo pour qu’elles s’ajoutent toutes seules au calendrier.</span>')+'</div>';
   $('mailLog').innerHTML=l.length?'<div class="fiche" style="margin-top:10px"><dl>'+l.map(m=>'<dt>'+esc(new Date(m.ts||0).toLocaleString('fr-CA',{dateStyle:'short',timeStyle:'short'}))+'</dt><dd>'+(m.test?'Test – ':'')+(m.type==='reminder'?'Rappel':m.type==='thanks'?'Remerciement':m.type==='custom'?'Message « '+esc(m.subject||'')+' »':'Confirmation')+' à '+esc(m.name||'')+' ('+esc(m.to||'')+') · '+(m.status==='sent'?'envoyé':m.status==='error'?'échec':'en attente')+'</dd>').join('')+'</dl></div>':'';
 }
@@ -2606,7 +2610,7 @@ function startPrivate(){
   if(!isAdmin)unsubs.push(api.listen('clientInfo',l=>{infos=l;renderEmp();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('requests',l=>{requests=l;renderRequests();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('mail',l=>{mails=l;renderMailer();renderRequests();},()=>{}));
-  if(isAdmin)unsubs.push(api.listen('system',l=>{mailer=l.find(x=>x.id==='mailer')||null;const g=l.find(x=>x.id==='github');ghToken=(g&&g.token)||'';renderGh();renderMailer();},()=>{renderMailer();}));
+  if(isAdmin)unsubs.push(api.listen('system',l=>{calfeed=l.find(x=>x.id==='calfeed')||null;mailer=l.find(x=>x.id==='mailer')||null;const g=l.find(x=>x.id==='github');ghToken=(g&&g.token)||'';renderGh();renderMailer();},()=>{renderMailer();}));
   if(isAdmin)unsubs.push(api.listen('clientInbox',l=>{inbox=l;renderInbox();},()=>{}));
   if(isAdmin)unsubs.push(api.listen('invoices',l=>{invoices=l;loaded.invoices=true;renderInvoices();scheduleSync();},()=>{loaded.invoices=true;}));
   if(isAdmin)unsubs.push(api.listen('confirm',l=>{confirms=l;renderAdmin();},()=>{}));
