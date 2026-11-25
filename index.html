@@ -81,6 +81,62 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac);box-
 .shift .acts{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
 .shift.done{opacity:.6;border-left-color:var(--bd)}
 .day{font-weight:600;margin-top:16px;text-transform:capitalize}
+/* Calendrier admin */
+.calhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.calhead h2{margin:0;text-transform:capitalize}
+.calnav{display:flex;gap:6px;align-items:center}
+.calnav .btn{margin:0}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.calwd{font-size:.8rem;color:var(--mut);text-align:center;padding:4px 0;font-weight:600}
+.calday{min-height:104px;border:1px solid var(--bd);border-radius:12px;padding:5px;background:var(--bg);cursor:pointer;display:flex;flex-direction:column;gap:3px;text-align:left;font:inherit;color:inherit;min-width:0}
+.calday:hover{border-color:var(--ac)}
+.calday.out{opacity:.38}
+.calday.today .dn{background:var(--ac);color:var(--on)}
+.calday.sel{outline:2.5px solid var(--ac);outline-offset:1px}
+.calday .dn{font-size:.85rem;font-weight:600;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+.ev{display:block;border-radius:7px;padding:2px 6px;font-size:.78rem;line-height:1.3;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev.warn{box-shadow:inset 0 0 0 2px #ffcf4d}
+.evdots{display:none;gap:3px;flex-wrap:wrap}
+.evdots i{width:9px;height:9px;border-radius:50%;display:block}
+.callegend{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.callegend span{display:inline-flex;align-items:center;gap:6px;font-size:.88rem;border:1px solid var(--bd);border-radius:999px;padding:4px 10px;background:var(--bg)}
+.callegend i{width:12px;height:12px;border-radius:50%;display:block}
+.calpanel{margin-top:16px;border-top:1px solid var(--bd);padding-top:12px}
+.calpanel h3{margin:0 0 6px;text-transform:capitalize;font-size:1.1rem}
+.calcard{border-left:5px solid var(--ac);background:var(--bg);border-radius:12px;padding:10px 12px;margin:8px 0;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.calcard .acts{display:flex;gap:6px;flex-wrap:wrap}
+.rem-ok{color:#2f7d4f;font-weight:600}.rem-no{color:#a3271b;font-weight:600}
+.chip-rep{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.85rem;font-weight:600;margin-left:6px;background:var(--ac2);color:var(--ac)}
+.qsteps2{display:flex;gap:0;margin:10px 0 4px;list-style:none;padding:0;max-width:520px}
+.qsteps2 li{flex:1;text-align:center;font-size:.76rem;color:var(--mut);position:relative;padding-top:30px;line-height:1.25}
+.qsteps2 li::before{content:attr(data-n);position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;border:2px solid var(--bd);background:var(--card);display:grid;place-items:center;font-weight:700;font-size:.8rem;color:var(--mut);z-index:1}
+.qsteps2 li::after{content:"";position:absolute;top:12px;left:-50%;width:100%;height:2px;background:var(--bd)}
+.qsteps2 li:first-child::after{display:none}
+.qsteps2 li.ok{color:#2f7d4f}.qsteps2 li.ok::before{content:"✓";background:#2f7d4f;border-color:#2f7d4f;color:#fff}.qsteps2 li.ok::after{background:#2f7d4f}
+.qsteps2 li.cur{color:var(--ac);font-weight:600}.qsteps2 li.cur::before{border-color:var(--ac);color:var(--ac);box-shadow:0 0 0 4px var(--ac2)}
+.btn.go{font-size:1rem;padding:10px 18px;margin:0}
+dialog#wiz{border:0;border-radius:22px;padding:0;width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 24px);background:var(--card);color:var(--tx);box-shadow:0 30px 80px -20px rgba(30,20,34,.5)}
+dialog#wiz::backdrop{background:rgba(30,20,34,.55)}
+.wz-head{position:sticky;top:0;background:var(--card);padding:18px 20px 10px;border-bottom:1px solid var(--bd);z-index:2}
+.wz-head h2{margin:0 0 2px;font-size:1.25rem;padding-right:44px}
+.wz-head .x{position:absolute;right:12px;top:12px;border:0;background:var(--ac2);color:var(--ac);width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer}
+.wz-body{padding:6px 20px 20px}
+.wz-body h3{margin:14px 0 4px;font-size:1.15rem}
+.wz-foot{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin-top:18px}
+.wz-foot .btn{margin:0}
+.freq{display:flex;flex-wrap:wrap;gap:6px}
+.freq label{display:inline-flex;align-items:center;gap:6px;margin:0;padding:8px 14px;border:1.5px solid var(--bd);border-radius:999px;color:var(--tx);font-size:.95rem;cursor:pointer;background:var(--bg)}
+.freq label:has(input:checked){border-color:var(--ac);background:var(--ac2);color:var(--ac);font-weight:600}
+.freq input{width:auto;margin:0;accent-color:var(--ac)}
+.wz-prev{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:.92rem}
+.wz-prev .dates{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.wz-prev .dates span{background:var(--ac2);color:var(--ac);border-radius:8px;padding:2px 8px;font-size:.84rem}
+.wz-sum{padding:0}.wz-sum li{margin:8px 0;list-style:none}
+.calwarn{background:#fff6dc;color:#6b4e00;border-radius:12px;padding:10px 14px;margin:12px 0 0;font-size:.92rem}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .calwarn{background:#3a3112;color:#ffe08a}}
+:root[data-theme="dark"] .calwarn{background:#3a3112;color:#ffe08a}
+@media (max-width:640px){.calday{min-height:58px;padding:3px}.calday .ev{display:none}.evdots{display:flex}.calday .dn{width:22px;height:22px;font-size:.78rem}}
+
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .chip{background:var(--ac2);color:var(--ac);border-radius:999px;padding:4px 6px 4px 12px;font-size:.9rem;display:flex;gap:6px;align-items:center}
 .chip small{color:var(--mut)}
@@ -1095,6 +1151,24 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
 </section>
 
 <section id="v-admin" class="app hide">
+ <div class="card" id="calCard">
+  <div class="calhead"><h2 id="calTitle">Calendrier</h2>
+   <div class="calnav"><button class="btn sec sm" id="calPrev" aria-label="Mois précédent">‹</button><button class="btn sec sm" id="calToday">Aujourd’hui</button><button class="btn sec sm" id="calNext" aria-label="Mois suivant">›</button></div></div>
+  <div class="calgrid" id="calGrid"></div>
+  <div class="callegend" id="calLegend"></div>
+  <div id="calWarn"></div>
+  <div class="calpanel" id="calPanel"></div>
+ </div>
+ <div class="card"><h2>Soumissions et messages <span class="mut" id="qCount"></span></h2>
+  <p class="mut" style="margin-top:0">Soumission acceptée ? Cliquez <b>« Accepter et planifier »</b> : 4 étapes guidées (fiche client, courriel de confirmation, ménages, rappels).</p>
+  <div id="qConfirmBox" class="note hide" style="background:var(--ac2)">
+   <b id="qConfirmTitle"></b>
+   <label for="qConfirmMsg">Message ajouté au courriel de confirmation</label><textarea id="qConfirmMsg" rows="4" maxlength="1500"></textarea>
+   <button class="btn" id="qConfirmSend">Confirmer et envoyer le courriel</button> <button class="btn sec" id="qConfirmCancel">Annuler</button>
+  </div>
+  <div id="qList"><p class="mut">Aucune demande pour le moment.</p>
+</div>
+</div>
  <div class="card"><h2>Demandes des clients <span class="mut" id="ibCount"></span></h2>
 <p class="mut">Déplacements de visites et mises à jour de fiche envoyés depuis l’espace client.</p>
 <div id="ibList"><p class="mut">Aucune demande pour le moment.</p>
@@ -1118,15 +1192,6 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
    <button class="btn sm" id="mtSend" style="margin-top:10px">Envoyer le test</button> <span class="mut" id="mtMsg"></span>
   </details>
   <div id="mailLog"></div>
-</div>
- <div class="card"><h2>Soumissions et messages <span class="mut" id="qCount"></span></h2>
-  <div id="qConfirmBox" class="note hide" style="background:var(--ac2)">
-   <b id="qConfirmTitle"></b>
-   <label for="qConfirmMsg">Message ajouté au courriel de confirmation</label><textarea id="qConfirmMsg" rows="4" maxlength="1500"></textarea>
-   <button class="btn" id="qConfirmSend">Confirmer et envoyer le courriel</button> <button class="btn sec" id="qConfirmCancel">Annuler</button>
-  </div>
-  <div id="qList"><p class="mut">Aucune demande pour le moment.</p>
-</div>
 </div>
  <div class="card"><h2>Factures <span class="mut" id="invCount"></span></h2>
   <div id="invList"><p class="mut">Aucune facture pour le moment.</p>
@@ -1206,6 +1271,9 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
   <div class="row"><div><label for="sStart">Début</label><input type="time" id="sStart" value="09:00"></div>
 <div><label for="sEnd">Fin</label><input type="time" id="sEnd" value="12:00"></div>
 </div>
+  <div class="row st" id="sRepeatRow"><div><label for="sRepeat">Répéter</label><select id="sRepeat"><option value="0">Une seule fois</option><option value="7">Chaque semaine</option><option value="14">Aux 2 semaines</option><option value="21">Aux 3 semaines</option><option value="28">Aux 4 semaines</option></select></div>
+<div><label for="sUntil">Jusqu’au</label><input type="date" id="sUntil"></div>
+</div>
   <label for="sClient">Client</label><input id="sClient" list="clList"><datalist id="clList"></datalist><label for="sAddr">Adresse</label><input id="sAddr"><label for="sNotes">Notes</label><textarea id="sNotes" rows="2"></textarea>
   <label for="sFiles">Pièces jointes (photos, PDF…) — visibles par les employées</label><input type="file" id="sFiles" multiple accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"><div class="files" id="sFileList"></div>
   <button class="btn" id="sSave">Enregistrer</button> <button class="btn sec hide" id="sCancel">Annuler</button>
@@ -1217,6 +1285,11 @@ header nav .navsec.on{background:var(--ac2);color:var(--ac)}
 </div>
 </section>
 </main>
+<dialog id="wiz" aria-labelledby="wzTitle">
+ <div class="wz-head"><h2 id="wzTitle">Nouveau client</h2><div class="mut" id="wzSub"></div><button class="x" id="wzClose" aria-label="Fermer">✕</button>
+  <ol class="qsteps2" id="wzSteps"></ol></div>
+ <div class="wz-body" id="wzBody"></div>
+</dialog>
 <div id="viewer" class="hide" role="dialog" aria-modal="true" aria-label="Photo"><button class="vnav vprev hide" id="vPrev" aria-label="Photo précédente">‹</button>
 <button class="vnav vnext hide" id="vNext" aria-label="Photo suivante">›</button>
 <img id="vImg" alt=""><div class="vbar"><span id="vName"></span> <a id="vDl" download>Télécharger</a> <button id="vClose">Fermer</button>
@@ -1374,7 +1447,7 @@ function renderReviews(){
   $('revList').innerHTML=n?l.map(r=>{const k=Math.max(0,Math.min(5,+r.stars||0));return '<figure class="rev" style="margin:0"><q>'+esc(r.text)+'</q><figcaption class="by"><span>'+esc(r.name)+'</span><span class="st" aria-label="'+k+' sur 5">'+'★'.repeat(k)+'</span></figcaption>'+(isAdmin?'<button class="btn del sm" data-del="'+esc(r.id)+'">Supprimer</button>':'')+'</figure>';}).join(''):'<p class="mut">Aucun avis pour l’instant. Soyez la première personne à en laisser un.</p>';
 }
 function shiftHTML(s,admin){
-  return '<div class="shift"><div><b>'+esc(s.start)+' – '+esc(s.end)+'</b> · '+esc(s.client||'Client')+(admin?' <span class="mut">('+esc(empName(s.emp))+')</span>':'')+(admin&&isConfirmed(s)?' <span class="chip-paid">✓ Confirmée par le client</span>':'')+
+  return '<div class="shift"><div><b>'+esc(s.start)+' – '+esc(s.end)+'</b> · '+esc(s.client||'Client')+(admin?' <span class="mut">('+esc(empName(s.emp))+')</span>':'')+(admin&&isConfirmed(s)?' <span class="chip-paid">✓ Confirmée par le client</span>':'')+(admin?(r=>' <span class="'+(r.ok?'chip-paid':'chip-due')+'" title="'+esc(r.why)+'">'+(r.ok?'🔔 Rappel prévu':'⚠️ Aucun rappel')+'</span>')(remindStatus(s)):'')+(admin&&s.series?' <span class="chip-rep">🔁 '+esc(repLabel(s.every))+'</span>':'')+
   (s.addr?'<div class="mut">📍 <a href="https://maps.google.com/?q='+encodeURIComponent(s.addr)+'" target="_blank" rel="noopener" style="color:inherit">'+esc(s.addr)+'</a></div>':'')+(s.notes?'<div class="mut">📝 '+esc(s.notes)+'</div>':'')+filesHTML(s.files,'s')+((ci=>ci?ficheHTML(ci,true,'Infos du client'):'')(s.client&&infoFor(s.client)))+'</div>'+
   (admin?'<div class="acts"><button class="btn sec sm" data-edit="'+esc(s.id)+'">Modifier</button><button class="btn del sm" data-sdel="'+esc(s.id)+'" aria-label="Supprimer">✕</button></div>':'')+'</div>';
 }
@@ -1409,6 +1482,8 @@ function renderAdmin(){
   const past=$('showPast').checked;
   $('admList').innerHTML=grouped(past?shifts:shifts.filter(s=>s.date>=today()),true);
   renderClients();
+  renderCal();
+  renderRequests();
 }
 $('showPast').onchange=renderAdmin;
 function renderAccount(){
@@ -1517,8 +1592,8 @@ function renderRequests(){
     (r.phone?'<div><a href="tel:'+esc(r.phone)+'">'+esc(r.phone)+'</a></div>':'')+(r.email?'<div><a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a></div>':'')+
     '<div class="fiche"><dl>'+line('Adresse',r.addr||r.city)+line('Type d’habitat',r.habitat)+line('Pièces',r.rooms)+line('Sous-sol',r.basement)+line('Animaux / enfants',r.pets)+line('Journées',r.days)+line('Heures',r.hours)+'</dl></div>'+
     (r.message?'<div class="mut" style="white-space:pre-wrap;margin-top:6px">'+esc(r.message)+'</div>':'')+
-    (r.confirmedAt?'<div style="margin-top:6px"><span class="chip-paid">✓ Soumission confirmée le '+esc(new Date(r.confirmedAt).toLocaleDateString('fr-CA',{day:'numeric',month:'long'}))+'</span> '+mailState(r.mailId)+'</div>':'')+'</div>'+
-    '<div class="acts">'+(/^Message/.test(r.service||'')||r.confirmedAt?'':(r.email?'<button class="btn sm" data-qconf="'+esc(r.id)+'">Confirmer la soumission</button>':'<span class="mut" title="Aucun courriel fourni">Pas de courriel</span>'))+(/^Message/.test(r.service||'')?'':'<button class="btn sec sm" data-qfiche="'+esc(r.id)+'">Créer la fiche client</button>')+'<button class="btn sec sm" data-qdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-qdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">Aucune demande pour le moment.</p>';
+    (r.confirmedAt?'<div style="margin-top:6px"><span class="chip-paid">✓ Soumission confirmée le '+esc(new Date(r.confirmedAt).toLocaleDateString('fr-CA',{day:'numeric',month:'long'}))+'</span> '+mailState(r.mailId)+'</div>':'')+
+    (/^Message/.test(r.service||'')?'':qStepsHTML(r))+'</div><div class="acts">'+(/^Message/.test(r.service||'')?'':(st=>st.next<4?'<button class="btn go" data-qwiz="'+esc(r.id)+'">'+(st.next===0?'▶ Accepter et planifier':'▶ Continuer (étape '+(st.next+1)+' sur 4)')+'</button>':'<button class="btn sec sm" data-qwiz="'+esc(r.id)+'">Voir le résumé</button>')(qProgress(r)))+'<button class="btn sec sm" data-qdone="'+esc(r.id)+'">'+(r.done?'Rouvrir':'Traitée')+'</button><button class="btn del sm" data-qdel="'+esc(r.id)+'" aria-label="Supprimer">✕</button></div></div>').join(''):'<p class="mut">Aucune demande pour le moment.</p>';
 }
 let qConfId=null;
 $('qConfirmCancel').onclick=()=>{qConfId=null;$('qConfirmBox').classList.add('hide');};
@@ -1533,6 +1608,7 @@ $('qConfirmSend').onclick=async()=>{
   finally{$('qConfirmSend').disabled=false;}
 };
 $('qList').onclick=e=>{
+  const wz=e.target.closest('[data-qwiz]');if(wz){openWiz(wz.dataset.qwiz);return;}
   const dn=e.target.dataset.qdone,dl=e.target.dataset.qdel,fi=e.target.dataset.qfiche,cf=e.target.dataset.qconf;
   if(cf){const r=requests.find(x=>x.id===cf);if(!r)return;qConfId=cf;
     $('qConfirmTitle').textContent='Confirmer la soumission de '+r.name+' ('+r.email+')';
@@ -1548,6 +1624,117 @@ $('qList').onclick=e=>{
     $('cNotes').value='Demande de soumission : '+(r.service||'')+(r.message?'\n'+r.message:'');
     $('cFormTitle').textContent='Nouvelle fiche : '+r.name;$('cCancel').classList.remove('hide');
     $('cFormTitle').scrollIntoView({behavior:'smooth',block:'start'});}
+};
+
+/* Parcours guidé : soumission acceptée → fiche → courriel → ménages → rappels */
+const WZ_STEPS=['Fiche client','Courriel de confirmation','Ménages planifiés','Rappels actifs'];
+const WD=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+const wzFreq=()=>+((document.querySelector('input[name=wzFreq]:checked')||{}).value||0);
+function qClient(r){return clients.find(x=>r.clientId&&x.id===r.clientId)||clients.find(x=>r.email&&nk(x.email)===nk(r.email))||clients.find(x=>nk(x.name)===nk(r.name));}
+function qProgress(r){
+  const c=qClient(r),ok=[!!c,!!(r.confirmedAt||r.confirmSkipped),!!(c&&shifts.some(s=>nk(s.client)===nk(c.name))),!!(c&&c.email&&c.remind!==false)];
+  let next=ok.findIndex(x=>!x);if(next<0)next=4;
+  return {c,ok,next};
+}
+function qStepsHTML(r){const p=qProgress(r);return '<ol class="qsteps2">'+WZ_STEPS.map((t,i)=>'<li data-n="'+(i+1)+'" class="'+(p.ok[i]?'ok':i===p.next?'cur':'')+'">'+t+'</li>').join('')+'</ol>';}
+let wzId=null,wzStep=0;
+function openWiz(id){const r=requests.find(x=>x.id===id);if(!r)return;wzId=id;wzStep=Math.min(qProgress(r).next,3);if(qProgress(r).next>=3&&qProgress(r).ok.slice(0,3).every(Boolean))wzStep=3;drawWiz();const d=$('wiz');if(!d.open)d.showModal();}
+$('wzClose').onclick=()=>$('wiz').close();
+$('wiz').addEventListener('click',e=>{if(e.target===$('wiz'))$('wiz').close();});
+function nextWeekday(days){const want=(days||[]).map(d=>WD.indexOf(d)).filter(i=>i>=0);let d=addDays(today(),1);for(let i=0;i<14;i++){if(!want.length||want.includes(new Date(d+'T12:00:00').getDay()))return d;d=addDays(d,1);}return addDays(today(),1);}
+function wzDates(){const d=$('wzDate').value,ev=wzFreq();if(!d)return [];if(!ev)return [d];const until=$('wzUntil').value||addDays(d,182);const out=[d];for(let x=addDays(d,ev);x<=until&&out.length<60;x=addDays(x,ev))out.push(x);return out;}
+const shortD=d=>new Date(d+'T12:00:00').toLocaleDateString('fr-CA',{weekday:'short',day:'numeric',month:'short'});
+function wzPreview(){
+  if(!$('wzPrev'))return;
+  const l=wzDates(),r=requests.find(x=>x.id===wzId),c=r&&qClient(r);
+  $('wzUntilRow').classList.toggle('hide',!wzFreq());
+  if(!l.length){$('wzPrev').innerHTML='Choisissez la date du premier ménage.';return;}
+  const wd=WD[new Date(l[0]+'T12:00:00').getDay()],pref=(c&&c.days)||[],emp=$('wzEmp').value,st=$('wzStart').value,en=$('wzEnd').value;
+  const clash=emp?l.filter(d=>shifts.some(s=>s.date===d&&s.emp===emp&&!(s.end<=st||s.start>=en))):[];
+  $('wzPrev').innerHTML='<b>'+l.length+' ménage'+(l.length>1?'s':'')+'</b> le '+wd.toLowerCase()+', de '+esc(st)+' à '+esc(en)+(wzFreq()?' ('+repLabel(wzFreq()).toLowerCase()+')':'')+
+    (pref.length?(pref.includes(wd)?'<div class="rem-ok" style="margin-top:4px">✓ Journée préférée du client</div>':'<div class="rem-no" style="margin-top:4px">⚠️ Le client préfère : '+esc(pref.join(', '))+'</div>'):'')+
+    (clash.length?'<div class="rem-no" style="margin-top:4px">⚠️ Cette employée a déjà un ménage à cette heure : '+clash.slice(0,3).map(shortD).join(', ')+(clash.length>3?'…':'')+'</div>':'')+
+    '<div class="dates">'+l.map(d=>'<span>'+shortD(d)+'</span>').join('')+'</div>';
+}
+function drawWiz(){
+  const r=requests.find(x=>x.id===wzId);if(!r){$('wiz').close();return;}
+  const p=qProgress(r),c=p.c;
+  $('wzTitle').textContent=r.name||'Nouveau client';
+  $('wzSub').textContent=[r.service,r.addr||r.city].filter(Boolean).join(' · ');
+  $('wzSteps').innerHTML=WZ_STEPS.map((t,i)=>'<li data-n="'+(i+1)+'" class="'+(p.ok[i]?'ok':'')+(i===wzStep?' cur':'')+'">'+t+'</li>').join('');
+  const back=wzStep>0?'<button class="btn sec" data-wz="back">← Retour</button>':'<span></span>';
+  let h='';
+  if(wzStep===0){
+    h='<h3>1. Créer la fiche client</h3>'+(c?'<div class="note">✓ La fiche de <b>'+esc(c.name)+'</b> existe déjà. Vous pourrez la modifier plus tard dans « Clients ».</div><div class="wz-foot"><span></span><button class="btn" data-wz="next">Continuer →</button></div>':
+    '<p class="mut" style="margin-top:0">Les informations de la soumission sont déjà remplies. Ajoutez ce que vous avez appris au téléphone.</p>'+
+    '<label for="wzName">Nom du client</label><input id="wzName" value="'+esc(r.name||'')+'">'+
+    '<label for="wzAddr">Adresse</label><input id="wzAddr" value="'+esc(r.addr||r.city||'')+'">'+
+    '<div class="row st"><div><label for="wzPhone">Téléphone</label><input id="wzPhone" type="tel" value="'+esc(r.phone||'')+'"></div><div><label for="wzEmail">Courriel</label><input id="wzEmail" type="email" value="'+esc(r.email||'')+'"></div></div>'+
+    '<label for="wzEntry">Méthode d’entrée</label><input id="wzEntry" placeholder="Ex. : clé sous le pot, code 1234, client présent">'+
+    '<label for="wzUrgent">À joindre en cas de problème</label><input id="wzUrgent" placeholder="Nom et téléphone">'+
+    '<label style="display:flex;align-items:center;gap:8px;margin-top:14px;color:var(--tx)"><input type="checkbox" id="wzRemind" checked style="width:auto;margin:0;accent-color:var(--ac)"> Rappel par courriel 24 h avant chaque ménage, et remerciement après</label>'+
+    '<p class="mut" style="font-size:.88rem">Le type d’habitat, les pièces, le sous-sol, les animaux et les disponibilités sont copiés de la soumission.</p>'+
+    '<div class="wz-foot"><span></span><button class="btn" data-wz="saveClient">Créer la fiche et continuer →</button></div>');
+  } else if(wzStep===1){
+    const em=(c&&c.email)||r.email;
+    h='<h3>2. Courriel de confirmation</h3>'+(r.confirmedAt?'<div class="note">✓ Courriel de confirmation envoyé le '+esc(new Date(r.confirmedAt).toLocaleDateString('fr-CA',{day:'numeric',month:'long'}))+'. '+mailState(r.mailId)+'</div><div class="wz-foot">'+back+'<button class="btn" data-wz="next">Continuer →</button></div>':
+     em?'<p class="mut" style="margin-top:0">Le client reçoit un courriel Jessiclean qui confirme votre entente, avec le lien de son espace client.</p><label for="wzMsg">Votre message</label><textarea id="wzMsg" rows="4" maxlength="1500">Merci de votre confiance ! Nous avons bien hâte de commencer. Vous recevrez un rappel par courriel la veille de chaque visite.</textarea>'+
+      '<div class="wz-foot">'+back+'<span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sec" data-wz="skipMail">Passer</button><button class="btn" data-wz="sendMail">Envoyer le courriel →</button></span></div>':
+     '<div class="note">Ce client n’a pas de courriel : pas de confirmation ni de rappel possible. Vous pourrez en ajouter un dans sa fiche.</div><div class="wz-foot">'+back+'<button class="btn" data-wz="skipMail">Continuer →</button></div>');
+  } else if(wzStep===2){
+    const mine=c?shifts.filter(s=>nk(s.client)===nk(c.name)&&s.date>=today()).sort(byTime):[];
+    h='<h3>3. Planifier les ménages</h3>'+(mine.length?'<div class="note">✓ '+mine.length+' ménage(s) déjà planifié(s), le premier le '+esc(fmtDate(mine[0].date))+'. Vous pouvez en ajouter ou continuer.</div>':'')+
+    '<div class="row st"><div><label for="wzDate">Date du premier ménage</label><input type="date" id="wzDate" value="'+nextWeekday(c&&c.days)+'"></div><div><label for="wzEmp">Employée</label><select id="wzEmp"><option value="">Non assignée</option>'+emps.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>').join('')+'</select></div></div>'+
+    '<div class="row"><div><label for="wzStart">Début</label><input type="time" id="wzStart" value="09:00"></div><div><label for="wzEnd">Fin</label><input type="time" id="wzEnd" value="12:00"></div></div>'+
+    '<label>Fréquence</label><div class="freq">'+[[0,'Une seule fois'],[7,'Chaque semaine'],[14,'Aux 2 semaines'],[21,'Aux 3 semaines'],[28,'Aux 4 semaines']].map(([v,t])=>'<label><input type="radio" name="wzFreq" value="'+v+'"'+(v===14?' checked':'')+'>'+t+'</label>').join('')+'</div>'+
+    '<div id="wzUntilRow"><label for="wzUntil">Jusqu’au</label><input type="date" id="wzUntil" value="'+addDays(today(),182)+'"></div>'+
+    '<label for="wzNotes">Notes pour l’employée (facultatif)</label><input id="wzNotes">'+
+    '<div class="wz-prev" id="wzPrev"></div>'+
+    '<div class="wz-foot">'+back+'<span style="display:flex;gap:8px;flex-wrap:wrap">'+(mine.length?'<button class="btn sec" data-wz="next">Continuer sans ajouter</button>':'')+'<button class="btn" data-wz="plan">Planifier les ménages →</button></span></div>';
+  } else {
+    const rs=c?remindStatus({client:c.name}):{ok:false,why:'Aucune fiche client'};
+    const mine=c?shifts.filter(s=>nk(s.client)===nk(c.name)&&s.date>=today()).sort(byTime):[];
+    h='<h3>'+(p.ok.every(Boolean)?'🎉 Tout est prêt !':'4. Vérification finale')+'</h3><ul class="wz-sum">'+
+     '<li>'+(p.ok[0]?'✅ Fiche client : <b>'+esc(c.name)+'</b>'+(c.code?' (code '+esc(c.code)+')':''):'⬜ Fiche client à créer')+'</li>'+
+     '<li>'+(r.confirmedAt?'✅ Courriel de confirmation envoyé':r.confirmSkipped?'➖ Courriel de confirmation passé':'⬜ Courriel de confirmation')+'</li>'+
+     '<li>'+(mine.length?'✅ '+mine.length+' ménage(s) à venir, le premier le '+esc(fmtDate(mine[0].date)):'⬜ Aucun ménage planifié')+'</li>'+
+     '<li>'+(rs.ok?'✅ 🔔 '+esc(rs.why):'⚠️ Pas de rappel : '+esc(rs.why.replace(/^./,x=>x.toLowerCase()))+'. Ajoutez un courriel dans la fiche (Clients → Modifier).')+'</li></ul>'+
+     '<div class="wz-foot"><span style="display:flex;gap:8px;flex-wrap:wrap">'+back+(c&&c.code?'<button class="btn sec" data-wz="link">Copier le lien de l’espace client</button>':'')+(mine.length?'<button class="btn sec" data-wz="cal">Voir dans le calendrier</button>':'')+'</span><button class="btn" data-wz="close">Terminer</button></div>';
+  }
+  $('wzBody').innerHTML=h;
+  if(wzStep===2){['wzDate','wzStart','wzEnd','wzUntil','wzEmp'].forEach(i=>$(i).addEventListener('input',wzPreview));document.querySelectorAll('input[name=wzFreq]').forEach(i=>i.addEventListener('change',wzPreview));wzPreview();}
+}
+$('wzBody').onclick=async e=>{
+  const b=e.target.closest('[data-wz]');if(!b)return;const a=b.dataset.wz,r=requests.find(x=>x.id===wzId);if(!r)return;
+  const busy=async fn=>{b.disabled=true;try{await fn();}catch(err){alert('Action impossible : '+msg(err));}finally{b.disabled=false;}};
+  if(a==='back'){wzStep--;drawWiz();}
+  else if(a==='next'){wzStep++;drawWiz();}
+  else if(a==='close'){$('wiz').close();}
+  else if(a==='saveClient')await busy(async()=>{
+    const name=$('wzName').value.trim();if(!name){alert('Le nom du client est requis.');$('wzName').focus();return;}
+    const id=uid(),d={name,addr:$('wzAddr').value.trim(),phone:$('wzPhone').value.trim(),email:$('wzEmail').value.trim(),urgent:$('wzUrgent').value.trim(),entry:$('wzEntry').value.trim(),
+      habitat:r.habitat||'',rooms:r.rooms||'',basement:r.basement||'',pets:r.pets||'',vacuum:'',products:'',trash:'',hours:r.hours||'',availNote:'',days:r.days||[],
+      notes:'Demande de soumission : '+(r.service||'')+(r.message?'\n'+r.message:''),remind:$('wzRemind').checked,code:newCode(),files:[]};
+    await api.set('clients',id,d);await api.update('requests',r.id,{clientId:id});
+    if(!clients.some(x=>x.id===id))clients=clients.concat([Object.assign({id},d)]);r.clientId=id;wzStep=1;drawWiz();})
+  else if(a==='sendMail')await busy(async()=>{
+    const c=qClient(r),mid=uid(),to=(c&&c.email)||r.email;
+    await api.set('mail',mid,{type:'confirm',to,name:(c&&c.name)||r.name,service:r.service||'',message:$('wzMsg').value.trim(),code:(c&&c.code)||'',ts:Date.now(),status:'pending'});
+    await api.update('requests',r.id,{confirmedAt:Date.now(),mailId:mid});r.confirmedAt=Date.now();r.mailId=mid;triggerMailer(true);wzStep=2;drawWiz();})
+  else if(a==='skipMail')await busy(async()=>{await api.update('requests',r.id,{confirmSkipped:true});r.confirmSkipped=true;wzStep=2;drawWiz();})
+  else if(a==='plan')await busy(async()=>{
+    const c=qClient(r);if(!c){alert('Créez d’abord la fiche client (étape 1).');wzStep=0;drawWiz();return;}
+    const dates=wzDates(),st=$('wzStart').value,en=$('wzEnd').value,ev=wzFreq();
+    if(!dates.length){alert('Choisissez la date du premier ménage.');return;}
+    if(!st||!en||en<=st){alert('L’heure de fin doit être après l’heure de début.');return;}
+    const base={start:st,end:en,emp:$('wzEmp').value,client:c.name,addr:c.addr||'',notes:$('wzNotes').value.trim(),files:[]},sid=ev?'r'+uid():null;
+    const made=dates.map(d=>Object.assign({id:uid()},base,{date:d},sid?{series:sid,every:ev}:{}));
+    await Promise.all(made.map(x=>{const {id,...d}=x;return api.set('shifts',id,d);}));
+    await api.update('requests',r.id,{done:true,plannedAt:Date.now()});r.done=true;
+    made.forEach(x=>{if(!shifts.some(s=>s.id===x.id))shifts.push(x);});
+    calGo(dates[0]);wzStep=3;drawWiz();})
+  else if(a==='link'){const c=qClient(r);if(!c)return;const u=clientLink(c.code);const done=()=>{b.textContent='Lien copié ✓';};if(navigator.clipboard)navigator.clipboard.writeText(u).then(done,()=>prompt('Copiez ce lien :',u));else prompt('Copiez ce lien :',u);}
+  else if(a==='cal'){$('wiz').close();$('calCard').scrollIntoView({behavior:'smooth',block:'start'});}
 };
 
 /* Courriels aux clients (envoyés par le programme automatique) */
@@ -1809,7 +1996,7 @@ document.addEventListener('click',async e=>{
 });
 
 /* Quarts */
-function resetForm(){editId=null;$('formTitle').textContent='Nouveau quart de travail';$('sCancel').classList.add('hide');['sClient','sAddr','sNotes'].forEach(i=>$(i).value='');loadFormFiles('s',[]);}
+function resetForm(){editId=null;$('formTitle').textContent='Nouveau quart de travail';$('sCancel').classList.add('hide');$('sRepeatRow').classList.remove('hide');$('sRepeat').value='0';$('sUntil').value='';['sClient','sAddr','sNotes'].forEach(i=>$(i).value='');loadFormFiles('s',[]);}
 $('sCancel').onclick=resetForm;
 $('sClient').onchange=()=>{const c=clients.find(x=>(x.name||'').trim().toLowerCase()===$('sClient').value.trim().toLowerCase());if(c&&c.addr&&!$('sAddr').value.trim())$('sAddr').value=c.addr;};
 $('sSave').onclick=async()=>{
@@ -1817,16 +2004,98 @@ $('sSave').onclick=async()=>{
   if(!d.date||!d.start||!d.end){alert('Date et heures requises.');return;}
   if(d.end<=d.start){alert('L’heure de fin doit être après l’heure de début.');return;}
   $('sSave').disabled=true;
-  try{d.files=await saveFiles('s');await api.set('shifts',editId||uid(),d);deleteFiles('s',removedFiles.s);resetForm();}
+  const every=editId?0:+$('sRepeat').value;
+  let dates=[d.date];
+  if(every){
+    const until=$('sUntil').value||addDays(d.date,182);
+    if(until<d.date){alert('La date « Jusqu’au » doit être après la première date.');$('sSave').disabled=false;return;}
+    for(let x=addDays(d.date,every);x<=until&&dates.length<60;x=addDays(x,every))dates.push(x);
+    if(!confirm(dates.length+' ménages seront créés ('+repLabel(every).toLowerCase()+'), du '+fmtDate(d.date)+' au '+fmtDate(dates[dates.length-1])+'. Continuer ?')){$('sSave').disabled=false;return;}
+  }
+  try{d.files=await saveFiles('s');
+    if(every){const sid='r'+uid();await Promise.all(dates.map(x=>api.set('shifts',uid(),Object.assign({},d,{date:x,series:sid,every}))));calGo(d.date);}
+    else await api.set('shifts',editId||uid(),d);
+    deleteFiles('s',removedFiles.s);resetForm();}
   catch(e){alert('Action impossible : '+msg(e));}
   finally{$('sSave').disabled=false;}
 };
 $('admList').onclick=e=>{
   const ed=e.target.dataset.edit,dl=e.target.dataset.sdel;
-  if(dl&&confirm('Supprimer ce quart ?')){const s0=shifts.find(x=>x.id===dl);guard(api.del('shifts',dl)).then(()=>deleteFiles('s',((s0&&s0.files)||[]).map(f=>f.id))).catch(()=>{});}
-  if(ed){const s=shifts.find(x=>x.id===ed);if(!s)return;editId=ed;loadFormFiles('s',s.files);
+  if(dl)delShift(dl);
+  if(ed)editShift(ed);
+};
+function delShift(dl){
+  const s0=shifts.find(x=>x.id===dl);if(!s0)return;
+  let ids=[dl];
+  const next=s0.series?shifts.filter(x=>x.series===s0.series&&x.date>s0.date):[];
+  if(next.length&&confirm('Ce ménage fait partie d’une série ('+repLabel(s0.every).toLowerCase()+').\n\nOK = supprimer celui-ci ET les '+next.length+' suivants\nAnnuler = choisir de supprimer seulement celui-ci'))ids=ids.concat(next.map(x=>x.id));
+  else if(!confirm('Supprimer le ménage du '+fmtDate(s0.date)+' ('+(s0.client||'client')+') ?'))return;
+  const gone=new Set(ids),fileIds=new Set();
+  shifts.filter(x=>gone.has(x.id)).forEach(x=>(x.files||[]).forEach(f=>fileIds.add(f.id)));
+  shifts.filter(x=>!gone.has(x.id)).forEach(x=>(x.files||[]).forEach(f=>fileIds.delete(f.id)));
+  guard(Promise.all(ids.map(id=>api.del('shifts',id)))).then(()=>deleteFiles('s',[...fileIds])).catch(()=>{});
+}
+function editShift(ed){
+  {const s=shifts.find(x=>x.id===ed);if(!s)return;editId=ed;loadFormFiles('s',s.files);$('sRepeatRow').classList.add('hide');
     $('sDate').value=s.date;$('sStart').value=s.start;$('sEnd').value=s.end;$('sEmp').value=s.emp||'';$('sClient').value=s.client||'';$('sAddr').value=s.addr||'';$('sNotes').value=s.notes||'';
     $('formTitle').textContent='Modifier le quart';$('sCancel').classList.remove('hide');$('formTitle').scrollIntoView({behavior:'smooth',block:'center'});}
+}
+
+/* Calendrier */
+const addDays=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');};
+const repLabel=n=>({7:'Chaque semaine',14:'Aux 2 semaines',21:'Aux 3 semaines',28:'Aux 4 semaines'})[n]||'Récurrent';
+const CAL_COLORS=['#8a4a91','#2f7d9a','#c0602b','#3f8a4c','#b33a6b','#5a5fc4','#a07a12','#1f8f86','#7a4a2b','#c43d3d'];
+function clientColor(name){const k=nk(name);if(!k)return '#7d7385';let h=0;for(const ch of k)h=(h*31+ch.charCodeAt(0))>>>0;return CAL_COLORS[h%CAL_COLORS.length];}
+function remindStatus(s){
+  const c=clients.find(x=>nk(x.name)===nk(s.client));
+  if(!s.client)return {ok:false,why:'Aucun client indiqué sur ce ménage'};
+  if(!c)return {ok:false,why:'Aucune fiche client au nom exact « '+s.client+' »'};
+  if(!c.email)return {ok:false,why:'Pas de courriel dans la fiche de '+c.name};
+  if(c.remind===false)return {ok:false,why:'Courriels automatiques désactivés dans la fiche de '+c.name};
+  return {ok:true,why:'Rappel automatique à '+c.email+' 24 h avant'};
+}
+let calMonth=today().slice(0,7),calSel=today();
+function calGo(d){calMonth=d.slice(0,7);calSel=d;renderCal();}
+function renderCal(){
+  if(!isAdmin||!$('calGrid'))return;
+  const [y,m]=calMonth.split('-').map(Number),first=new Date(y,m-1,1);
+  $('calTitle').textContent=first.toLocaleDateString('fr-CA',{month:'long',year:'numeric'});
+  const start=addDays(calMonth+'-01',-first.getDay()),t=today();
+  const byDay={};shifts.forEach(s=>{(byDay[s.date]=byDay[s.date]||[]).push(s);});
+  Object.values(byDay).forEach(l=>l.sort(byTime));
+  let h=['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'].map(w=>'<div class="calwd">'+w+'</div>').join('');
+  const weeks=Math.ceil((first.getDay()+new Date(y,m,0).getDate())/7);
+  const seen={},warn=[];
+  for(let i=0;i<weeks*7;i++){
+    const d=addDays(start,i),l=byDay[d]||[];
+    const cls='calday'+(d.slice(0,7)!==calMonth?' out':'')+(d===t?' today':'')+(d===calSel?' sel':'');
+    h+='<button type="button" class="'+cls+'" data-cday="'+d+'" aria-label="'+esc(fmtDate(d))+(l.length?', '+l.length+' ménage'+(l.length>1?'s':''):'')+'"><span class="dn">'+(+d.slice(8))+'</span>'+
+      l.slice(0,3).map(s=>{const r=remindStatus(s);return '<span class="ev'+(r.ok||d<t?'':' warn')+'" style="background:'+clientColor(s.client)+'">'+esc(s.start)+' '+esc((s.client||'?').split(' ')[0])+'</span>';}).join('')+
+      (l.length>3?'<span class="mut" style="font-size:.75rem">+'+(l.length-3)+' autre(s)</span>':'')+
+      '<span class="evdots">'+l.map(s=>'<i style="background:'+clientColor(s.client)+'"></i>').join('')+'</span></button>';
+    if(d.slice(0,7)===calMonth)l.forEach(s=>{const k=s.client||'(sans client)';seen[k]=seen[k]||remindStatus(s);if(d>=t&&!remindStatus(s).ok)warn.push(s);});
+  }
+  $('calGrid').innerHTML=h;
+  $('calLegend').innerHTML=Object.keys(seen).sort().map(k=>'<span title="'+esc(seen[k].why)+'"><i style="background:'+clientColor(k)+'"></i>'+esc(k)+' '+(seen[k].ok?'🔔':'⚠️')+'</span>').join('')||'<span class="mut" style="border:0;background:none">Aucun ménage ce mois-ci.</span>';
+  const wc=[...new Set(warn.map(s=>s.client||'(sans client)'))];
+  $('calWarn').innerHTML=wc.length?'<div class="calwarn">⚠️ <b>Pas de rappel automatique</b> pour : '+wc.map(c=>esc(c)+' ('+esc(remindStatus(warn.find(s=>(s.client||'(sans client)')===c)).why.replace(/^./,x=>x.toLowerCase()))+')').join(' ; ')+'. Vérifiez la fiche client (nom identique, courriel, case « Courriels automatiques »).</div>':'';
+  const l=byDay[calSel]||[];
+  $('calPanel').innerHTML='<h3>'+esc(fmtDate(calSel))+'</h3>'+(l.length?l.map(s=>{const r=remindStatus(s);return '<div class="calcard" style="border-left-color:'+clientColor(s.client)+'"><div><b>'+esc(s.start)+' – '+esc(s.end)+'</b> · '+esc(s.client||'Client')+' <span class="mut">('+esc(empName(s.emp))+')</span>'+
+    (s.series?'<div class="mut">🔁 '+esc(repLabel(s.every))+'</div>':'')+
+    (s.addr?'<div class="mut">📍 '+esc(s.addr)+'</div>':'')+
+    '<div class="'+(r.ok?'rem-ok':'rem-no')+'">'+(r.ok?'🔔 ':'⚠️ ')+esc(r.why)+'</div>'+(isConfirmed(s)?'<div class="rem-ok">✓ Confirmée par le client</div>':'')+
+    '</div><div class="acts"><button class="btn sec sm" data-cedit2="'+esc(s.id)+'">Modifier</button><button class="btn del sm" data-cdel2="'+esc(s.id)+'" aria-label="Supprimer">✕</button></div></div>';}).join(''):'<p class="mut">Aucun ménage cette journée.</p>')+
+    '<button class="btn sm" data-cadd="'+calSel+'" style="margin-top:6px">+ Ajouter un ménage ce jour-là</button>';
+}
+$('calPrev').onclick=()=>{const [y,m]=calMonth.split('-').map(Number);const d=new Date(y,m-2,1);calMonth=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderCal();};
+$('calNext').onclick=()=>{const [y,m]=calMonth.split('-').map(Number);const d=new Date(y,m,1);calMonth=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderCal();};
+$('calToday').onclick=()=>calGo(today());
+$('calCard').onclick=e=>{
+  const b=e.target.closest('[data-cday],[data-cedit2],[data-cdel2],[data-cadd]');if(!b)return;
+  if(b.dataset.cday){calSel=b.dataset.cday;if(calSel.slice(0,7)!==calMonth)calMonth=calSel.slice(0,7);renderCal();$('calPanel').scrollIntoView({behavior:'smooth',block:'nearest'});}
+  else if(b.dataset.cedit2)editShift(b.dataset.cedit2);
+  else if(b.dataset.cdel2)delShift(b.dataset.cdel2);
+  else if(b.dataset.cadd){resetForm();$('sDate').value=b.dataset.cadd;$('formTitle').scrollIntoView({behavior:'smooth',block:'center'});}
 };
 
 /* Clients */

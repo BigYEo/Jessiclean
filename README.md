@@ -52,6 +52,12 @@ Retirer l'employée dans Admin lui enlève immédiatement l'accès à l'horaire.
 
 **Clients** : chaque fiche reçoit un **code d'accès** à 8 caractères. Donnez ce code au client, ou mieux, cliquez « Copier le lien client » et envoyez-lui le lien par texto ou courriel. Dans « Espace client », il voit ses prochaines dates et heures, et le prénom de l'employée, mais jamais les notes ni les adresses.
 
+**Calendrier** (haut de l'Admin) : vue du mois, une couleur par client. 🔔 = rappel automatique prévu ; ⚠️ = aucun rappel (pas de fiche au même nom, pas de courriel ou courriels désactivés). Cliquez une journée pour voir, modifier ou ajouter des ménages.
+
+**Soumission acceptée** : bouton « Accepter et planifier » sur la demande, 4 étapes guidées (fiche client, courriel de confirmation, ménages récurrents, vérification des rappels).
+
+**Ménages récurrents** : dans le formulaire de quart, « Répéter » (chaque semaine, aux 2 semaines…) crée tous les ménages jusqu'à la date choisie. À la suppression, on peut retirer un seul ménage ou celui-ci et les suivants.
+
 **Quarts de travail** : le nom de client du quart doit être identique à celui de la fiche (la liste vous le propose) pour que le client le voie. L'horaire client se met à jour quand une administratrice a le site ouvert.
 
 **Demandes de soumission** : le formulaire de la page d'accueil envoie les demandes dans **Admin → Demandes de soumission**. L'onglet affiche « Admin (2) » quand des demandes attendent. Cliquez « Traitée » une fois le client rappelé.
